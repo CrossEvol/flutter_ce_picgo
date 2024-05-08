@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
 
 class AlbumScreen extends StatefulWidget {
   const AlbumScreen({super.key});
@@ -13,12 +14,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('相册'),
-          centerTitle: true,
-          backgroundColor: Colors.blue,
-          leading: const SizedBox(),
-          actions: const [],
+        appBar: HomePageAppBar(
+          title: '相册',
         ),
         body: const Text('AlbumScreen'));
   }
