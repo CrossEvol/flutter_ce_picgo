@@ -1,8 +1,29 @@
+import 'dart:io';
+
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/views/HomeScreen.dart';
 
-void main() {
+void main() async {
+  if (Platform.isWindows) {
+    appWindow.size = const Size(375, 667);
+  }
+
   runApp(const MyApp());
+
+  if (Platform.isWindows) {
+    appWindow.show();
+    doWhenWindowReady(() {
+      final win = appWindow;
+      const initialSize = Size(375, 667);
+      win.minSize = initialSize;
+      win.maxSize = initialSize;
+      win.size = initialSize;
+      win.alignment = Alignment.center;
+      win.title = "Flutter PicGo";
+      win.show();
+    });
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -36,4 +57,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
