@@ -1,17 +1,18 @@
 import 'dart:io';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/views/HomeScreen.dart';
 
 void main() async {
-  if (Platform.isWindows) {
+  if (!kIsWeb && Platform.isWindows) {
     appWindow.size = const Size(375, 667);
   }
 
   runApp(const MyApp());
 
-  if (Platform.isWindows) {
+  if (!kIsWeb && Platform.isWindows) {
     appWindow.show();
     doWhenWindowReady(() {
       final win = appWindow;
