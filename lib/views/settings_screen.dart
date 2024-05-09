@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -65,6 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             title: const Text('图床设置'),
             onTap: () {
+              context.go('/settings/pb');
               // Application.router.navigateTo(context, Routes.settingPb,
               //     transition: TransitionType.cupertino);
             },

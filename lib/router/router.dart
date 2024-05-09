@@ -4,6 +4,7 @@ import 'package:flutter_ce_picgo/views/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../views/home_screen.dart';
+import '../views/image_storage_settings_views/image_storage_setting_screen.dart';
 
 /// The route configuration.
 final GoRouter router = GoRouter(
@@ -24,6 +25,12 @@ final GoRouter router = GoRouter(
           path: 'settings',
           builder: (BuildContext context, GoRouterState state) {
             return const SettingsScreen();
+          },
+        ),
+        GoRoute(
+          path: 'settings/pb',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ImageStorageSettingScreen();
           },
         ),
       ],
