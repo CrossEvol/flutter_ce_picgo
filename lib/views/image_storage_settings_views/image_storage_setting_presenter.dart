@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter_ce_picgo/constants/table_name_keys.dart';
+import 'package:flutter_ce_picgo/database/db_provider.dart';
+
 import '../../models/image_storage_setting.dart';
 
 abstract class ImageStorageSettingPageContract {
@@ -22,6 +25,7 @@ class ImageStorageSettingPagePresenter {
   ImageStorageSettingPagePresenter(this._view);
 
   doLoadPb() async {
+    var list = await dbProvider.db.query(PB_SETTING_TABLE);
     // try {
     //   var sql = Sql.setTable('pb_setting');
     //   var list = await sql.get();

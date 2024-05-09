@@ -3,9 +3,15 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ce_picgo/database/db_provider.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
+  sqfliteFfiInit();
+  dbProvider = DbProvider();
+  await dbProvider.init();
+
   if (!kIsWeb && Platform.isWindows) {
     appWindow.size = const Size(375, 667);
   }
