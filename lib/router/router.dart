@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ce_picgo/views/AlbumScreen.dart';
-import 'package:flutter_ce_picgo/views/SettingsScreen.dart';
+import 'package:flutter_ce_picgo/views/album_screen.dart';
+import 'package:flutter_ce_picgo/views/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 
-import '../views/HomeScreen.dart';
+import '../views/home_screen.dart';
 
 /// The route configuration.
 final GoRouter router = GoRouter(

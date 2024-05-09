@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ce_picgo/views/HomeScreen.dart';
+import 'package:flutter_ce_picgo/views/home_screen.dart';
 
 void main() async {
   if (!kIsWeb && Platform.isWindows) {
