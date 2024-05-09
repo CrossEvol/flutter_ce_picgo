@@ -14,7 +14,7 @@ class ImageStorageSettingScreen extends StatefulWidget {
 
 class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
     implements ImageStorageSettingPageContract {
-  List<PBSetting> _settings = [];
+  List<ImageStorageSetting> _settings = [];
   String _errorTip = '暂无图床数据';
 
   late ImageStorageSettingPagePresenter _presenter;
@@ -118,7 +118,7 @@ class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
   }
 
   @override
-  void loadPb(List<PBSetting> settings) {
+  void loadPb(List<ImageStorageSetting> settings) {
     setState(() {
       _settings = settings;
     });

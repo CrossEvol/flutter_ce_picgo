@@ -85,18 +85,18 @@ class DbProvider {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             type varchar(20) NOT NULL UNIQUE,
             path varchar(20) NOT NULL UNIQUE,
-            name varchar(50) DEFAULT NULL,
-            config varchar(255) DEFAULT NULL,
+            name varchar(50) DEFAULT "",
+            config varchar(255) DEFAULT "",
             visible INTEGER DEFAULT 1
           )''');
 
     /// github图床
     await db.rawInsert(
-        'INSERT INTO $PB_SETTING_TABLE(type, path, name, config, visible) VALUES("${PBTypeKeys.github}", "/setting/pb/github", "Github图床", NULL, 1)');
+        'INSERT INTO $PB_SETTING_TABLE(type, path, name, config, visible) VALUES("${PBTypeKeys.github}", "/setting/pb/github", "Github图床", "", 1)');
 
     /// Gitee图床
     await db.rawInsert(
-        'INSERT INTO $PB_SETTING_TABLE(type, path, name, config, visible) VALUES("${PBTypeKeys.gitee}", "/setting/pb/gitee", "Gitee图床", NULL, 1)');
+        'INSERT INTO $PB_SETTING_TABLE(type, path, name, config, visible) VALUES("${PBTypeKeys.gitee}", "/setting/pb/gitee", "Gitee图床", "", 1)');
 
     // copy data
     // update authors set dynasty_index=(select id  from dynasties where dynasties .name=authors.dynasty) where dynasty in (select name from dynasties )
