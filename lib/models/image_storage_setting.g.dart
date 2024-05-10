@@ -17,18 +17,20 @@ class HiveImageStorageSettingAdapter
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return HiveImageStorageSetting()
-      ..id = fields[0] as int
-      ..type = fields[1] as String
-      ..name = fields[2] as String
-      ..config = fields[3] as String
-      ..path = fields[4] as String;
+    return HiveImageStorageSetting(
+      id: fields[0] as int,
+      type: fields[1] as String,
+      name: fields[2] as String,
+      config: fields[3] as String,
+      path: fields[4] as String,
+      visible: fields[5] as bool,
+    );
   }
 
   @override
   void write(BinaryWriter writer, HiveImageStorageSetting obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +40,9 @@ class HiveImageStorageSettingAdapter
       ..writeByte(3)
       ..write(obj.config)
       ..writeByte(4)
-      ..write(obj.path);
+      ..write(obj.path)
+      ..writeByte(5)
+      ..write(obj.visible);
   }
 
   @override

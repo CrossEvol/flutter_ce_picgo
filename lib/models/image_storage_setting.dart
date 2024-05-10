@@ -24,11 +24,15 @@ class ImageStorageSetting {
   static int _toJson(bool value) => value ? 1 : 0;
 
   static bool _fromJson(int value) => value == 0;
+
+  @override
+  String toString() {
+    return 'ImageStorageSetting{id: $id, type: $type, name: $name, config: $config, path: $path, visible: $visible}';
+  }
 }
 
 @HiveType(typeId: 0)
-class HiveImageStorageSetting extends HiveObject{
-
+class HiveImageStorageSetting extends HiveObject {
   @HiveField(0)
   int id = 0;
 
@@ -43,5 +47,45 @@ class HiveImageStorageSetting extends HiveObject{
 
   @HiveField(4)
   String path = "";
+
+  @HiveField(5)
+  bool visible = false;
+
+  HiveImageStorageSetting({
+    required this.id,
+    required this.type,
+    required this.name,
+    required this.config,
+    required this.path,
+    required this.visible,
+  });
+
+  @override
+  String toString() {
+    return 'HiveImageStorageSetting{id: $id, type: $type, name: $name, config: $config, path: $path, visible: $visible}';
+  }
 }
 
+extension ImageStorageSettingExtensions on ImageStorageSetting {
+  HiveImageStorageSetting toHiveObject() {
+    return HiveImageStorageSetting(
+        id: id,
+        type: type,
+        name: name,
+        config: config,
+        path: path,
+        visible: visible);
+  }
+}
+
+extension HiveImageStorageSettingExtension on HiveImageStorageSetting {
+  ImageStorageSetting fromHiveObject() {
+    return ImageStorageSetting()
+      ..id = id
+      ..type = type
+      ..name = name
+      ..config = config
+      ..path = path
+      ..visible = visible;
+  }
+}
