@@ -3,14 +3,13 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ce_picgo/database/db_provider.dart';
+import 'package:flutter_ce_picgo/database/sqflite_db_provider.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+import 'database/db_interface.dart';
 
 void main() async {
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
-  dbProvider = DbProvider();
+  dbProvider = SqfliteDbProvider();
   await dbProvider.init();
 
   if (!kIsWeb && Platform.isWindows) {

@@ -1,14 +1,19 @@
 import 'dart:io';
+import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../constants/image_storage_type.dart';
 import '../constants/table_name_keys.dart';
 
-late DbProvider dbProvider;
-
-class DbProvider {
+class SqfliteDbProvider implements DbInterface {
   late Database db;
+
+  @override
+  Future<List> getAllSettings() async {
+    return await db.query(PB_SETTING_TABLE);
+  }
 
   /// 获取数据库中所有的表
   Future<List<String>> getTables() async {
@@ -31,7 +36,13 @@ class DbProvider {
   }
 
   /// 初始化数据库
+  @override
   Future init({bool isCreate = false}) async {
+    if (Platform.isWindows) {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
+
     String dbPath = await getDatabasesPath();
     String path = join(dbPath, 'PicGo.db');
     try {
@@ -106,14 +117,13 @@ class DbProvider {
           (SELECT config FROM ${PB_SETTING_TABLE + "_backup"} WHERE ${PB_SETTING_TABLE + "_backup"}.type = $PB_SETTING_TABLE.type)
           ''');
       // drop backup
-      await db
-          .execute('DROP TABLE IF EXISTS ${PB_SETTING_TABLE + "_backup"}');
+      await db.execute('DROP TABLE IF EXISTS ${PB_SETTING_TABLE + "_backup"}');
     }
   }
 
   /// db版本升级
   _upgradeDbV1ToV2(Database db) async {
-    await db.execute(
-        'ALTER TABLE $UPLOADED_TABLE ADD COLUMN info varchar(255)');
+    await db
+        .execute('ALTER TABLE $UPLOADED_TABLE ADD COLUMN info varchar(255)');
   }
 }
