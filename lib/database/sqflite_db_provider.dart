@@ -37,7 +37,7 @@ class SqfliteDbProvider implements DbInterface {
 
   /// 初始化数据库
   @override
-  Future init({bool isCreate = false}) async {
+  Future<void> init({bool isCreate = false}) async {
     if (Platform.isWindows) {
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;

@@ -1,3 +1,4 @@
+import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'image_storage_setting.g.dart';
@@ -24,3 +25,23 @@ class ImageStorageSetting {
 
   static bool _fromJson(int value) => value == 0;
 }
+
+@HiveType(typeId: 0)
+class HiveImageStorageSetting extends HiveObject{
+
+  @HiveField(0)
+  int id = 0;
+
+  @HiveField(1)
+  String type = "";
+
+  @HiveField(2)
+  String name = "";
+
+  @HiveField(3)
+  String config = "";
+
+  @HiveField(4)
+  String path = "";
+}
+
