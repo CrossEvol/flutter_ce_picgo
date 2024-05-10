@@ -41,4 +41,10 @@ class HiveDbProvider implements DbInterface {
               visible: true));
     }
   }
+
+  @override
+  Future<void> saveImageStorageSettingConfig({required String type, required String config}) {
+    // TODO: implement saveImageStorageSettingConfig
+    throw UnimplementedError();
+  }
 }

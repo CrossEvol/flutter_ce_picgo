@@ -8,4 +8,6 @@ abstract interface class DbInterface {
   Future<void> init({bool isCreate = false});
 
   Future<List<ImageStorageSetting>> getAllSettings();
+
+  Future<void> saveImageStorageSettingConfig({required String type, required String config});
 }

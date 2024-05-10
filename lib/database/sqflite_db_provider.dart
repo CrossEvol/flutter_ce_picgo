@@ -133,4 +133,10 @@ class SqfliteDbProvider implements DbInterface {
     await db
         .execute('ALTER TABLE $UPLOADED_TABLE ADD COLUMN info varchar(255)');
   }
+
+  @override
+  Future<void> saveImageStorageSettingConfig({required String type, required String config}) {
+    // TODO: implement saveImageStorageSettingConfig
+    throw UnimplementedError();
+  }
 }

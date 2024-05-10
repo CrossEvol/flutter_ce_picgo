@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ce_picgo/database/db_interface.dart';
+import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
 import '../../models/config.dart';
@@ -14,6 +17,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
   @override
   void initState() {
     super.initState();
+    fToast.init(context);
     loadConfig();
   }
 
@@ -189,14 +193,16 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
         configMap[key] = value.text.trim();
       });
       String configStr = json.encode(configMap);
-      // int row = await ImageUploadUtils.savePBConfig(pbType, configStr);
-      // if (row > 0) {
-      //   // Toast.show('保存成功', context);
-      // } else {
-      //   // Toast.show('保存失败', context);
-      // }
+      try {
+        await dbProvider.saveImageStorageSettingConfig(
+            type: pbType, config: configStr);
+        fToast.showSuccessToast(text: '保存成功');
+      } catch (e) {
+        log('$e');
+        fToast.showErrorToast(text: '保存失败');
+      }
     } catch (e) {
-      // Toast.show('$e', context, duration: Toast.LENGTH_LONG);
+      fToast.showErrorToast(text: '$e');
     }
   }
 
@@ -206,7 +212,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
       var configStr = await prefs.getDefaultStorage();
       onLoadConfig(configStr);
     } catch (e) {
-      print(e);
+      fToast.showErrorToast(text: '$e');
     }
   }
 
@@ -214,7 +220,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
   setDefaultPB() async {
     if (pbType.isNotEmpty) {
       await prefs.setDefaultStorage(pbType);
-      // Toast.show('设置成功', context);
+      fToast.showSuccessToast(text: '设置成功');
     }
   }
 }
