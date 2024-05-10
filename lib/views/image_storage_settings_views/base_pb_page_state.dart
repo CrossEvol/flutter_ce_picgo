@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
 import '../../models/config.dart';
 
@@ -201,17 +202,19 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
 
   /// 加载图床配置
   loadConfig() async {
-    // try {
-    //   var configStr = await ImageUploadUtils.getPBConfig(pbType);
-    //   onLoadConfig(configStr);
-    // } catch (e) {}
+    try {
+      var configStr = await prefs.getDefaultStorage();
+      onLoadConfig(configStr);
+    } catch (e) {
+      print(e);
+    }
   }
 
   /// 配置默认图床
   setDefaultPB() async {
-    // if (!isBlank(pbType)) {
-    //   await ImageUploadUtils.setDefaultPB(pbType);
-    //   Toast.show('设置成功', context);
-    // }
+    if (pbType.isNotEmpty) {
+      await prefs.setDefaultStorage(pbType);
+      // Toast.show('设置成功', context);
+    }
   }
 }
