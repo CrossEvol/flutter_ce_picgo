@@ -110,11 +110,11 @@ class SqfliteDbProvider implements DbInterface {
 
     /// github图床
     await db.rawInsert(
-        'INSERT INTO $PB_SETTING_TABLE(type, path, name, config, visible) VALUES("${ImageStorageType.github}", "/setting/pb/github", "Github图床", "", 1)');
+        'INSERT INTO $PB_SETTING_TABLE(type, path, name, config, visible) VALUES("${ImageStorageType.github}", "/settings/pb/github", "Github图床", "", 1)');
 
     /// Gitee图床
     await db.rawInsert(
-        'INSERT INTO $PB_SETTING_TABLE(type, path, name, config, visible) VALUES("${ImageStorageType.gitee}", "/setting/pb/gitee", "Gitee图床", "", 1)');
+        'INSERT INTO $PB_SETTING_TABLE(type, path, name, config, visible) VALUES("${ImageStorageType.gitee}", "/settings/pb/gitee", "Gitee图床", "", 1)');
 
     // copy data
     // update authors set dynasty_index=(select id  from dynasties where dynasties .name=authors.dynasty) where dynasty in (select name from dynasties )

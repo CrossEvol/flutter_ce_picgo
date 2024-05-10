@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/database/hive_db_provider.dart';
 import 'package:flutter_ce_picgo/database/sqflite_db_provider.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
@@ -16,8 +15,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await useSharedPreferences();
-
-   await testSharedPreferences();
 
   if (kIsWeb) {
     dbProvider = HiveDbProvider();

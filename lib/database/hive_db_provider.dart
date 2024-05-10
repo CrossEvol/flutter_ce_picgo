@@ -25,7 +25,7 @@ class HiveDbProvider implements DbInterface {
               type: ImageStorageType.github,
               name: "Github图床",
               config: "",
-              path: "/setting/pb/github",
+              path: "/settings/pb/github",
               visible: true));
     }
 
@@ -37,7 +37,7 @@ class HiveDbProvider implements DbInterface {
               type: ImageStorageType.github,
               name: "Gitee图床",
               config: "",
-              path: "/setting/pb/gitee",
+              path: "/settings/pb/gitee",
               visible: true));
     }
   }

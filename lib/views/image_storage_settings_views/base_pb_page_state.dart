@@ -150,7 +150,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
     );
   }
 
-  late List<Config> configs;
+  List<Config> configs = [];
 
   // 子类主动调用
   setConfigs(List<Config> configs) {

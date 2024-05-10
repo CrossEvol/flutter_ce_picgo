@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -28,6 +30,11 @@ extension FlutterToastExtension on FToast {
 
 Widget createToastWidget(
     {required String text, required ToastState toastState}) {
+  if (text.length > 30) {
+    log(text);
+    text = text.substring(0, 30);
+  }
+
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
     decoration: BoxDecoration(

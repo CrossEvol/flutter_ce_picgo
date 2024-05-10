@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/constants/shared_preferences_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,9 @@ extension SharedPreferencesExtension on SharedPreferences {
 
 Future<void> useSharedPreferences() async {
   prefs = await SharedPreferences.getInstance();
+  if (kDebugMode) {
+    prefs.remove(SharedPreferencesKeys.settingDefaultStorage);
+  }
 }
 
 Future<void> testSharedPreferences() async {

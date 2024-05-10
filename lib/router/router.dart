@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/views/album_screen.dart';
+import 'package:flutter_ce_picgo/views/image_storage_settings_views/github/github_page.dart';
 import 'package:flutter_ce_picgo/views/settings_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,6 +32,12 @@ final GoRouter router = GoRouter(
           path: 'settings/pb',
           builder: (BuildContext context, GoRouterState state) {
             return const ImageStorageSettingScreen();
+          },
+        ),
+        GoRoute(
+          path: 'settings/pb/github',
+          builder: (BuildContext context, GoRouterState state) {
+            return const GithubPage();
           },
         ),
       ],

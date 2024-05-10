@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/image_storage_setting_presenter.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/image_storage_setting.dart';
 
@@ -8,7 +9,8 @@ class ImageStorageSettingScreen extends StatefulWidget {
   const ImageStorageSettingScreen({super.key});
 
   @override
-  State<ImageStorageSettingScreen> createState() => _ImageStorageSettingScreenState();
+  State<ImageStorageSettingScreen> createState() =>
+      _ImageStorageSettingScreenState();
 }
 
 class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
@@ -78,6 +80,7 @@ class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
                 return ListTile(
                   title: Text(_settings[index].name),
                   onTap: () {
+                    context.go(_settings[index].path);
                     // Application.router.navigateTo(
                     //     context, _settings[index].path,
                     //     transition: TransitionType.cupertino);
