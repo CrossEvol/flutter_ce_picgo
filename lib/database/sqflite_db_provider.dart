@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -138,5 +139,10 @@ class SqfliteDbProvider implements DbInterface {
   Future<void> saveImageStorageSettingConfig({required String type, required String config}) {
     // TODO: implement saveImageStorageSettingConfig
     throw UnimplementedError();
+  }
+
+  @override
+  Future<String> getImageStorageSettingConfig({required String type}) {
+
   }
 }

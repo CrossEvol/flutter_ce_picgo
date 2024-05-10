@@ -10,4 +10,6 @@ abstract interface class DbInterface {
   Future<List<ImageStorageSetting>> getAllSettings();
 
   Future<void> saveImageStorageSettingConfig({required String type, required String config});
+
+  Future<String> getImageStorageSettingConfig({required String type});
 }
