@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
+import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -11,8 +14,12 @@ class SqfliteDbProvider implements DbInterface {
   late Database db;
 
   @override
-  Future<List> getAllSettings() async {
-    return await db.query(PB_SETTING_TABLE);
+  Future<List<ImageStorageSetting>> getAllSettings() async {
+    var list = await db.query(PB_SETTING_TABLE);
+    for (var value in list) {
+      log(jsonEncode(value));
+    }
+    return list.map((e) => ImageStorageSetting.fromJson(e)).toList();
   }
 
   /// 获取数据库中所有的表

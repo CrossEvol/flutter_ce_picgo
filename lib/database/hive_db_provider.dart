@@ -8,8 +8,8 @@ class HiveDbProvider implements DbInterface {
   late Box<HiveImageStorageSetting> box;
 
   @override
-  Future<List<HiveImageStorageSetting>> getAllSettings() async {
-    return box.values.toList();
+  Future<List<ImageStorageSetting>> getAllSettings() async {
+    return box.values.map((e) => e.fromHiveObject()).toList();
   }
 
   @override

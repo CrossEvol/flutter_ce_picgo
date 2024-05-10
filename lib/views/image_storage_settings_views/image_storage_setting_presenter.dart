@@ -25,11 +25,7 @@ class ImageStorageSettingPagePresenter {
 
   doLoadPb() async {
     try {
-      var list = await dbProvider.getAllSettings();
-      for (var value in list) {
-        log(jsonEncode(value));
-      }
-      var settings = list.map((e) => ImageStorageSetting.fromJson(e)).toList();
+      var settings = await dbProvider.getAllSettings();
       _view.loadPb(settings);
     } catch (e) {
       _view.loadError(e.toString());
