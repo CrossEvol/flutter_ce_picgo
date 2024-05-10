@@ -8,9 +8,8 @@ class HiveDbProvider implements DbInterface {
   late Box<HiveImageStorageSetting> box;
 
   @override
-  Future<List> getAllSettings() {
-    // TODO: implement getAllSettings
-    throw UnimplementedError();
+  Future<List<HiveImageStorageSetting>> getAllSettings() async {
+    return box.values.toList();
   }
 
   @override
@@ -18,7 +17,28 @@ class HiveDbProvider implements DbInterface {
     await Hive.initFlutter();
     Hive.registerAdapter(HiveImageStorageSettingAdapter());
     box = await Hive.openBox(PB_SETTING_BOX);
-    // await box.put(ImageStorageType.github,);
-    // await box.put(ImageStorageType.gitee, 1);
+    if (!box.containsKey(ImageStorageType.github)) {
+      await box.put(
+          ImageStorageType.github,
+          HiveImageStorageSetting(
+              id: 0,
+              type: ImageStorageType.github,
+              name: "Github图床",
+              config: "",
+              path: "/setting/pb/github",
+              visible: true));
+    }
+
+    if (!box.containsKey(ImageStorageType.gitee)) {
+      await box.put(
+          ImageStorageType.gitee,
+          HiveImageStorageSetting(
+              id: 0,
+              type: ImageStorageType.github,
+              name: "Gitee图床",
+              config: "",
+              path: "/setting/pb/gitee",
+              visible: true));
+    }
   }
 }

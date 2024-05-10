@@ -1,4 +1,6 @@
 
+import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
+
 late DbInterface dbProvider;
 
 abstract interface class DbInterface {
