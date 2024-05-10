@@ -10,10 +10,22 @@ class GithubConfig {
   String repo;
   String token;
 
-  GithubConfig({required this.branch, required this.customUrl, required this.path, required this.repo, required this.token});
+  GithubConfig.none()
+      : branch = "",
+        customUrl = "",
+        path = "",
+        repo = "",
+        token = "";
 
+  GithubConfig(
+      {required this.branch,
+      required this.customUrl,
+      required this.path,
+      required this.repo,
+      required this.token});
 
-    factory GithubConfig.fromJson(Map<String, dynamic> json) => _$GithubConfigFromJson(json);
+  factory GithubConfig.fromJson(Map<String, dynamic> json) =>
+      _$GithubConfigFromJson(json);
 
-    Map<String, dynamic> toJson() => _$GithubConfigToJson(this);
+  Map<String, dynamic> toJson() => _$GithubConfigToJson(this);
 }
