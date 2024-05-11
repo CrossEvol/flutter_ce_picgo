@@ -5,20 +5,21 @@ import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:hive_flutter/adapters.dart';
 
 class HiveDbProvider implements DbInterface {
-  late Box<HiveImageStorageSetting> box;
+  // iss = Image Storage Setting
+  late Box<HiveImageStorageSetting> issBox;
 
   @override
   Future<List<ImageStorageSetting>> getAllSettings() async {
-    return box.values.map((e) => e.fromHiveObject()).toList();
+    return issBox.values.map((e) => e.fromHiveObject()).toList();
   }
 
   @override
   Future<void> init({bool isCreate = false}) async {
     await Hive.initFlutter();
     Hive.registerAdapter(HiveImageStorageSettingAdapter());
-    box = await Hive.openBox(PB_SETTING_BOX);
-    if (!box.containsKey(ImageStorageType.github)) {
-      await box.put(
+    issBox = await Hive.openBox(PB_SETTING_BOX);
+    if (!issBox.containsKey(ImageStorageType.github)) {
+      await issBox.put(
           ImageStorageType.github,
           HiveImageStorageSetting(
               id: 0,
@@ -29,8 +30,8 @@ class HiveDbProvider implements DbInterface {
               visible: true));
     }
 
-    if (!box.containsKey(ImageStorageType.gitee)) {
-      await box.put(
+    if (!issBox.containsKey(ImageStorageType.gitee)) {
+      await issBox.put(
           ImageStorageType.gitee,
           HiveImageStorageSetting(
               id: 0,
@@ -43,14 +44,18 @@ class HiveDbProvider implements DbInterface {
   }
 
   @override
-  Future<void> saveImageStorageSettingConfig({required String type, required String config}) {
+  Future<void> saveImageStorageSettingConfig(
+      {required String type, required String config}) {
     // TODO: implement saveImageStorageSettingConfig
     throw UnimplementedError();
   }
 
   @override
-  Future<String> getImageStorageSettingConfig({required String type}) {
-    // TODO: implement getImageStorageSettingConfig
-    throw UnimplementedError();
+  Future<String> getImageStorageSettingConfig({required String type}) async {
+    if (!issBox.containsKey(type)) {
+      throw ArgumentError('Not Found $type');
+    }
+    var hiveImageStorageSetting = issBox.get(type);
+    return hiveImageStorageSetting!.config;
   }
 }
