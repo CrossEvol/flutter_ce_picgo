@@ -209,7 +209,8 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
   /// 加载图床配置
   loadConfig() async {
     try {
-      var configStr = await prefs.getDefaultStorage();
+      var storageType = await prefs.getDefaultStorage();
+      var configStr = await dbProvider.getImageStorageSettingConfig(type: storageType);
       onLoadConfig(configStr);
     } catch (e) {
       fToast.showErrorToast(text: '$e');

@@ -136,13 +136,17 @@ class SqfliteDbProvider implements DbInterface {
   }
 
   @override
-  Future<void> saveImageStorageSettingConfig({required String type, required String config}) {
+  Future<void> saveImageStorageSettingConfig(
+      {required String type, required String config}) {
     // TODO: implement saveImageStorageSettingConfig
     throw UnimplementedError();
   }
 
   @override
-  Future<String> getImageStorageSettingConfig({required String type}) {
-
+  Future<String> getImageStorageSettingConfig({required String type}) async {
+    var list = (await db.rawQuery(
+        'SELECT config FROM $PB_SETTING_TABLE WHERE type = ?', [type]));
+    var config = list.first['config'] as String;
+    return config;
   }
 }
