@@ -4,6 +4,8 @@ import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:hive_flutter/adapters.dart';
 
+import '../models/hive/hive_image_storage_setting.dart';
+
 class HiveDbProvider implements DbInterface {
   // iss = Image Storage Setting
   late Box<HiveImageStorageSetting> issBox;

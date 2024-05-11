@@ -1,4 +1,5 @@
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
+import 'package:flutter_ce_picgo/models/hive/hive_image_storage_setting.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
