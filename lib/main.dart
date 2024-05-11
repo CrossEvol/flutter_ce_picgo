@@ -1,11 +1,8 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ce_picgo/database/hive_db_provider.dart';
-import 'package:flutter_ce_picgo/database/sqflite_db_provider.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
@@ -16,11 +13,7 @@ void main() async {
 
   await useSharedPreferences();
 
-  if (kIsWeb) {
-    dbProvider = HiveDbProvider();
-  } else {
-    dbProvider = SqfliteDbProvider();
-  }
+  dbProvider = DbInterface();
   await dbProvider.init();
 
   if (!kIsWeb && Platform.isWindows) {

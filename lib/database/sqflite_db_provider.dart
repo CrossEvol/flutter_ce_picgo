@@ -11,6 +11,8 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../constants/image_storage_type.dart';
 import '../constants/table_name_keys.dart';
 
+DbInterface getInstance() => SqfliteDbProvider();
+
 class SqfliteDbProvider implements DbInterface {
   late Database db;
 

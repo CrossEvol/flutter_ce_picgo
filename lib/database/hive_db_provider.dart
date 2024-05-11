@@ -6,6 +6,8 @@ import 'package:hive_flutter/adapters.dart';
 
 import '../models/hive/hive_image_storage_setting.dart';
 
+DbInterface getInstance() => HiveDbProvider();
+
 class HiveDbProvider implements DbInterface {
   // iss = Image Storage Setting
   late Box<HiveImageStorageSetting> issBox;

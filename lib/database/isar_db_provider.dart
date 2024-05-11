@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 
 import '../constants/image_storage_type.dart';
 
+DbInterface getInstance() => IsarDbProvider();
+
 class IsarDbProvider implements DbInterface {
   late Isar isar;
 

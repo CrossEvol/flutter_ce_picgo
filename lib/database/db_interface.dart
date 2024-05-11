@@ -1,15 +1,20 @@
-
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
+
+import 'db_interface_stub.dart'
+    if (dart.library.html) 'isar_db_provider.dart'
+    if (dart.library.io) 'non_web_db_provider.dart';
 
 late DbInterface dbProvider;
 
 abstract interface class DbInterface {
+  factory DbInterface() => getInstance();
 
   Future<void> init({bool isCreate = false});
 
   Future<List<ImageStorageSetting>> getAllSettings();
 
-  Future<void> saveImageStorageSettingConfig({required String type, required String config});
+  Future<void> saveImageStorageSettingConfig(
+      {required String type, required String config});
 
   Future<String> getImageStorageSettingConfig({required String type});
 }
