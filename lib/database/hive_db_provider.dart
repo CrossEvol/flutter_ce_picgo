@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/constants/table_name_keys.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
@@ -22,6 +23,9 @@ class HiveDbProvider implements DbInterface {
     await Hive.initFlutter();
     Hive.registerAdapter(HiveImageStorageSettingAdapter());
     issBox = await Hive.openBox(PB_SETTING_BOX);
+    if (kDebugMode) {
+      await issBox.clear();
+    }
     if (!issBox.containsKey(ImageStorageType.github)) {
       await issBox.put(
           ImageStorageType.github,
