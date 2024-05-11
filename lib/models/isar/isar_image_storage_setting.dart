@@ -1,8 +1,9 @@
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:isar/isar.dart';
 
-part 'isar_image_storage_setting.g.dart';
+// part 'isar_image_storage_setting.g.dart';
 
+// TODO: wait for the isar web support
 @collection
 class IsarImageStorageSetting {
   Id id = Isar.autoIncrement;

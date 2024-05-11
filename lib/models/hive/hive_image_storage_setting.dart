@@ -49,8 +49,9 @@ extension HiveImageStorageSettingExtension on HiveImageStorageSetting {
       ..path = path
       ..visible = visible;
   }
+}
 
-
+extension ImageStorageSettingExtension on ImageStorageSetting {
   HiveImageStorageSetting toHiveObject() {
     return HiveImageStorageSetting(
         id: id,

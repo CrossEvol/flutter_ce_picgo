@@ -1,7 +1,7 @@
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 
 import 'db_interface_stub.dart'
-    if (dart.library.html) 'isar_db_provider.dart'
+    if (dart.library.html) 'hive_db_provider.dart'
     if (dart.library.io) 'non_web_db_provider.dart';
 
 late DbInterface dbProvider;
