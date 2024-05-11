@@ -1,7 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'hive/hive_image_storage_setting.dart';
-
 part 'image_storage_setting.g.dart';
 
 @JsonSerializable()
@@ -29,17 +27,5 @@ class ImageStorageSetting {
   @override
   String toString() {
     return 'ImageStorageSetting{id: $id, type: $type, name: $name, config: $config, path: $path, visible: $visible}';
-  }
-}
-
-extension ImageStorageSettingExtensions on ImageStorageSetting {
-  HiveImageStorageSetting toHiveObject() {
-    return HiveImageStorageSetting(
-        id: id,
-        type: type,
-        name: name,
-        config: config,
-        path: path,
-        visible: visible);
   }
 }

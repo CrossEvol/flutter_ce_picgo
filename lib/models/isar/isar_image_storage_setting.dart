@@ -33,4 +33,14 @@ extension IsarImageStorageSettingExtension on IsarImageStorageSetting {
       ..path = path
       ..visible = visible;
   }
+
+  IsarImageStorageSetting toIsarObject() {
+    return IsarImageStorageSetting(
+        id: id,
+        type: type,
+        name: name,
+        config: config,
+        path: path,
+        visible: visible);
+  }
 }
