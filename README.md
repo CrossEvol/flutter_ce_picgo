@@ -2,6 +2,9 @@
 
 A new Flutter project.
 
+# Todo
+- configure json_serializable rules in build.yaml, include fieldRename to snake
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
