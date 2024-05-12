@@ -53,16 +53,22 @@ class HiveDbProvider implements DbInterface {
 
   @override
   Future<void> saveImageStorageSettingConfig(
-      {required String type, required String config}) {
-    // TODO: implement saveImageStorageSettingConfig
-    throw UnimplementedError();
+      {required String type, required String config}) async {
+    assertTypeFound(type);
+    var hiveImageStorageSetting = issBox.get(type);
+    hiveImageStorageSetting!.config = config;
+    await issBox.put(type, hiveImageStorageSetting);
+  }
+
+  void assertTypeFound(String type) {
+    if (!issBox.containsKey(type)) {
+      throw ArgumentError('Not Found $type');
+    }
   }
 
   @override
   Future<String> getImageStorageSettingConfig({required String type}) async {
-    if (!issBox.containsKey(type)) {
-      throw ArgumentError('Not Found $type');
-    }
+    assertTypeFound(type);
     var hiveImageStorageSetting = issBox.get(type);
     return hiveImageStorageSetting!.config;
   }
