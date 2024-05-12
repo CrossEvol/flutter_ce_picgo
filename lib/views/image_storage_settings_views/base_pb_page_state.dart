@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
 import '../../models/config.dart';
@@ -198,7 +199,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
             type: pbType, config: configStr);
         fToast.showSuccessToast(text: '保存成功');
       } catch (e) {
-        log('$e');
+        logger.e(e);
         fToast.showErrorToast(text: '保存失败');
       }
     } catch (e) {

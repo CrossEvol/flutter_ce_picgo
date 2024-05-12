@@ -1,22 +1,24 @@
 import 'package:bloc/bloc.dart';
 import 'dart:developer';
 
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
+
 class SimpleBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-    log('${bloc.runtimeType} $change');
+    logger.i('${bloc.runtimeType} $change');
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    log('${bloc.runtimeType} $transition');
+    logger.i('${bloc.runtimeType} $transition');
   }
 
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
-    log('${bloc.runtimeType} $error $stackTrace');
+    logger.i('${bloc.runtimeType} $error $stackTrace');
     super.onError(bloc, error, stackTrace);
   }
 }

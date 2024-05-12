@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 final FToast fToast = FToast();
@@ -31,7 +32,7 @@ extension FlutterToastExtension on FToast {
 Widget createToastWidget(
     {required String text, required ToastState toastState}) {
   if (text.length > 30) {
-    log(text);
+    logger.e(text);
     text = text.substring(0, 30);
   }
 

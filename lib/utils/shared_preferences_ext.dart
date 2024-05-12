@@ -24,9 +24,3 @@ Future<void> useSharedPreferences() async {
     prefs.remove(SharedPreferencesKeys.settingDefaultStorage);
   }
 }
-
-Future<void> testSharedPreferences() async {
-  log(await prefs.getDefaultStorage());
-  prefs.setDefaultStorage(ImageStorageType.gitee);
-  log(await prefs.getDefaultStorage());
-}

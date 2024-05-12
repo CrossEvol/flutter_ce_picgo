@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
@@ -7,17 +8,25 @@ import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
 import 'database/db_interface.dart';
+import 'utils/logger_util.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await initLogger();
+
+  logger.i('configure the usage of SharedPreferences...');
   await useSharedPreferences();
 
+  logger.i('configure the database provider...');
   dbProvider = DbInterface();
   await dbProvider.init();
 
   if (!kIsWeb && Platform.isWindows) {
     appWindow.size = const Size(375, 667);
+    logger.i('Platform is windows, configure the appWindow successfully...');
+  }else{
+    logger.i('Platform is not windows, unnecessary to configure the appWindow...');
   }
 
   runApp(const MyApp());

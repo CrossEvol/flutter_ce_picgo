@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -19,7 +20,7 @@ class SqfliteDbProvider implements DbInterface {
   Future<List<ImageStorageSetting>> getAllSettings() async {
     var list = await db.query(PB_SETTING_TABLE);
     for (var value in list) {
-      log(jsonEncode(value));
+      logger.i(jsonEncode(value));
     }
     return list.map((e) => ImageStorageSetting.fromJson(e)).toList();
   }
