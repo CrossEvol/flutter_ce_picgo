@@ -71,6 +71,17 @@ class IsarDbProvider implements DbInterface {
   @override
   Future<void> saveImageStorageSettingConfig(
       {required String type, required String config}) async {
-    throw UnimplementedError();
+    await isar.writeTxn(() async {
+      var isarImageStorageSetting = await isar.isarImageStorageSettings
+          .filter()
+          .typeEqualTo(type)
+          .findFirst();
+      isarImageStorageSetting!.config = config;
+      await isar.isarImageStorageSettings
+          .filter()
+          .typeEqualTo(type)
+          .deleteAll();
+      await isar.isarImageStorageSettings.put(isarImageStorageSetting);
+    });
   }
 }
