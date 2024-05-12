@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
+import 'package:flutter_ce_picgo/widgets/upload_item/thumbnail/upload_thumbnail.dart';
 
-import 'load_state_widget.dart';
 import 'upload_item_presenter.dart';
 
 enum UploadState {
@@ -62,15 +61,16 @@ class _UploadItemState extends State<UploadItem> implements UploadItemContract {
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadiusDirectional.circular(8)),
-          child: ExtendedImage.file(
-            File(widget.file.path),
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
-            // border: Border.all(color: Colors.grey, width: 1.0),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            loadStateChanged: (state) => watchLoadStateWidget(state),
-          ),
+          // child: ExtendedImage.file(
+          //   File(widget.file.path),
+          //   width: 50,
+          //   height: 50,
+          //   fit: BoxFit.cover,
+          //   // border: Border.all(color: Colors.grey, width: 1.0),
+          //   borderRadius: const BorderRadius.all(Radius.circular(8)),
+          //   loadStateChanged: (state) => watchLoadStateWidget(state),
+          // ),
+          child: UploadThumbnail().createUploadThumbnail(widget.file.path),
         ),
       ),
       title: Text(
