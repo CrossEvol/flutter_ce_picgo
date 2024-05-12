@@ -31,6 +31,11 @@ class GithubContent {
     required this.type,
     required this.links,
   });
+
+  factory GithubContent.fromJson(Map<String, dynamic> json) =>
+      _$GithubContentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GithubContentToJson(this);
 }
 
 @JsonEnum()
