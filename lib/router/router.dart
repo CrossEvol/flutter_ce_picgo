@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/views/album_screen.dart';
+import 'package:flutter_ce_picgo/views/handle_upload_screen.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/gitee_page/gitee_page.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/github/github_page.dart';
 import 'package:flutter_ce_picgo/views/settings_screen.dart';
@@ -45,6 +46,12 @@ final GoRouter router = GoRouter(
           path: 'settings/pb/gitee',
           builder: (BuildContext context, GoRouterState state) {
             return const GiteePage();
+          },
+        ),
+        GoRoute(
+          path: 'upload',
+          builder: (BuildContext context, GoRouterState state) {
+            return const HandleUploadScreen();
           },
         ),
       ],

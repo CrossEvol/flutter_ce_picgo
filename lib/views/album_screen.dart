@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 
@@ -33,33 +34,51 @@ class _AlbumScreenState extends State<AlbumScreen> {
         appBar: HomePageAppBar(
           title: '相册',
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.lightBlue,
-          onPressed: () async {
-            try {
-              final XFile? pickedFile = await _picker.pickImage(
-                source: ImageSource.gallery,
-                // maxWidth: maxWidth,
-                // maxHeight: maxHeight,
-                // imageQuality: quality,
-              );
-              setState(() {
-                _setImageFileListFromFile(pickedFile);
-              });
-            } catch (e) {
-              setState(() {
-                _pickImageError = e;
-              });
-            }
-          },
-          heroTag: 'image0',
-          tooltip: 'Pick Image from gallery',
-          child: Icon(
-            Icons.photo_outlined,
-            size: 28.0,
-            color: Colors.white,
-            weight: FontWeight.w700.value.toDouble(),
-          ),
+        floatingActionButton: Row(
+          children: [
+            FloatingActionButton(
+              backgroundColor: Colors.lightBlue,
+              onPressed: () async {
+                context.go('/upload');
+              },
+              heroTag: 'upload',
+              tooltip: 'Upload Image to cloud',
+              child: Icon(
+                Icons.photo_outlined,
+                size: 28.0,
+                color: Colors.white,
+                weight: FontWeight.w700.value.toDouble(),
+              ),
+            ),
+            FloatingActionButton(
+              backgroundColor: Colors.lightBlue,
+              onPressed: () async {
+                try {
+                  final XFile? pickedFile = await _picker.pickImage(
+                    source: ImageSource.gallery,
+                    // maxWidth: maxWidth,
+                    // maxHeight: maxHeight,
+                    // imageQuality: quality,
+                  );
+                  setState(() {
+                    _setImageFileListFromFile(pickedFile);
+                  });
+                } catch (e) {
+                  setState(() {
+                    _pickImageError = e;
+                  });
+                }
+              },
+              heroTag: 'preview',
+              tooltip: 'Pick Image from gallery',
+              child: Icon(
+                Icons.photo_outlined,
+                size: 28.0,
+                color: Colors.white,
+                weight: FontWeight.w700.value.toDouble(),
+              ),
+            ),
+          ],
         ),
         body: Center(
           child: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
