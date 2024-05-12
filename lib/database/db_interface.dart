@@ -17,4 +17,6 @@ abstract interface class DbInterface {
       {required String type, required String config});
 
   Future<String> getImageStorageSettingConfig({required String type});
+
+  Future<String> getImageStorageSettingName({required String type});
 }

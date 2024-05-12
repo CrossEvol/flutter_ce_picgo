@@ -3,6 +3,8 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 
 import '../widgets/upload_item/upload_item.dart';
+import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
+import 'package:flutter_ce_picgo/database/db_interface.dart';
 
 class HandleUploadScreen extends StatefulWidget {
   const HandleUploadScreen({super.key});
@@ -87,9 +89,10 @@ class _HandleUploadScreenState extends State<HandleUploadScreen> {
   }
 
   _getCurrentPb() async {
+    var type = await prefs.getDefaultStorage();
+    var name = await dbProvider.getImageStorageSettingName(type: type);
     // String pbType = await ImageUploadUtils.getDefaultPB();
     // String name = await ImageUploadUtils.getPBName(pbType);
-    var name = "";
     setState(() {
       _title = '图片上传 - $name';
     });

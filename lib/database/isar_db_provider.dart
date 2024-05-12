@@ -20,14 +20,18 @@ class IsarDbProvider implements DbInterface {
 
   @override
   Future<String> getImageStorageSettingConfig({required String type}) async {
-    if (!(await containsType(type: type))) {
-      throw ArgumentError('Not Found $type');
-    }
+    await assertTypeFound(type);
     var isarImageStorageSetting = await isar.isarImageStorageSettings
         .filter()
         .typeEqualTo(type)
         .findFirst();
     return isarImageStorageSetting!.config;
+  }
+
+  Future<void> assertTypeFound(String type) async {
+    if (!(await containsType(type: type))) {
+      throw ArgumentError('Not Found $type');
+    }
   }
 
   @override
@@ -83,5 +87,15 @@ class IsarDbProvider implements DbInterface {
           .deleteAll();
       await isar.isarImageStorageSettings.put(isarImageStorageSetting);
     });
+  }
+
+  @override
+  Future<String> getImageStorageSettingName({required String type}) async {
+    await assertTypeFound(type);
+    var isarImageStorageSetting = await isar.isarImageStorageSettings
+        .filter()
+        .typeEqualTo(type)
+        .findFirst();
+    return isarImageStorageSetting!.name;
   }
 }

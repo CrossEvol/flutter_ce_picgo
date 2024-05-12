@@ -152,7 +152,13 @@ class SqfliteDbProvider implements DbInterface {
   Future<String> getImageStorageSettingConfig({required String type}) async {
     var list = (await db.rawQuery(
         'SELECT config FROM $PB_SETTING_TABLE WHERE type = ?', [type]));
-    var config = list.first['config'] as String;
-    return config;
+    return ImageStorageSetting.fromJson(list.first).config;
+  }
+
+  @override
+  Future<String> getImageStorageSettingName({required String type}) async {
+    var list = (await db
+        .rawQuery('SELECT name FROM $PB_SETTING_TABLE WHERE type = ?', [type]));
+    return ImageStorageSetting.fromJson(list.first).name;
   }
 }

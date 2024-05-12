@@ -72,4 +72,11 @@ class HiveDbProvider implements DbInterface {
     var hiveImageStorageSetting = issBox.get(type);
     return hiveImageStorageSetting!.config;
   }
+
+  @override
+  Future<String> getImageStorageSettingName({required String type}) async {
+    assertTypeFound(type);
+    var hiveImageStorageSetting = issBox.get(type);
+    return hiveImageStorageSetting!.name;
+  }
 }
