@@ -27,4 +27,9 @@ class GiteeConfig {
     required this.customUrl,
     required this.branch,
   });
+
+  factory GiteeConfig.fromJson(Map<String, dynamic> json) =>
+      _$GiteeConfigFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GiteeConfigToJson(this);
 }
