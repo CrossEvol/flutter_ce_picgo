@@ -34,48 +34,55 @@ class _AlbumScreenState extends State<AlbumScreen> {
         appBar: HomePageAppBar(
           title: '相册',
         ),
-        floatingActionButton: Row(
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            FloatingActionButton(
-              backgroundColor: Colors.lightBlue,
-              onPressed: () async {
-                context.go('/upload');
-              },
-              heroTag: 'upload',
-              tooltip: 'Upload Image to cloud',
-              child: Icon(
-                Icons.photo_outlined,
-                size: 28.0,
-                color: Colors.white,
-                weight: FontWeight.w700.value.toDouble(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton(
+                backgroundColor: Colors.deepPurple,
+                onPressed: () async {
+                  context.go('/upload');
+                },
+                heroTag: 'upload',
+                tooltip: 'Upload Image to cloud',
+                child: Icon(
+                  Icons.cloud_upload_outlined,
+                  size: 28.0,
+                  color: Colors.white,
+                  weight: FontWeight.w700.value.toDouble(),
+                ),
               ),
             ),
-            FloatingActionButton(
-              backgroundColor: Colors.lightBlue,
-              onPressed: () async {
-                try {
-                  final XFile? pickedFile = await _picker.pickImage(
-                    source: ImageSource.gallery,
-                    // maxWidth: maxWidth,
-                    // maxHeight: maxHeight,
-                    // imageQuality: quality,
-                  );
-                  setState(() {
-                    _setImageFileListFromFile(pickedFile);
-                  });
-                } catch (e) {
-                  setState(() {
-                    _pickImageError = e;
-                  });
-                }
-              },
-              heroTag: 'preview',
-              tooltip: 'Pick Image from gallery',
-              child: Icon(
-                Icons.photo_outlined,
-                size: 28.0,
-                color: Colors.white,
-                weight: FontWeight.w700.value.toDouble(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton(
+                backgroundColor: Colors.lightBlue,
+                onPressed: () async {
+                  try {
+                    final XFile? pickedFile = await _picker.pickImage(
+                      source: ImageSource.gallery,
+                      // maxWidth: maxWidth,
+                      // maxHeight: maxHeight,
+                      // imageQuality: quality,
+                    );
+                    setState(() {
+                      _setImageFileListFromFile(pickedFile);
+                    });
+                  } catch (e) {
+                    setState(() {
+                      _pickImageError = e;
+                    });
+                  }
+                },
+                heroTag: 'preview',
+                tooltip: 'Pick Image from gallery',
+                child: Icon(
+                  Icons.photo_outlined,
+                  size: 28.0,
+                  color: Colors.white,
+                  weight: FontWeight.w700.value.toDouble(),
+                ),
               ),
             ),
           ],

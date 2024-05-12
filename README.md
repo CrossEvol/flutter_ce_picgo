@@ -16,3 +16,14 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 # Notes
+
+## extended_image error
+
+```shell
+lib/widgets/upload_item/upload_item.dart:66:13: Error: The argument type 'File/*1*/' can't be assigned to the parameter type 'File/*2*/'.
+ - 'File/*1*/' is from 'dart:io'.
+ - 'File/*2*/' is from 'package:extended_image_library/src/_platform_web.dart' ('/C:/Users/mizuk/AppData/Local/Pub/Cache/hosted/pub.flutter-io.cn/extended_image_library-4.0.1/lib/src/_platform_web.dart').
+            File(widget.file.path),
+```
+
+in web platform, File class lack of compatibility.
