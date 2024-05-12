@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-final FToast fToast = FToast();
+final FToast _fToast = FToast();
 
 void main() {
   runApp(MaterialApp(
@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
       ),
       body: ElevatedButton(
         onPressed: () {
-          fToast.removeQueuedCustomToasts();
+          _fToast.removeQueuedCustomToasts();
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const MySecondApp()));
         },
@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     // if you want to use context from globally instead of content we need to pass navigatorKey.currentContext!
-    fToast.init(context);
+    _fToast.init(context);
   }
 
   @override
@@ -74,14 +74,14 @@ class _MyAppState extends State<MyApp> {
       ),
     );
 
-    fToast.showToast(
+    _fToast.showToast(
       child: toast,
       gravity: ToastGravity.BOTTOM,
       toastDuration: const Duration(seconds: 2),
     );
 
     // Custom Toast Position
-    fToast.showToast(
+    _fToast.showToast(
         child: toast,
         toastDuration: const Duration(seconds: 2),
         positionedToastBuilder: (context, child) {
@@ -112,7 +112,7 @@ class _MySecondAppState extends State<MySecondApp> {
       ),
       body: ElevatedButton(
         onPressed: () {
-          fToast.removeQueuedCustomToasts();
+          _fToast.removeQueuedCustomToasts();
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => const MyApp()));
         },
@@ -131,12 +131,12 @@ class _MySecondAppState extends State<MySecondApp> {
   void initState() {
     super.initState();
     // if you want to use context from globally instead of content we need to pass navigatorKey.currentContext!
-    fToast.init(context);
+    _fToast.init(context);
   }
 
   @override
   void dispose() {
-    fToast.removeQueuedCustomToasts();
+    _fToast.removeQueuedCustomToasts();
     super.dispose();
   }
 
@@ -159,14 +159,14 @@ class _MySecondAppState extends State<MySecondApp> {
       ),
     );
 
-    fToast.showToast(
+    _fToast.showToast(
       child: toast,
       gravity: ToastGravity.BOTTOM,
       toastDuration: const Duration(seconds: 2),
     );
 
     // Custom Toast Position
-    fToast.showToast(
+    _fToast.showToast(
         child: toast,
         toastDuration: const Duration(seconds: 2),
         positionedToastBuilder: (context, child) {
