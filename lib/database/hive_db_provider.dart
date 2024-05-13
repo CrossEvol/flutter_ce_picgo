@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/constants/table_name_keys.dart';
+import 'package:flutter_ce_picgo/models/hive/hive_uploaded_image.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
@@ -14,7 +15,7 @@ class HiveDbProvider implements DbInterface {
   // iss = Image Storage Setting
   late Box<HiveImageStorageSetting> issBox;
 
-  late Box<UploadedImage> uploadedImageBox;
+  late Box<HiveUploadedImage> uploadedImageBox;
 
   @override
   Future<List<ImageStorageSetting>> getAllSettings() async {
@@ -89,13 +90,11 @@ class HiveDbProvider implements DbInterface {
 
   @override
   Future<List<UploadedImage>> getUploadedImages() async {
-    // TODO: implement getUploadedImages
-    throw UnimplementedError();
+    return uploadedImageBox.values.map((e) => e.fromHiveObject()).toList();
   }
 
   @override
   Future<void> saveUploadedImage(UploadedImage uploadedImage) async {
-    // TODO: implement saveUploadedImage
-    throw UnimplementedError();
+    await uploadedImageBox.add(uploadedImage.toHiveObject());
   }
 }
