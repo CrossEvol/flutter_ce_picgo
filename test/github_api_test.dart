@@ -12,6 +12,8 @@ void main() async {
   var path = '';
   var sha = '';
 
+  await initLogger();
+
   test('time', () {
     print(DateTime.now().toString());
     print(DateTime.now().millisecondsSinceEpoch);
@@ -20,9 +22,7 @@ void main() async {
     print(DateTime.now().microsecond);
   });
 
-  test('github repo put request test', () async {
-    await initLogger();
-
+  test('github repo api PUT request test', () async {
     Dio dio = Dio();
 
     // Set headers
@@ -63,5 +63,39 @@ void main() async {
 
   test('sha', () {
     print(sha);
+  });
+
+  test('github repo api DELETE test', () async {
+    const tempSha = '446008abaa36f66322ebed1de9b4d7217fe3cfce';
+    const tempPath = '1715597438275.jpg';
+    Dio dio = Dio();
+
+    // Set headers
+    dio.options.headers['Accept'] = 'application/vnd.github+json';
+    dio.options.headers['Authorization'] = 'Bearer $githubToken';
+    dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
+    dio.options.headers['Content-Type'] = 'application/json';
+    dio.interceptors.add(LogInterceptor(
+        requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
+
+    Map<String, dynamic> requestBody = {
+      'message': 'my commit message',
+      'sha': tempSha,
+    };
+
+    // Perform DELETE request
+    try {
+      Response response = await dio.delete(
+        'https://api.github.com/repos/$repo/contents/$tempPath',
+        data: requestBody,
+        options: Options(contentType: Headers.jsonContentType),
+      );
+      expect(response.statusCode, equals(200));
+      var jsonData = response.data;
+      expect(jsonData['content'], null);
+      logger.i(jsonData);
+    } catch (e) {
+      logger.e(e);
+    }
   });
 }
