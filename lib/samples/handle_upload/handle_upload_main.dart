@@ -10,6 +10,8 @@ import '../../database/db_interface.dart';
 import '../../utils/logger_util.dart';
 import '../../utils/shared_preferences_ext.dart';
 
+late List<UploadedImage> uploadedImages;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -21,6 +23,7 @@ void main() async {
   logger.i('configure the database provider...');
   dbProvider = DbInterface();
   // await dbProvider.init();
+  uploadedImages = getUploadedImages();
 
   if (!kIsWeb && Platform.isWindows) {
     appWindow.size = const Size(375, 667);
@@ -65,7 +68,11 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('MyApp'),
         ),
-        body: const Text('MyApp'));
+        body: ListView.builder(
+            itemCount: uploadedImages.length,
+            itemBuilder: (context, index) {
+              return UploadItem(uploadedImage: uploadedImages[index]);
+            }));
   }
 
   @override
@@ -145,9 +152,7 @@ class _UploadItemState extends State<UploadItem> {
     super.initState();
     name = widget.uploadedImage.name;
     uploadState = widget.uploadedImage.state;
-    path = widget.uploadedImage.filepath.isNotEmpty
-        ? widget.uploadedImage.filepath
-        : widget.uploadedImage.url;
+    path = !kIsWeb ? widget.uploadedImage.filepath : widget.uploadedImage.url;
   }
 
   @override
@@ -198,4 +203,19 @@ extension on UploadState {
       _ => '未知'
     };
   }
+}
+
+List<UploadedImage> getUploadedImages() {
+  return List.generate(
+      4,
+      (index) => UploadedImage(
+          id: index + 1,
+          filepath:
+              r'D:\androidStudio\AndroidStudioProjects\flutter_ce_picgo\assets\images\icon_empty_album.png',
+          storageType: '',
+          url: 'https://avatars.githubusercontent.com/u/67866644?v=4',
+          name: 'Item ${index + 1}',
+          state: UploadState.uploading,
+          createTime: DateTime.now(),
+          uploadTime: DateTime.now()));
 }
