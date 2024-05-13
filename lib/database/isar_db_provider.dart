@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/models/isar/isar_image_storage_setting.dart';
+import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -97,5 +98,17 @@ class IsarDbProvider implements DbInterface {
         .typeEqualTo(type)
         .findFirst();
     return isarImageStorageSetting!.name;
+  }
+
+  @override
+  Future<List<UploadedImage>> getUploadedImages()async {
+    // TODO: implement getUploadedImages
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> saveUploadedImage(UploadedImage uploadedImage)async {
+    // TODO: implement saveUploadedImage
+    throw UnimplementedError();
   }
 }

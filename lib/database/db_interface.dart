@@ -1,4 +1,5 @@
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
+import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 
 import 'db_interface_stub.dart'
     if (dart.library.html) 'hive_db_provider.dart'
@@ -19,4 +20,8 @@ abstract interface class DbInterface {
   Future<String> getImageStorageSettingConfig({required String type});
 
   Future<String> getImageStorageSettingName({required String type});
+
+  Future<void> saveUploadedImage(UploadedImage uploadedImage);
+
+  Future<List<UploadedImage>> getUploadedImages();
 }

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
+import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -150,8 +151,8 @@ class SqfliteDbProvider implements DbInterface {
 
   @override
   Future<String> getImageStorageSettingConfig({required String type}) async {
-    var list = (await db.rawQuery(
-        'SELECT * FROM $PB_SETTING_TABLE WHERE type = ?', [type]));
+    var list = (await db
+        .rawQuery('SELECT * FROM $PB_SETTING_TABLE WHERE type = ?', [type]));
     return ImageStorageSetting.fromJson(list.first).config;
   }
 
@@ -160,5 +161,17 @@ class SqfliteDbProvider implements DbInterface {
     var list = (await db
         .rawQuery('SELECT * FROM $PB_SETTING_TABLE WHERE type = ?', [type]));
     return ImageStorageSetting.fromJson(list.first).name;
+  }
+
+  @override
+  Future<List<UploadedImage>> getUploadedImages() async {
+    // TODO: implement getUploadedImages
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> saveUploadedImage(UploadedImage uploadedImage) async {
+    // TODO: implement saveUploadedImage
+    throw UnimplementedError();
   }
 }

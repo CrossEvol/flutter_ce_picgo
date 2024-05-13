@@ -3,6 +3,7 @@ import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/constants/table_name_keys.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
+import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../models/hive/hive_image_storage_setting.dart';
@@ -78,5 +79,17 @@ class HiveDbProvider implements DbInterface {
     assertTypeFound(type);
     var hiveImageStorageSetting = issBox.get(type);
     return hiveImageStorageSetting!.name;
+  }
+
+  @override
+  Future<List<UploadedImage>> getUploadedImages()async {
+    // TODO: implement getUploadedImages
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> saveUploadedImage(UploadedImage uploadedImage)async {
+    // TODO: implement saveUploadedImage
+    throw UnimplementedError();
   }
 }
