@@ -14,6 +14,8 @@ class HiveDbProvider implements DbInterface {
   // iss = Image Storage Setting
   late Box<HiveImageStorageSetting> issBox;
 
+  late Box<UploadedImage> uploadedImageBox;
+
   @override
   Future<List<ImageStorageSetting>> getAllSettings() async {
     return issBox.values.map((e) => e.fromHiveObject()).toList();
@@ -26,6 +28,10 @@ class HiveDbProvider implements DbInterface {
     issBox = await Hive.openBox(PB_SETTING_BOX);
     if (kDebugMode) {
       await issBox.clear();
+    }
+    uploadedImageBox = await Hive.openBox(UPLOADED_IMAGE_BOX);
+    if (kDebugMode) {
+      await uploadedImageBox.clear();
     }
     if (!issBox.containsKey(ImageStorageType.github)) {
       await issBox.put(
@@ -82,13 +88,13 @@ class HiveDbProvider implements DbInterface {
   }
 
   @override
-  Future<List<UploadedImage>> getUploadedImages()async {
+  Future<List<UploadedImage>> getUploadedImages() async {
     // TODO: implement getUploadedImages
     throw UnimplementedError();
   }
 
   @override
-  Future<void> saveUploadedImage(UploadedImage uploadedImage)async {
+  Future<void> saveUploadedImage(UploadedImage uploadedImage) async {
     // TODO: implement saveUploadedImage
     throw UnimplementedError();
   }
