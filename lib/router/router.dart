@@ -4,6 +4,7 @@ import 'package:flutter_ce_picgo/views/handle_upload_page.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/gitee_page/gitee_page.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/github/github_page.dart';
 import 'package:flutter_ce_picgo/views/settings_screen.dart';
+import 'package:flutter_ce_picgo/views/upload_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../views/home_screen.dart';
@@ -51,7 +52,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'upload',
           builder: (BuildContext context, GoRouterState state) {
-            return const HandleUploadPage();
+            return const UploadScreen();
           },
         ),
       ],

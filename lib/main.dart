@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
@@ -24,8 +26,9 @@ void main() async {
   if (!kIsWeb && Platform.isWindows) {
     appWindow.size = const Size(375, 667);
     logger.i('Platform is windows, configure the appWindow successfully...');
-  }else{
-    logger.i('Platform is not windows, unnecessary to configure the appWindow...');
+  } else {
+    logger.i(
+        'Platform is not windows, unnecessary to configure the appWindow...');
   }
 
   runApp(const MyApp());
@@ -51,14 +54,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Flutter CE PicGo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (_) => UploadImageBloc()..add(UploadImageEventLoad())),
+      ],
+      child: MaterialApp.router(
+        title: 'Flutter CE PicGo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
       ),
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
     );
   }
 }

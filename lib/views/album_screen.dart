@@ -2,10 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
+
+import '../constants/image_storage_type.dart';
+import '../models/enums/uploaded_state.dart';
+import '../models/uploaded_image.dart';
 
 class AlbumScreen extends StatefulWidget {
   const AlbumScreen({super.key});
@@ -42,6 +48,54 @@ class _AlbumScreenState extends State<AlbumScreen> {
               child: FloatingActionButton(
                 backgroundColor: Colors.deepPurple,
                 onPressed: () async {
+                  if (_mediaFileList == null) {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                                title: const Text('AlertDialog Title'),
+                                content: const SingleChildScrollView(
+                                  child: ListBody(
+                                    children: <Widget>[
+                                      Text('This is a demo alert dialog.'),
+                                      Text(
+                                          'Would you like to approve of this message?'),
+                                    ],
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: const Text('Confirm'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      context.go('/upload');
+                                    },
+                                  ),
+                                ]));
+                    return;
+                  } else {
+                    if (_mediaFileList!.isNotEmpty) {
+                      context.read<UploadImageBloc>().add(UploadImageEventAdd(
+                          uploadedImage: UploadedImage(
+                              id: 0,
+                              filepath: _mediaFileList!.first!.path,
+                              storageType: ImageStorageType.github,
+                              url: '',
+                              name:
+                                  '${DateTime.now().microsecondsSinceEpoch}.jpg',
+                              state: UploadState.uploading,
+                              createTime: DateTime.now(),
+                              uploadTime: DateTime.now())));
+                    }
+                  }
+                  setState(() {
+                    _mediaFileList = null;
+                  });
                   context.go('/upload');
                 },
                 heroTag: 'upload',
