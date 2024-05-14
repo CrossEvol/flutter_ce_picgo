@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/samples/bloc_todo/stateful_todo_item.dart';
 import 'package:flutter_ce_picgo/samples/bloc_todo/todo_bloc.dart';
 
 class TodoPage extends StatefulWidget {
@@ -48,44 +49,46 @@ class _TodoPageState extends State<TodoPage> {
                 title: Text(state.todos.first.title),
               ),
               itemBuilder: (context, index) {
-                Future.delayed(const Duration(seconds: 3), () {
-                  context.read<TodoBloc>().add(TodoEventUpdate(
-                      id: state.todos[index].id,
-                      title: '${state.todos[index].title}☆'));
-                });
+                // Future.delayed(const Duration(seconds: 3), () {
+                //   context.read<TodoBloc>().add(TodoEventUpdate(
+                //       id: state.todos[index].id,
+                //       title: '${state.todos[index].title}☆'));
+                // });
 
-                return Dismissible(
-                  background: Container(
-                    color: Colors.red,
-                  ),
-                  key: Key(state.todos[index].id.toString()),
-                  child: ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(state.todos[index].title),
-                        ElevatedButton(
-                            onPressed: () {
-                              Future.delayed(const Duration(milliseconds: 50),
-                                  () {
-                                context.read<TodoBloc>().add(TodoEventUpdate(
-                                    id: state.todos[index].id,
-                                    title: '${state.todos[index].title}☆'));
-                              });
-                            },
-                            child: const Icon(Icons.update))
-                      ],
-                    ),
-                  ),
-                  onDismissed: (direction) {
-                    context
-                        .read<TodoBloc>()
-                        .add(TodoEventRemove(state.todos[index].id));
-                    Future.delayed(const Duration(milliseconds: 1), () {
-                      setState(() {});
-                    });
-                  },
-                );
+                return StatefulTodoItem(todo: state.todos[index]);
+
+                // return Dismissible(
+                //   background: Container(
+                //     color: Colors.red,
+                //   ),
+                //   key: Key(state.todos[index].id.toString()),
+                //   child: ListTile(
+                //     title: Row(
+                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //       children: [
+                //         Text(state.todos[index].title),
+                //         ElevatedButton(
+                //             onPressed: () {
+                //               Future.delayed(const Duration(milliseconds: 50),
+                //                   () {
+                //                 context.read<TodoBloc>().add(TodoEventUpdate(
+                //                     id: state.todos[index].id,
+                //                     title: '${state.todos[index].title}☆'));
+                //               });
+                //             },
+                //             child: const Icon(Icons.update))
+                //       ],
+                //     ),
+                //   ),
+                //   onDismissed: (direction) {
+                //     context
+                //         .read<TodoBloc>()
+                //         .add(TodoEventRemove(state.todos[index].id));
+                //     Future.delayed(const Duration(milliseconds: 1), () {
+                //       setState(() {});
+                //     });
+                //   },
+                // );
               },
             );
           },
