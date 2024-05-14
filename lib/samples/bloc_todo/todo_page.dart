@@ -10,7 +10,6 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-
   _TodoPageState();
 
   @override
@@ -18,7 +17,7 @@ class _TodoPageState extends State<TodoPage> {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
-          onPressed: ()  {
+          onPressed: () {
             context.read<TodoBloc>().add(TodoEventInsert());
           },
         ),
@@ -58,8 +57,12 @@ class _TodoPageState extends State<TodoPage> {
                     title: Text(state.todos[index].title),
                   ),
                   onDismissed: (direction) {
-                    context.read<TodoBloc>().add(TodoEventRemove(state.todos[index].id));
-                    setState(() {});
+                    context
+                        .read<TodoBloc>()
+                        .add(TodoEventRemove(state.todos[index].id));
+                    Future.delayed(const Duration(milliseconds: 1), () {
+                      setState(() {});
+                    });
                   },
                 );
               },

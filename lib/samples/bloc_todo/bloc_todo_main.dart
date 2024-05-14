@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/samples/bloc_todo/todo_bloc.dart';
 import 'package:flutter_ce_picgo/samples/bloc_todo/todo_page.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 
 import 'simple_bloc_observer.dart';
 
-void main(){
+void main() async{
+  await initLogger();
+
   Bloc.observer = SimpleBlocObserver();
 
   runApp(const MyApp());

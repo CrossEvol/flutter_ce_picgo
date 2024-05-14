@@ -251,28 +251,11 @@ class _UploadViewState extends State<_UploadView> {
           return ListView.builder(
               itemCount: state.images.length,
               itemBuilder: (context, index) {
-                var image = state.images[index];
-                if (image.state == UploadState.uploading) {
-                  logger.w('start a delayed task...');
-                  Future.delayed(const Duration(seconds: 3), () {
-                    logger.w('complete a delayed task...');
-                    context.read<UploadImageBloc>().add(UploadImageEventUpdate(
-                        filepath: image.filepath,
-                        state: UploadState.completed));
-                    reload();
-                  });
-                }
                 return UploadItem(uploadedImage: state.images[index]);
               });
         },
       ),
     );
-  }
-
-  void reload(){
-    setState(() {
-
-    });
   }
 
   @override
@@ -352,7 +335,20 @@ class _UploadItemState extends State<UploadItem> {
     super.initState();
     name = widget.uploadedImage.name;
     uploadState = widget.uploadedImage.state;
-    path = !kIsWeb ? widget.uploadedImage.filepath : widget.uploadedImage.url;
+    path = widget.uploadedImage.filepath;
+    // path = !kIsWeb ? widget.uploadedImage.filepath : widget.uploadedImage.url;
+    if (uploadState == UploadState.uploading) {
+      logger.w('start a delayed task...');
+      Future.delayed(const Duration(seconds: 3), () {
+        logger.w('complete a delayed task...');
+        context.read<UploadImageBloc>().add(UploadImageEventUpdate(
+            filepath: path,
+            state: UploadState.completed));
+        setState(() {
+          logger.w('try to set state...');
+        });
+      });
+    }
   }
 
   @override
