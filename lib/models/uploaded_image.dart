@@ -15,6 +15,8 @@ class UploadedImage {
   DateTime createTime;
   DateTime uploadTime;
 
+
+
   UploadedImage({
     required this.id,
     required this.filepath,
@@ -30,4 +32,26 @@ class UploadedImage {
       _$UploadedImageFromJson(json);
 
   Map<String, dynamic> toJson() => _$UploadedImageToJson(this);
+
+  UploadedImage copyWith({
+    int? id,
+    String? filepath,
+    String? storageType,
+    String? url,
+    String? name,
+    UploadState? state,
+    DateTime? createTime,
+    DateTime? uploadTime,
+  }) {
+    return UploadedImage(
+      id: id ?? this.id,
+      filepath: filepath ?? this.filepath,
+      storageType: storageType ?? this.storageType,
+      url: url ?? this.url,
+      name: name ?? this.name,
+      state: state ?? this.state,
+      createTime: createTime ?? this.createTime,
+      uploadTime: uploadTime ?? this.uploadTime,
+    );
+  }
 }
