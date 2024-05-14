@@ -151,6 +151,10 @@ class _MyAppState extends State<_MyApp> {
                         state: UploadState.uploading,
                         createTime: DateTime.now(),
                         uploadTime: DateTime.now())));
+                XFile('');
+                setState(() {
+                  mediaFile = null;
+                });
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const _UploadView()));
               },
@@ -223,7 +227,7 @@ class _MyAppState extends State<_MyApp> {
 }
 
 class _UploadView extends StatefulWidget {
-  const _UploadView({super.key});
+  const _UploadView();
 
   @override
   State<_UploadView> createState() => _UploadViewState();
@@ -384,17 +388,3 @@ extension on UploadState {
   }
 }
 
-List<UploadedImage> getUploadedImages() {
-  return List.generate(
-      4,
-      (index) => UploadedImage(
-          id: index + 1,
-          filepath:
-              r'D:\androidStudio\AndroidStudioProjects\flutter_ce_picgo\assets\images\icon_empty_album.png',
-          storageType: '',
-          url: 'https://avatars.githubusercontent.com/u/67866644?v=4',
-          name: 'Item ${index + 1}',
-          state: UploadState.uploading,
-          createTime: DateTime.now(),
-          uploadTime: DateTime.now()));
-}
