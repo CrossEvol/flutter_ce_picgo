@@ -11,17 +11,24 @@ part 'upload_image_state.dart';
 
 class UploadImageBloc extends Bloc<UploadImageEvent, UploadImageState> {
   UploadImageBloc() : super(const UploadImageState(images: [])) {
-    on<UploadImageEventUpdate>((event, emit) {
-      var newImages = state.images
-          .map((e) => e.filepath == event.filepath
-              ? e.copyWith(
-                  url: event.url ?? e.url,
-                  name: event.name ?? e.name,
-                  state: event.state ?? e.state,
-                  uploadTime: DateTime.now())
-              : e)
-          .toList();
-      emit(state.copyWith(images: newImages));
+    on<UploadImageEventUpdate>((event, emit) async {
+      var updated = await dbProvider.updateUploadedImage(
+          filepath: event.filepath,
+          url: event.url,
+          name: event.name,
+          state: event.state);
+      if (updated) {
+        var newImages = state.images
+            .map((e) => e.filepath == event.filepath
+                ? e.copyWith(
+                    url: event.url ?? e.url,
+                    name: event.name ?? e.name,
+                    state: event.state ?? e.state,
+                    uploadTime: DateTime.now())
+                : e)
+            .toList();
+        emit(state.copyWith(images: newImages));
+      }
     });
 
     on<UploadImageEventLoad>((event, emit) async {
