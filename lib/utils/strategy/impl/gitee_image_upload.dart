@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:cross_file/src/types/interface.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
@@ -19,6 +21,18 @@ class GiteeImageUpload implements ImageUploadStrategy {
 
   @override
   Future<Uploaded> upload(File file, String renameImage) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UploadedImage> delete0(UploadedImage uploadedImage) {
+    // TODO: implement delete0
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UploadedImage> upload0(XFile file, String renameImage) {
+    // TODO: implement upload0
     throw UnimplementedError();
   }
 }

@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'package:cross_file/src/types/interface.dart';
+
+import 'package:flutter_ce_picgo/models/uploaded_image.dart';
+
 import '../../../models/uploaded.dart';
 import '../image_upload_strategy.dart';
 
@@ -14,6 +18,18 @@ class GithubImageUpload implements ImageUploadStrategy {
 
   @override
   Future<Uploaded> upload(File file, String renameImage) async {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UploadedImage> delete0(UploadedImage uploadedImage) {
+    // TODO: implement delete0
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UploadedImage> upload0(XFile file, String renameImage) {
+    // TODO: implement upload0
     throw UnimplementedError();
   }
 }
