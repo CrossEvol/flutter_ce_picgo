@@ -48,6 +48,12 @@ class _TodoPageState extends State<TodoPage> {
                 title: Text(state.todos.first.title),
               ),
               itemBuilder: (context, index) {
+                Future.delayed(const Duration(seconds: 3), () {
+                  context.read<TodoBloc>().add(TodoEventUpdate(
+                      id: state.todos[index].id,
+                      title: '${state.todos[index].title}☆'));
+                });
+
                 return Dismissible(
                   background: Container(
                     color: Colors.red,
@@ -60,7 +66,8 @@ class _TodoPageState extends State<TodoPage> {
                         Text(state.todos[index].title),
                         ElevatedButton(
                             onPressed: () {
-                              Future.delayed(const Duration(milliseconds: 50), () {
+                              Future.delayed(const Duration(milliseconds: 50),
+                                  () {
                                 context.read<TodoBloc>().add(TodoEventUpdate(
                                     id: state.todos[index].id,
                                     title: '${state.todos[index].title}☆'));
