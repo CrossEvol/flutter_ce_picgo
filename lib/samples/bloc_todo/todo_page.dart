@@ -56,7 +56,10 @@ class _TodoPageState extends State<TodoPage> {
                 //       title: '${state.todos[index].title}☆'));
                 // });
 
-                return StatelessTodoItem(todo: state.todos[index]);
+                return StatelessTodoItem(
+                  todo: state.todos[index],
+                  voidCallback: () => setState(() {}),
+                );
 
                 // return StatefulTodoItem(todo: state.todos[index]);
 

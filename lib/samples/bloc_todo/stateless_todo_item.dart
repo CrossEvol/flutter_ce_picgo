@@ -4,10 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'todo.dart';
 import 'todo_bloc.dart';
 
+typedef VoidCallback = void Function();
+
 class StatelessTodoItem extends StatelessWidget {
   final Todo todo;
+  final VoidCallback voidCallback;
 
-  const StatelessTodoItem({super.key, required this.todo});
+  const StatelessTodoItem({super.key, required this.todo, required this.voidCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +37,7 @@ class StatelessTodoItem extends StatelessWidget {
       ),
       onDismissed: (direction) {
         context.read<TodoBloc>().add(TodoEventRemove(todo.id));
+        voidCallback();
       },
     );
   }
