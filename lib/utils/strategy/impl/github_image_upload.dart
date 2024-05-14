@@ -35,7 +35,8 @@ class GithubImageUpload implements ImageUploadStrategy {
   }
 
   @override
-  Future<UploadedImage> upload0(XFile file, String renameImage) async {
+  Future<(String url, UploadState state)> upload0(
+      UploadedImage uploadedImage) async {
     var configJson = await dbProvider.getImageStorageSettingConfig(
         type: ImageStorageType.github);
     var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
@@ -49,6 +50,8 @@ class GithubImageUpload implements ImageUploadStrategy {
     dio.interceptors.add(LogInterceptor(
         requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
 
+    final file = XFile(uploadedImage.filepath);
+
     var fileData = await file.readAsBytes();
 
     // Set request body
@@ -60,33 +63,17 @@ class GithubImageUpload implements ImageUploadStrategy {
     // Perform PUT request
     try {
       Response response = await dio.put(
-        'https://api.github.com/repos/${githubConfig.repo}/contents/$renameImage',
+        'https://api.github.com/repos/${githubConfig.repo}/contents/${uploadedImage.name}',
         data: requestBody,
         options: Options(contentType: Headers.jsonContentType),
       );
       var jsonData = response.data;
       var githubContent = GithubContent.fromJson(jsonData['content']);
-      return UploadedImage(
-          id: 0,
-          filepath: file.path,
-          storageType: ImageStorageType.github,
-          url: githubContent.downloadUrl,
-          name: renameImage,
-          state: UploadState.completed,
-          createTime: DateTime.now(),
-          uploadTime: DateTime.now());
+      return (githubContent.downloadUrl, UploadState.completed);
       // sha = githubContent.sha;
     } catch (e) {
       logger.e(e);
-      return UploadedImage(
-          id: 0,
-          filepath: file.path,
-          storageType: ImageStorageType.github,
-          url: '',
-          name: renameImage,
-          state: UploadState.uploadFailed,
-          createTime: DateTime.now(),
-          uploadTime: DateTime.now());
+      return ('', UploadState.uploadFailed);
     }
   }
 }

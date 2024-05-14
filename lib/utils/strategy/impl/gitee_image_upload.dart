@@ -31,7 +31,7 @@ class GiteeImageUpload implements ImageUploadStrategy {
   }
 
   @override
-  Future<UploadedImage> upload0(XFile file, String renameImage) {
+  Future<(String url, UploadState state)> upload0(UploadedImage uploadedImage) {
     // TODO: implement upload0
     throw UnimplementedError();
   }

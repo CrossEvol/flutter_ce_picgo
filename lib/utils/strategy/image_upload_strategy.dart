@@ -11,7 +11,7 @@ abstract class ImageUploadStrategy {
 
   Future<Uploaded> delete(Uploaded uploaded);
 
-  Future<UploadedImage> upload0(XFile file, String renameImage);
+  Future<(String url, UploadState state)> upload0(UploadedImage uploadedImage);
 
   Future<UploadedImage> delete0(UploadedImage uploadedImage);
 }

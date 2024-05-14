@@ -1,3 +1,7 @@
+import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
+import 'package:flutter_ce_picgo/models/uploaded_image.dart';
+import 'package:flutter_ce_picgo/utils/strategy/image_upload_strategy.dart';
+import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -9,5 +13,21 @@ void main() {
       final (name, age) = element;
       print('name = $name, age = $age');
     }
+  });
+
+  test('upload result record test', () async {
+    var uploadStrategy =
+        UploadStrategyFactory.getUploadStrategy(ImageStorageType.github);
+    var (url, state) = await uploadStrategy.upload0(UploadedImage(
+        id: 0,
+        filepath: '',
+        storageType: '',
+        url: '',
+        name: '',
+        state: UploadState.uploading,
+        createTime: DateTime.now(),
+        uploadTime: DateTime.now()));
+    expect(url, isNotNull);
+    expect(state, isNotNull);
   });
 }
