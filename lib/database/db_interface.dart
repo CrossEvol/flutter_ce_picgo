@@ -26,5 +26,9 @@ abstract interface class DbInterface {
 
   Future<List<UploadedImage>> getUploadedImages();
 
-  Future<bool> updateUploadedImage({String? url, String? name, UploadState? state});
+  Future<bool> updateUploadedImage(
+      {required String filepath,
+      String? url,
+      String? name,
+      UploadState? state});
 }

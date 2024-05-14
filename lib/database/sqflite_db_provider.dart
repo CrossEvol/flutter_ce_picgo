@@ -177,7 +177,11 @@ class SqfliteDbProvider implements DbInterface {
   }
 
   @override
-  Future<bool> updateUploadedImage({String? url, String? name, UploadState? state}) {
+  Future<bool> updateUploadedImage(
+      {required String filepath,
+      String? url,
+      String? name,
+      UploadState? state}) {
     // TODO: implement updateUploadedImage
     throw UnimplementedError();
   }

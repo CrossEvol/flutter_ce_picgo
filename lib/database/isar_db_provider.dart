@@ -102,19 +102,23 @@ class IsarDbProvider implements DbInterface {
   }
 
   @override
-  Future<List<UploadedImage>> getUploadedImages()async {
+  Future<List<UploadedImage>> getUploadedImages() async {
     // TODO: implement getUploadedImages
     throw UnimplementedError();
   }
 
   @override
-  Future<void> saveUploadedImage(UploadedImage uploadedImage)async {
+  Future<void> saveUploadedImage(UploadedImage uploadedImage) async {
     // TODO: implement saveUploadedImage
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> updateUploadedImage({String? url, String? name, UploadState? state}) {
+  Future<bool> updateUploadedImage(
+      {required String filepath,
+      String? url,
+      String? name,
+      UploadState? state}) {
     // TODO: implement updateUploadedImage
     throw UnimplementedError();
   }
