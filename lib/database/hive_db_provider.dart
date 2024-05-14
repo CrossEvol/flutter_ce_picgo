@@ -6,6 +6,7 @@ import 'package:flutter_ce_picgo/models/hive/hive_uploaded_image.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../models/hive/hive_image_storage_setting.dart';
@@ -98,7 +99,9 @@ class HiveDbProvider implements DbInterface {
 
   @override
   Future<void> saveUploadedImage(UploadedImage uploadedImage) async {
-    await uploadedImageBox.add(uploadedImage.toHiveObject());
+    await uploadedImageBox.put(
+        uploadedImage.filepath, uploadedImage.toHiveObject());
+    // await uploadedImageBox.add(uploadedImage.toHiveObject());
   }
 
   @override
@@ -106,8 +109,19 @@ class HiveDbProvider implements DbInterface {
       {required String filepath,
       String? url,
       String? name,
-      UploadState? state}) {
-    // TODO: implement updateUploadedImage
-    throw UnimplementedError();
+      UploadState? state}) async {
+    try {
+      var hiveUploadedImage = uploadedImageBox.get(filepath);
+      var image = hiveUploadedImage!
+          .fromHiveObject()
+          .copyWith(
+              url: url, name: name, state: state, uploadTime: DateTime.now())
+          .toHiveObject();
+      await uploadedImageBox.put(filepath, image);
+      return true;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 }
