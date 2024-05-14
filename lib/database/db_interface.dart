@@ -1,3 +1,4 @@
+import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 
@@ -24,4 +25,6 @@ abstract interface class DbInterface {
   Future<void> saveUploadedImage(UploadedImage uploadedImage);
 
   Future<List<UploadedImage>> getUploadedImages();
+
+  Future<bool> updateUploadedImage({String? url, String? name, UploadState? state});
 }

@@ -31,4 +31,16 @@ void main() {
     expect(url, isNotNull);
     expect(state, isNotNull);
   });
+
+  test('optional params', (){
+      f(name: 'test',age: 18);
+      f(name: 'abc');
+      f();
+      f(age: 18);
+  });
+}
+
+
+void f({String? name , int? age}){
+
 }

@@ -100,4 +100,10 @@ class HiveDbProvider implements DbInterface {
   Future<void> saveUploadedImage(UploadedImage uploadedImage) async {
     await uploadedImageBox.add(uploadedImage.toHiveObject());
   }
+
+  @override
+  Future<bool> updateUploadedImage({String? url, String? name, UploadState? state}) {
+    // TODO: implement updateUploadedImage
+    throw UnimplementedError();
+  }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
+import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
@@ -172,6 +173,12 @@ class SqfliteDbProvider implements DbInterface {
   @override
   Future<void> saveUploadedImage(UploadedImage uploadedImage) async {
     // TODO: implement saveUploadedImage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> updateUploadedImage({String? url, String? name, UploadState? state}) {
+    // TODO: implement updateUploadedImage
     throw UnimplementedError();
   }
 }
