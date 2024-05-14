@@ -6,18 +6,18 @@ import '../widgets/upload_item/upload_item.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 
-class HandleUploadScreen extends StatefulWidget {
-  const HandleUploadScreen({super.key});
+class HandleUploadPage extends StatefulWidget {
+  const HandleUploadPage({super.key});
 
   // final List<AssetEntity> assets;
   //
   // HandleUploadScreen(this.assets, {Key key}) : super(key: key);
 
   @override
-  State<HandleUploadScreen> createState() => _HandleUploadScreenState();
+  State<HandleUploadPage> createState() => _HandleUploadPageState();
 }
 
-class _HandleUploadScreenState extends State<HandleUploadScreen> {
+class _HandleUploadPageState extends State<HandleUploadPage> {
   String _title = '';
   bool isParse = false;
   List<File> files = [];

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
-import 'package:flutter_ce_picgo/samples/preview_then_upload/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/samples/preview_then_upload/d_upload_image_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +40,7 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
-          create: (_) => UploadImageBloc()..add(UploadImageEventLoad()))
+          create: (_) => DUploadImageBloc()..add(UploadImageEventLoad()))
     ],
     child: const MaterialApp(
       home: _MyApp(),
@@ -141,7 +141,7 @@ class _MyAppState extends State<_MyApp> {
                           ));
                   return;
                 }
-                context.read<UploadImageBloc>().add(UploadImageEventAdd(
+                context.read<DUploadImageBloc>().add(UploadImageEventAdd(
                     uploadedImage: UploadedImage(
                         id: 0,
                         filepath: mediaFile!.path,
@@ -241,7 +241,7 @@ class _UploadViewState extends State<_UploadView> {
       appBar: AppBar(
         title: const Text('UploadView'),
       ),
-      body: BlocBuilder<UploadImageBloc, UploadImageState>(
+      body: BlocBuilder<DUploadImageBloc, DUploadImageState>(
         builder: (context, state) {
           if (state.images.isEmpty) {
             return const Center(child: Text('Empty List'));
@@ -255,7 +255,7 @@ class _UploadViewState extends State<_UploadView> {
                   logger.w('start a delayed task...');
                   Future.delayed(const Duration(seconds: 3), () {
                     logger.w('complete a delayed task...');
-                    context.read<UploadImageBloc>().add(UploadImageEventUpdate(
+                    context.read<DUploadImageBloc>().add(UploadImageEventUpdate(
                         filepath: image.filepath,
                         state: UploadState.completed));
                   });
