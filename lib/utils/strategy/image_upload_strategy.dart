@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../models/enums/uploaded_state.dart';
 import '../../models/uploaded.dart';
 
 abstract class ImageUploadStrategy {

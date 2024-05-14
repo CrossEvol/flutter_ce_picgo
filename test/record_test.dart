@@ -1,4 +1,5 @@
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
+import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:flutter_ce_picgo/utils/strategy/image_upload_strategy.dart';
 import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';

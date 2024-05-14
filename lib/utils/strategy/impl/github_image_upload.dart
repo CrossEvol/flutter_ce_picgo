@@ -9,6 +9,7 @@ import 'package:flutter_ce_picgo/models/github_config.dart';
 
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 
+import '../../../models/enums/uploaded_state.dart';
 import '../../../models/github_content.dart';
 import '../../../models/uploaded.dart';
 import '../../logger_util.dart';

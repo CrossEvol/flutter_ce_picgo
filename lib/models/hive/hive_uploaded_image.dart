@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 
+import '../enums/uploaded_state.dart';
 import '../uploaded_image.dart';
 
 part 'hive_uploaded_image.g.dart';

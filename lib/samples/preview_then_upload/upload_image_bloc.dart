@@ -3,6 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 
+import '../../models/enums/uploaded_state.dart';
+
 part 'upload_image_event.dart';
 
 part 'upload_image_state.dart';

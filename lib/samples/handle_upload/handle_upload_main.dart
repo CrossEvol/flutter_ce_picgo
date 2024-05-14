@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 
 import '../../database/db_interface.dart';
+import '../../models/enums/uploaded_state.dart';
 import '../../utils/logger_util.dart';
 import '../../utils/shared_preferences_ext.dart';
 

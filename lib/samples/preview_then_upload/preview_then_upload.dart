@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../database/db_interface.dart';
+import '../../models/enums/uploaded_state.dart';
 import '../../utils/logger_util.dart';
 import '../../utils/shared_preferences_ext.dart';
 import '../handle_upload/handle_upload_main.dart';

@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 
+import '../../../models/enums/uploaded_state.dart';
 import '../../../models/uploaded.dart';
 import '../image_upload_strategy.dart';
 

@@ -1,9 +1,8 @@
+import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'uploaded_image.g.dart';
 
-@JsonEnum()
-enum UploadState { uploading, saving, completed, uploadFailed, saveFailed }
 
 @JsonSerializable()
 class UploadedImage {
