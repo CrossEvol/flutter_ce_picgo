@@ -26,6 +26,7 @@ class HiveDbProvider implements DbInterface {
   Future<void> init({bool isCreate = false}) async {
     await Hive.initFlutter();
     Hive.registerAdapter(HiveImageStorageSettingAdapter());
+    // Hive.registerAdapter(HiveUploadedImageAdapter());
     issBox = await Hive.openBox(PB_SETTING_BOX);
     if (kDebugMode) {
       await issBox.clear();
