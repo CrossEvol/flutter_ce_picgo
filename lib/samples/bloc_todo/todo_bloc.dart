@@ -15,14 +15,22 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       ]));
     });
 
-    on<TodoEventRemove>((event,emit){
+    on<TodoEventRemove>((event, emit) {
       var todos = state.todos;
       todos.removeWhere((element) => element.id == event.removedId);
       emit(state.copyWith(todos: todos));
     });
 
-    on<TodoEventReset>((event,emit){
+    on<TodoEventReset>((event, emit) {
       var todos = List.generate(10, (index) => Todo.newDefaultTodo());
+      emit(state.copyWith(todos: todos));
+    });
+
+    on<TodoEventUpdate>((event, emit) {
+      var todos = state.todos
+          .map((e) =>
+              e.id == event.id ? Todo(id: event.id, title: event.title) : e)
+          .toList();
       emit(state.copyWith(todos: todos));
     });
   }

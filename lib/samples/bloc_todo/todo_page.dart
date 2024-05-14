@@ -54,7 +54,21 @@ class _TodoPageState extends State<TodoPage> {
                   ),
                   key: Key(state.todos[index].id.toString()),
                   child: ListTile(
-                    title: Text(state.todos[index].title),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(state.todos[index].title),
+                        ElevatedButton(
+                            onPressed: () {
+                              Future.delayed(const Duration(milliseconds: 50), () {
+                                context.read<TodoBloc>().add(TodoEventUpdate(
+                                    id: state.todos[index].id,
+                                    title: '${state.todos[index].title}☆'));
+                              });
+                            },
+                            child: const Icon(Icons.update))
+                      ],
+                    ),
                   ),
                   onDismissed: (direction) {
                     context
