@@ -260,7 +260,7 @@ class _UploadViewState extends State<_UploadView> {
                         state: UploadState.completed));
                   });
                 }
-                return StatelessUploadItem(uploadedImage: state.images[index]);
+                return _StatelessUploadItem(uploadedImage: state.images[index]);
               });
         },
       ),
@@ -278,21 +278,21 @@ class _UploadViewState extends State<_UploadView> {
   }
 }
 
-class UploadItem extends StatefulWidget {
+class _StatefulUploadItem extends StatefulWidget {
   final UploadedImage uploadedImage;
 
-  const UploadItem({super.key, required this.uploadedImage});
+  const _StatefulUploadItem({super.key, required this.uploadedImage});
 
   @override
-  State<UploadItem> createState() => _UploadItemState();
+  State<_StatefulUploadItem> createState() => _StatefulUploadItemState();
 }
 
-class _UploadItemState extends State<UploadItem> {
+class _StatefulUploadItemState extends State<_StatefulUploadItem> {
   late String name;
   late UploadState uploadState;
   late String path;
 
-  _UploadItemState();
+  _StatefulUploadItemState();
 
   @override
   Widget build(BuildContext context) {
@@ -384,12 +384,12 @@ class _UploadItemState extends State<UploadItem> {
   }
 }
 
-class StatelessUploadItem extends StatelessWidget {
+class _StatelessUploadItem extends StatelessWidget {
   final String name;
   final UploadState uploadState;
   final String path;
 
-  StatelessUploadItem({super.key, required UploadedImage uploadedImage})
+  _StatelessUploadItem({super.key, required UploadedImage uploadedImage})
       : name = uploadedImage.name,
         uploadState = uploadedImage.state,
         path = !kIsWeb ? uploadedImage.filepath : uploadedImage.url;
