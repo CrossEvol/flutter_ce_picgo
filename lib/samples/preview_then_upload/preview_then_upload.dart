@@ -260,7 +260,7 @@ class _UploadViewState extends State<_UploadView> {
                         state: UploadState.completed));
                   });
                 }
-                return UploadItem(uploadedImage: state.images[index]);
+                return StatelessUploadItem(uploadedImage: state.images[index]);
               });
         },
       ),
@@ -350,6 +350,93 @@ class _UploadItemState extends State<UploadItem> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Widget buildStateTip() {
+    switch (uploadState) {
+      case UploadState.uploading:
+      case UploadState.saving:
+        return const SizedBox(
+          width: 16,
+          height: 16,
+          child: CupertinoActivityIndicator(),
+        );
+      case UploadState.completed:
+        return const Icon(
+          Icons.done,
+          size: 16,
+          color: Colors.green,
+        );
+      case UploadState.uploadFailed:
+      case UploadState.saveFailed:
+      default:
+        return GestureDetector(
+          child: const Icon(
+            Icons.error,
+            color: Colors.red,
+            size: 16,
+          ),
+          onTap: () {
+            // _startUpload();
+          },
+        );
+    }
+  }
+}
+
+class StatelessUploadItem extends StatelessWidget {
+  final String name;
+  final UploadState uploadState;
+  final String path;
+
+  StatelessUploadItem({super.key, required UploadedImage uploadedImage})
+      : name = uploadedImage.name,
+        uploadState = uploadedImage.state,
+        path = !kIsWeb ? uploadedImage.filepath : uploadedImage.url;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: SizedBox(
+        height: 50,
+        width: 50,
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusDirectional.circular(8)),
+          child: kIsWeb
+              ? Image.network(
+                  path,
+                  // mm.imagePath,
+                  width: 50,
+                  height: 50,
+                )
+              : Image.file(
+                  File(path),
+                  // File(mm.imagePath),
+                  width: 50,
+                  height: 50,
+                ),
+        ),
+      ),
+      title: Text(
+        name,
+        // widget.rename,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textWidthBasis: TextWidthBasis.parent,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+      ),
+      subtitle: Text(
+        '上传状态：${uploadState.toText()}',
+        maxLines: 1,
+        style: const TextStyle(color: Colors.grey),
+      ),
+      trailing: buildStateTip(),
+      onTap: () {
+        // _handleTap();
+      },
+    );
   }
 
   Widget buildStateTip() {
