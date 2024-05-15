@@ -4,6 +4,7 @@ A new Flutter project.
 
 # Todo
 - configure json_serializable rules in build.yaml, include fieldRename to snake
+- File support in web platform
 
 ## Getting Started
 
@@ -30,3 +31,17 @@ lib/widgets/upload_item/upload_item.dart:66:13: Error: The argument type 'File/*
 ```
 
 in web platform, File class lack of compatibility.
+
+## CrossFile not support
+`github_image_upload.dart`
+```dart
+    final file = XFile(uploadedImage.filepath);
+```
+
+```shell
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ #0   packages/flutter_ce_picgo/views/upload_screen.dart 52:23            <fn>
+├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+│ ⛔ UnimplementedError: CrossFile is not available in your current platform.
+└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+```

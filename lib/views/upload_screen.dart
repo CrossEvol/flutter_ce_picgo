@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
+import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
 
 import '../models/enums/uploaded_state.dart';
 import '../utils/logger_util.dart';
@@ -34,11 +36,21 @@ class _UploadScreenState extends State<UploadScreen> {
                 var image = state.images[index];
                 if (image.state == UploadState.uploading) {
                   logger.w('start uploading...');
-                  Future.delayed(const Duration(seconds: 3), () {
-                    logger.w('complete uploading...');
-                    context.read<UploadImageBloc>().add(UploadImageEventUpdate(
-                        filepath: image.filepath,
-                        state: UploadState.completed));
+                  Future.delayed(const Duration(seconds: 1), () async {
+                    try {
+                      var type = await prefs.getDefaultStorage();
+                      var uploadStrategy =
+                          UploadStrategyFactory.getUploadStrategy(type);
+                      var (url, state) = await uploadStrategy.upload0(image);
+                      logger.w('end uploading...');
+                      context.read<UploadImageBloc>().add(
+                          UploadImageEventUpdate(
+                              filepath: image.filepath,
+                              url: url,
+                              state: state));
+                    } catch (e) {
+                      logger.e(e);
+                    }
                   });
                 }
                 return StatelessUploadItem(uploadedImage: state.images[index]);
