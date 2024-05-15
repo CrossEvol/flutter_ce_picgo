@@ -15,8 +15,10 @@ void main() {
         state: UploadState.completed,
         createTime: DateTime.utc(1999,9,9,9,9,9),
         uploadTime: DateTime.utc(1999,9,9,9,9,9));
-    var json = jsonEncode(uploadedImage.toJson());
-    print(json);
+    var map = uploadedImage.toJson();
+    print(jsonEncode(map));
+    map.remove('id');
+    print(jsonEncode(map));
   });
 
   test('iso8601', (){

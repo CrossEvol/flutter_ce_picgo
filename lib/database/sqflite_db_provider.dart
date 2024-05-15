@@ -63,7 +63,11 @@ class SqfliteDbProvider implements DbInterface {
         version: 9,
         onCreate: (db, version) async {
           // 创建pb_setting表
-          _initPb(db);
+          await _initPb(db);
+
+          // 创建 uploaded_image 表
+          await _initUploadedImages(db);
+
           // 创建uploaded表
           await db.execute('''
           CREATE TABLE $UPLOADED_TABLE (
@@ -73,12 +77,14 @@ class SqfliteDbProvider implements DbInterface {
             info varchar(255)
           )''');
         },
-        onUpgrade: (db, oldVersion, newVersion) {
-          _initPb(db);
+        onUpgrade: (db, oldVersion, newVersion) async {
+          await _initPb(db);
+
+          await _initUploadedImages(db);
 
           /// v1 to v2
           if (oldVersion == 1) {
-            _upgradeDbV1ToV2(db);
+            await _upgradeDbV1ToV2(db);
           }
         },
       );
@@ -89,7 +95,7 @@ class SqfliteDbProvider implements DbInterface {
   }
 
   /// 初始化图床设置表
-  void _initPb(Database db) async {
+  Future<void> _initPb(Database db) async {
     List tables = await db
         .rawQuery('SELECT name FROM sqlite_master WHERE type = "table"');
     bool isExists = false;
@@ -133,8 +139,23 @@ class SqfliteDbProvider implements DbInterface {
     }
   }
 
+  Future<void> _initUploadedImages(Database db) async {
+    await db.execute('''
+     CREATE TABLE IF NOT EXISTS $UPLOADED_IMAGE_TABLE  (
+        id INTEGER PRIMARY KEY,
+        filepath TEXT NOT NULL DEFAULT '',
+        storageType TEXT NOT NULL DEFAULT '',
+        url TEXT NOT NULL DEFAULT '',
+        name TEXT NOT NULL DEFAULT '',
+        state TEXT NOT NULL DEFAULT '',
+        createTime TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        uploadTime TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+     ''');
+  }
+
   /// db版本升级
-  _upgradeDbV1ToV2(Database db) async {
+  Future<void> _upgradeDbV1ToV2(Database db) async {
     await db
         .execute('ALTER TABLE $UPLOADED_TABLE ADD COLUMN info varchar(255)');
   }
@@ -166,14 +187,15 @@ class SqfliteDbProvider implements DbInterface {
 
   @override
   Future<List<UploadedImage>> getUploadedImages() async {
-    // TODO: implement getUploadedImages
-    throw UnimplementedError();
+    var list = await db.query(UPLOADED_IMAGE_TABLE);
+    return list.map((e) => UploadedImage.fromJson(e)).toList();
   }
 
   @override
   Future<void> saveUploadedImage(UploadedImage uploadedImage) async {
-    // TODO: implement saveUploadedImage
-    throw UnimplementedError();
+    var map = uploadedImage.toJson();
+    map.remove('id');
+    await db.insert(UPLOADED_IMAGE_TABLE, map);
   }
 
   @override
@@ -181,8 +203,25 @@ class SqfliteDbProvider implements DbInterface {
       {required String filepath,
       String? url,
       String? name,
-      UploadState? state}) {
-    // TODO: implement updateUploadedImage
-    throw UnimplementedError();
+      UploadState? state}) async {
+    try {
+      var oldImage = UploadedImage.fromJson((await db.query(
+              UPLOADED_IMAGE_TABLE,
+              where: 'filepath = ?',
+              whereArgs: [filepath],
+              limit: 1))
+          .first);
+      var newImage = oldImage.copyWith(url: url, name: name, state: state);
+      var map = newImage.toJson();
+      map.remove('id');
+      var i = await db.update(UPLOADED_IMAGE_TABLE, map);
+      if (i > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 }
