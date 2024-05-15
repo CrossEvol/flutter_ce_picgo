@@ -89,7 +89,7 @@ class SqfliteDbProvider implements DbInterface {
   }
 
   /// 初始化图床设置表
-  _initPb(Database db) async {
+  void _initPb(Database db) async {
     List tables = await db
         .rawQuery('SELECT name FROM sqlite_master WHERE type = "table"');
     bool isExists = false;

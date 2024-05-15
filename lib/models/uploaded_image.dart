@@ -1,6 +1,8 @@
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../common/converters/datetime_converter.dart';
+
 part 'uploaded_image.g.dart';
 
 
@@ -12,9 +14,12 @@ class UploadedImage {
   String url;
   String name;
   UploadState state;
-  DateTime createTime;
-  DateTime uploadTime;
 
+  @DateTimeConverter()
+  DateTime createTime;
+
+  @DateTimeConverter()
+  DateTime uploadTime;
 
 
   UploadedImage({

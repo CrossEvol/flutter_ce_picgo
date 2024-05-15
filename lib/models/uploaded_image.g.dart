@@ -14,8 +14,10 @@ UploadedImage _$UploadedImageFromJson(Map<String, dynamic> json) =>
       url: json['url'] as String,
       name: json['name'] as String,
       state: $enumDecode(_$UploadStateEnumMap, json['state']),
-      createTime: DateTime.parse(json['createTime'] as String),
-      uploadTime: DateTime.parse(json['uploadTime'] as String),
+      createTime:
+          const DateTimeConverter().fromJson(json['createTime'] as String),
+      uploadTime:
+          const DateTimeConverter().fromJson(json['uploadTime'] as String),
     );
 
 Map<String, dynamic> _$UploadedImageToJson(UploadedImage instance) =>
@@ -26,8 +28,8 @@ Map<String, dynamic> _$UploadedImageToJson(UploadedImage instance) =>
       'url': instance.url,
       'name': instance.name,
       'state': _$UploadStateEnumMap[instance.state]!,
-      'createTime': instance.createTime.toIso8601String(),
-      'uploadTime': instance.uploadTime.toIso8601String(),
+      'createTime': const DateTimeConverter().toJson(instance.createTime),
+      'uploadTime': const DateTimeConverter().toJson(instance.uploadTime),
     };
 
 const _$UploadStateEnumMap = {
