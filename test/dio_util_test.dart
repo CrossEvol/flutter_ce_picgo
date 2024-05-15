@@ -53,7 +53,7 @@ class Product {
     brand: json["brand"],
     category: json["category"],
     thumbnail: json["thumbnail"],
-    images: List<String>.from(json["images"].map((x) => x)),
+    images: List<String>.from(json["images"].imageCache((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {

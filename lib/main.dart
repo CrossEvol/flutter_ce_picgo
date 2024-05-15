@@ -5,8 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/provider/image_cache.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
+import 'package:provider/provider.dart';
 
 import 'database/db_interface.dart';
 import 'utils/logger_util.dart';
@@ -59,14 +61,17 @@ class MyApp extends StatelessWidget {
         BlocProvider(
             create: (_) => UploadImageBloc()..add(UploadImageEventLoad())),
       ],
-      child: MaterialApp.router(
-        title: 'Flutter CE PicGo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+      child: ChangeNotifierProvider(
+        create: (context) => ImageCacheModel(),
+        child: MaterialApp.router(
+          title: 'Flutter CE PicGo',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          debugShowCheckedModeBanner: false,
+          routerConfig: router,
         ),
-        debugShowCheckedModeBanner: false,
-        routerConfig: router,
       ),
     );
   }

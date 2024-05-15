@@ -4,10 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/provider/image_cache.dart';
 import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:isar/isar.dart';
 import 'package:mime/mime.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/image_storage_type.dart';
 import '../models/enums/uploaded_state.dart';
@@ -79,6 +82,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                 ]));
                     return;
                   } else {
+                    Provider.of<ImageCacheModel>(context,listen: false).setImageCache(
+                        _mediaFileList!.first.path, _mediaFileList!.first);
                     if (_mediaFileList!.isNotEmpty) {
                       context.read<UploadImageBloc>().add(UploadImageEventAdd(
                           uploadedImage: UploadedImage(
