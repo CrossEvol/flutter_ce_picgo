@@ -3,7 +3,9 @@ import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/models/isar/isar_image_storage_setting.dart';
+import 'package:flutter_ce_picgo/models/isar/isar_uploaded_image.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -40,12 +42,13 @@ class IsarDbProvider implements DbInterface {
   Future<void> init({bool isCreate = false}) async {
     final dir = await getApplicationDocumentsDirectory();
     isar = await Isar.open(
-      [IsarImageStorageSettingSchema],
+      [IsarImageStorageSettingSchema, IsarUploadedImageSchema],
       directory: dir.path,
     );
     if (kDebugMode) {
       await isar.writeTxn(() async {
         await isar.isarImageStorageSettings.clear();
+        await isar.isarUploadedImages.clear();
       });
     }
     await isar.writeTxn(() async {
@@ -103,14 +106,15 @@ class IsarDbProvider implements DbInterface {
 
   @override
   Future<List<UploadedImage>> getUploadedImages() async {
-    // TODO: implement getUploadedImages
-    throw UnimplementedError();
+    var list = await isar.isarUploadedImages.where().findAll();
+    return list.map((e) => e.fromIsarObject()).toList();
   }
 
   @override
   Future<void> saveUploadedImage(UploadedImage uploadedImage) async {
-    // TODO: implement saveUploadedImage
-    throw UnimplementedError();
+    await isar.writeTxn(() async {
+      await isar.isarUploadedImages.put(uploadedImage.toIsarObject());
+    });
   }
 
   @override
@@ -118,8 +122,29 @@ class IsarDbProvider implements DbInterface {
       {required String filepath,
       String? url,
       String? name,
-      UploadState? state}) {
-    // TODO: implement updateUploadedImage
-    throw UnimplementedError();
+      UploadState? state}) async {
+    var isarUploadedImage = await isar.isarUploadedImages
+        .filter()
+        .filepathEqualTo(filepath)
+        .findFirst();
+    var bool = await isar.writeTxn(() async {
+      try {
+        var hasDeleted = await isar.isarUploadedImages
+            .filter()
+            .filepathEqualTo(filepath)
+            .deleteFirst();
+        if (hasDeleted) {
+          await isar.isarUploadedImages.put(isarUploadedImage!
+              .fromIsarObject()
+              .copyWith(url: url, name: name, state: state)
+              .toIsarObject());
+        }
+        return true;
+      } catch (e) {
+        logger.e(e);
+        return false;
+      }
+    });
+    return bool;
   }
 }
