@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/provider/image_cache.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
+import 'package:provider/provider.dart';
 
 import '../models/enums/uploaded_state.dart';
 import '../utils/logger_util.dart';
@@ -41,7 +43,12 @@ class _UploadScreenState extends State<UploadScreen> {
                       var type = await prefs.getDefaultStorage();
                       var uploadStrategy =
                           UploadStrategyFactory.getUploadStrategy(type);
-                      var (url, state) = await uploadStrategy.upload0(image);
+                      var xFile = Provider.of<ImageCacheModel>(context,listen: false)
+                          .getXFile(image.filepath);
+                      var (url, state) = await uploadStrategy.upload1(
+                          xFile: xFile!,
+                          rename:
+                              '${DateTime.now().microsecondsSinceEpoch}.jpg');
                       logger.w('end uploading...');
                       context.read<UploadImageBloc>().add(
                           UploadImageEventUpdate(
