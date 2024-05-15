@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../models/enums/uploaded_state.dart';
 import '../models/uploaded_image.dart';
@@ -10,11 +13,15 @@ class StatelessUploadItem extends StatelessWidget {
   final String name;
   final UploadState uploadState;
   final String path;
+  final FToast fToast;
+  final String downloadUrl;
 
-  StatelessUploadItem({super.key, required UploadedImage uploadedImage})
+  StatelessUploadItem(
+      {super.key, required UploadedImage uploadedImage, required this.fToast})
       : name = uploadedImage.name,
         uploadState = uploadedImage.state,
-        path = !kIsWeb ? uploadedImage.filepath : uploadedImage.url;
+        path = !kIsWeb ? uploadedImage.filepath : uploadedImage.url,
+        downloadUrl = uploadedImage.url;
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +64,21 @@ class StatelessUploadItem extends StatelessWidget {
       ),
       trailing: buildStateTip(),
       onTap: () {
-        // _handleTap();
+        _handleTap();
       },
     );
+  }
+
+  /// 处理点击事件
+  void _handleTap() {
+    if (uploadState == UploadState.completed) {
+      Clipboard.setData(ClipboardData(text: downloadUrl));
+      fToast.showSuccessToast(text: '已复制到剪切板');
+      // Toast.show('已复制到剪切板', context);
+    } else {
+      fToast.showErrorToast(text: '当前状态无法操作');
+      // Toast.show('当前状态无法操作', context);
+    }
   }
 
   Widget buildStateTip() {

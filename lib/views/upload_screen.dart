@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/provider/image_cache.dart';
+import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
 import 'package:provider/provider.dart';
@@ -43,8 +44,9 @@ class _UploadScreenState extends State<UploadScreen> {
                       var type = await prefs.getDefaultStorage();
                       var uploadStrategy =
                           UploadStrategyFactory.getUploadStrategy(type);
-                      var xFile = Provider.of<ImageCacheModel>(context,listen: false)
-                          .getXFile(image.filepath);
+                      var xFile =
+                          Provider.of<ImageCacheModel>(context, listen: false)
+                              .getXFile(image.filepath);
                       var (url, state) = await uploadStrategy.upload1(
                           xFile: xFile!,
                           rename:
@@ -60,7 +62,10 @@ class _UploadScreenState extends State<UploadScreen> {
                     }
                   });
                 }
-                return StatelessUploadItem(uploadedImage: state.images[index]);
+                return StatelessUploadItem(
+                  uploadedImage: state.images[index],
+                  fToast: fToast,
+                );
               });
         },
       ),
@@ -70,6 +75,7 @@ class _UploadScreenState extends State<UploadScreen> {
   @override
   void initState() {
     super.initState();
+    fToast.init(context);
   }
 
   @override
