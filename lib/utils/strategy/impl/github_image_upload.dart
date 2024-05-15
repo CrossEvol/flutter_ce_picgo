@@ -77,6 +77,46 @@ class GithubImageUpload implements ImageUploadStrategy {
       return ('', UploadState.uploadFailed);
     }
   }
+
+  @override
+  Future<(String, UploadState)> upload1({required XFile xFile,required String rename}) async {
+    var configJson = await dbProvider.getImageStorageSettingConfig(
+        type: ImageStorageType.github);
+    var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
+
+    Dio dio = Dio();
+    // Set headers
+    dio.options.headers['Accept'] = 'application/vnd.github+json';
+    dio.options.headers['Authorization'] = 'Bearer ${githubConfig.token}';
+    dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
+    dio.options.headers['Content-Type'] = 'application/json';
+    dio.interceptors.add(LogInterceptor(
+        requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
+
+    var fileData = await xFile.readAsBytes();
+
+    // Set request body
+    Map<String, dynamic> requestBody = {
+      'message': 'my commit message',
+      'content': base64Encode(fileData),
+    };
+
+    // Perform PUT request
+    try {
+      Response response = await dio.put(
+        'https://api.github.com/repos/${githubConfig.repo}/contents/$rename',
+        data: requestBody,
+        options: Options(contentType: Headers.jsonContentType),
+      );
+      var jsonData = response.data;
+      var githubContent = GithubContent.fromJson(jsonData['content']);
+      return (githubContent.downloadUrl, UploadState.completed);
+      // sha = githubContent.sha;
+    } catch (e) {
+      logger.e(e);
+      return ('', UploadState.uploadFailed);
+    }
+  }
 }
 
 /// GithubError describes the error info  when request failed.

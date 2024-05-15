@@ -36,6 +36,12 @@ class GiteeImageUpload implements ImageUploadStrategy {
     // TODO: implement upload0
     throw UnimplementedError();
   }
+
+  @override
+  Future<(String, UploadState)> upload1({required XFile xFile,required String rename}) {
+    // TODO: implement upload1
+    throw UnimplementedError();
+  }
 }
 
 /// GithubError describes the error info  when request failed.
