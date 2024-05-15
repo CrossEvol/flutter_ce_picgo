@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../models/enums/uploaded_state.dart';
 import '../models/uploaded_image.dart';
-import 'upload_item/thumbnail/upload_thumbnail.dart';
 
 class StatelessUploadItem extends StatelessWidget {
   final String name;
@@ -20,7 +21,7 @@ class StatelessUploadItem extends StatelessWidget {
       {super.key, required UploadedImage uploadedImage, required this.fToast})
       : name = uploadedImage.name,
         uploadState = uploadedImage.state,
-        path = !kIsWeb ? uploadedImage.filepath : uploadedImage.url,
+        path = uploadedImage.filepath,
         downloadUrl = uploadedImage.url;
 
   @override
@@ -30,24 +31,10 @@ class StatelessUploadItem extends StatelessWidget {
         height: 50,
         width: 50,
         child: Card(
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusDirectional.circular(8)),
-          child: UploadThumbnail().createUploadThumbnail(path),
-          // child: kIsWeb
-          //     ? Image.network(
-          //         path,
-          //         // mm.imagePath,
-          //         width: 50,
-          //         height: 50,
-          //       )
-          //     : Image.file(
-          //         File(path),
-          //         // File(mm.imagePath),
-          //         width: 50,
-          //         height: 50,
-          //       ),
-        ),
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusDirectional.circular(8)),
+            child: UploadThumbnail(url: downloadUrl, path: path)),
       ),
       title: Text(
         name,
@@ -123,5 +110,36 @@ extension on UploadState {
       UploadState.saveFailed => '保存失败',
       _ => '未知'
     };
+  }
+}
+
+class UploadThumbnail extends StatelessWidget {
+  final String url;
+  final String path;
+
+  const UploadThumbnail({super.key, required this.url, required this.path});
+
+  @override
+  Widget build(BuildContext context) {
+    return kIsWeb
+        ? Image.network(
+            url,
+            // mm.imagePath,
+            width: 50,
+            height: 50,
+          )
+        : url.isEmpty
+            ? Image.file(
+                File(path),
+                // File(mm.imagePath),
+                width: 50,
+                height: 50,
+              )
+            : Image.network(
+                url,
+                // mm.imagePath,
+                width: 50,
+                height: 50,
+              );
   }
 }
