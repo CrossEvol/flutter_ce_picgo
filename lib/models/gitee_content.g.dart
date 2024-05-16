@@ -9,6 +9,8 @@ part of 'gitee_content.dart';
 GiteeContent _$GiteeContentFromJson(Map<String, dynamic> json) => GiteeContent(
       name: json['name'] as String,
       path: json['path'] as String,
+      content: json['content'] as String?,
+      encoding: json['encoding'] as String?,
       sha: json['sha'] as String,
       size: (json['size'] as num).toInt(),
       url: json['url'] as String,
@@ -24,6 +26,8 @@ Map<String, dynamic> _$GiteeContentToJson(GiteeContent instance) =>
     <String, dynamic>{
       'name': instance.name,
       'path': instance.path,
+      'content': instance.content,
+      'encoding': instance.encoding,
       'sha': instance.sha,
       'size': instance.size,
       'url': instance.url,

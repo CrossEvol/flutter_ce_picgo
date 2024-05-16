@@ -8,6 +8,8 @@ part 'gitee_content.g.dart';
 class GiteeContent {
   String name;
   String path;
+  String? content;
+  String? encoding;
   String sha;
   int size;
   String url;
@@ -18,9 +20,16 @@ class GiteeContent {
   @JsonKey(name: '_links')
   Map<GiteeLinkType, String> links;
 
+  factory GiteeContent.fromJson(Map<String, dynamic> json) =>
+      _$GiteeContentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GiteeContentToJson(this);
+
   GiteeContent({
     required this.name,
     required this.path,
+    this.content,
+    this.encoding,
     required this.sha,
     required this.size,
     required this.url,
@@ -29,11 +38,6 @@ class GiteeContent {
     required this.type,
     required this.links,
   });
-
-  factory GiteeContent.fromJson(Map<String, dynamic> json) =>
-      _$GiteeContentFromJson(json);
-
-  Map<String, dynamic> toJson() => _$GiteeContentToJson(this);
 }
 
 @JsonEnum()

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_ce_picgo/models/gitee_content.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -25,7 +26,7 @@ void main() async {
         requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
 
     var imageFile = File(
-        r'D:\androidStudio\AndroidStudioProjects\flutter_ce_picgo\assets\images\icon_empty_album.png');
+        r'D:\androidStudio\AndroidStudioProjects\flutter_ce_picgo\assets\images\rocket_logo.jpg');
     var fileData = await imageFile.readAsBytes();
 
     // Set request body
@@ -44,14 +45,15 @@ void main() async {
         options: Options(contentType: Headers.jsonContentType),
       );
       expect(response.statusCode, equals(201));
-      logger.i(jsonEncode(response.data));
-      // sha = githubContent.sha;
+      var jsonData = response.data;
+      var giteeContent = GiteeContent.fromJson(jsonData['content']);
+      logger.i(giteeContent.toJson());
     } catch (e) {
       logger.e(e);
     }
   });
 
-  test('sha', () {
+  test('get sha', () {
     print(sha);
   });
 }
