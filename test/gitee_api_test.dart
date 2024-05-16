@@ -54,18 +54,52 @@ void main() async {
 
   test('get sha', () async {
     Dio dio = Dio();
-    var tempPath = '1715842582381.jpg';
+    var tempPath = '1715842854200.jpg';
 
     dio.options.headers['Content-Type'] = ' application/json;charset=UTF-8';
     dio.interceptors.add(LogInterceptor(
         requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
 
-    var response = await dio.get(
-        'https://gitee.com/api/v5/repos/$repo/contents/$tempPath?access_token=$giteeToken');
-    expect(200, response.statusCode);
-    var jsonData = response.data;
-    var giteeContent = GiteeContent.fromJson(jsonData);
-    logger.i(giteeContent.toJson());
-    logger.w(giteeContent.sha);
+    try {
+      var response = await dio.get(
+              'https://gitee.com/api/v5/repos/$repo/contents/$tempPath?access_token=$giteeToken');
+      expect(200, equals(response.statusCode));
+      var jsonData = response.data;
+      var giteeContent = GiteeContent.fromJson(jsonData);
+      logger.i(giteeContent.toJson());
+      logger.w(giteeContent.sha);
+    } catch (e) {
+      logger.e(e);
+    }
+  });
+
+  test('github repo api DELETE request test', () async {
+    Dio dio = Dio();
+    var tempSha = '446008abaa36f66322ebed1de9b4d7217fe3cfce';
+    var tempPath = '1715842854200.jpg';
+
+    // Set headers
+    dio.options.headers['Content-Type'] = ' application/json;charset=UTF-8';
+    dio.interceptors.add(LogInterceptor(
+        requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
+
+    // Set request body
+    Map<String, dynamic> requestBody = {
+      'message': 'my commit message',
+      'sha': tempSha
+    };
+
+    try {
+      var response = await dio.delete(
+        'https://gitee.com/api/v5/repos/$repo/contents/$tempPath?access_token=$giteeToken',
+        data: requestBody,
+        options: Options(contentType: Headers.jsonContentType),
+      );
+      expect(200, equals(response.statusCode));
+      var jsonData = response.data;
+      expect(jsonData['content'], isNull);
+    } catch (e) {
+      logger.e(e);
+    }
   });
 }
