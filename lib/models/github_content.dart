@@ -9,6 +9,8 @@ class GithubContent {
   String name;
   String path;
   String sha;
+  String? content;
+  String? encoding;
   int size;
   String url;
   String htmlUrl;
@@ -30,6 +32,8 @@ class GithubContent {
     required this.downloadUrl,
     required this.type,
     required this.links,
+    this.content,
+    this.encoding,
   });
 
   factory GithubContent.fromJson(Map<String, dynamic> json) =>

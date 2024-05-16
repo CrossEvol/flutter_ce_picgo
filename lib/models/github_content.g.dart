@@ -21,6 +21,8 @@ GithubContent _$GithubContentFromJson(Map<String, dynamic> json) =>
         (k, e) =>
             MapEntry($enumDecode(_$GithubLinkTypeEnumMap, k), e as String),
       ),
+      content: json['content'] as String?,
+      encoding: json['encoding'] as String?,
     );
 
 Map<String, dynamic> _$GithubContentToJson(GithubContent instance) =>
@@ -28,6 +30,8 @@ Map<String, dynamic> _$GithubContentToJson(GithubContent instance) =>
       'name': instance.name,
       'path': instance.path,
       'sha': instance.sha,
+      'content': instance.content,
+      'encoding': instance.encoding,
       'size': instance.size,
       'url': instance.url,
       'html_url': instance.htmlUrl,

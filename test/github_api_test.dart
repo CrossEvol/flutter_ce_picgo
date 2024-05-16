@@ -61,8 +61,28 @@ void main() async {
     }
   });
 
-  test('sha', () {
-    print(sha);
+  test('get sha test', () async {
+    Dio dio = Dio();
+    var tempPath = '1715846011140598.jpg';
+
+    // Set headers
+    dio.options.headers['Accept'] = 'application/vnd.github+json';
+    dio.options.headers['Authorization'] = 'Bearer $githubToken';
+    dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
+    dio.options.headers['Content-Type'] = 'application/json';
+    dio.interceptors.add(LogInterceptor(
+        requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
+
+    try {
+      var response = await dio
+          .get('https://api.github.com/repos/$repo/contents/$tempPath');
+      expect(200, equals(response.statusCode));
+      expect(response.data, isNotNull);
+      var githubContent = GithubContent.fromJson(response.data);
+      logger.i(githubContent.toJson());
+    } catch (e) {
+      logger.e(e);
+    }
   });
 
   test('github repo api DELETE test', () async {
