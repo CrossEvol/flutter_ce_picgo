@@ -1,6 +1,7 @@
 part of 'image_cache_bloc.dart';
 
 final class ImageCacheState extends Equatable {
+
   Map<String, XFile> imageCache;
 
   @override

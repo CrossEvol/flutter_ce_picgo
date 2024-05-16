@@ -4,8 +4,8 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
-import 'package:flutter_ce_picgo/provider/image_cache.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 import 'package:provider/provider.dart';
@@ -60,18 +60,16 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
             create: (_) => UploadImageBloc()..add(UploadImageEventLoad())),
+        BlocProvider(create: (_) => ImageCacheBloc())
       ],
-      child: ChangeNotifierProvider(
-        create: (context) => ImageCacheModel(),
-        child: MaterialApp.router(
-          title: 'Flutter CE PicGo',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          debugShowCheckedModeBanner: false,
-          routerConfig: router,
+      child: MaterialApp.router(
+        title: 'Flutter CE PicGo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
         ),
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
       ),
     );
   }

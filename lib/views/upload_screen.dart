@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
-import 'package:flutter_ce_picgo/provider/image_cache.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
@@ -44,10 +44,11 @@ class _UploadScreenState extends State<UploadScreen> {
                       var type = await prefs.getDefaultStorage();
                       var uploadStrategy =
                           UploadStrategyFactory.getUploadStrategy(type);
-                      var xFile =
-                          Provider.of<ImageCacheModel>(context, listen: false)
-                              .getXFile(image.filepath);
-                      var (url, state,sha) = await uploadStrategy.upload1(
+                      var xFile = context
+                          .read<ImageCacheBloc>()
+                          .state
+                          .imageCache[image.filepath];
+                      var (url, state, sha) = await uploadStrategy.upload1(
                           xFile: xFile!,
                           rename:
                               '${DateTime.now().microsecondsSinceEpoch}.jpg');
@@ -56,7 +57,11 @@ class _UploadScreenState extends State<UploadScreen> {
                           UploadImageEventUpdate(
                               filepath: image.filepath,
                               url: url,
-                              state: state,sha:sha));
+                              state: state,
+                              sha: sha));
+                      context
+                          .read<ImageCacheBloc>()
+                          .add(ImageCacheEventRemove(key: image.filepath));
                     } catch (e) {
                       logger.e(e);
                     }
