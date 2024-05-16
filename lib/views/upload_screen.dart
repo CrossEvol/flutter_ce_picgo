@@ -48,7 +48,7 @@ class _UploadScreenState extends State<UploadScreen> {
                           .read<ImageCacheBloc>()
                           .state
                           .imageCache[image.filepath];
-                      var (url, state, sha) = await uploadStrategy.upload1(
+                      var (url, state, sha) = await uploadStrategy.upload(
                           xFile: xFile!,
                           rename:
                               '${DateTime.now().microsecondsSinceEpoch}.jpg');

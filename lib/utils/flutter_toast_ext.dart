@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:fluttertoast/fluttertoast.dart';
