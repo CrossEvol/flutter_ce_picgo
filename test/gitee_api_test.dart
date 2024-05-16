@@ -10,7 +10,6 @@ void main() async {
   const giteeToken = '5f29545bd0cab05994cacc62b3955de7';
   const repo = 'youmuao/picgo_repo';
   var path = '';
-  var sha = '';
 
   await initLogger();
 
@@ -33,7 +32,7 @@ void main() async {
     Map<String, dynamic> requestBody = {
       'message': 'my commit message',
       'content': base64Encode(fileData),
-      'access_token':giteeToken
+      'access_token': giteeToken
     };
 
     path = '${DateTime.now().millisecondsSinceEpoch}.jpg';
@@ -53,7 +52,20 @@ void main() async {
     }
   });
 
-  test('get sha', () {
-    print(sha);
+  test('get sha', () async {
+    Dio dio = Dio();
+    var tempPath = '1715842582381.jpg';
+
+    dio.options.headers['Content-Type'] = ' application/json;charset=UTF-8';
+    dio.interceptors.add(LogInterceptor(
+        requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
+
+    var response = await dio.get(
+        'https://gitee.com/api/v5/repos/$repo/contents/$tempPath?access_token=$giteeToken');
+    expect(200, response.statusCode);
+    var jsonData = response.data;
+    var giteeContent = GiteeContent.fromJson(jsonData);
+    logger.i(giteeContent.toJson());
+    logger.w(giteeContent.sha);
   });
 }
