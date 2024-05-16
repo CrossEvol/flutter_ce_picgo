@@ -7,17 +7,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
 import '../../../models/enums/uploaded_state.dart';
-import '../../../models/uploaded.dart';
 import '../image_upload_strategy.dart';
 
 class GiteeImageUpload implements ImageUploadStrategy {
   static const uploadCommitMessage = "Upload by Flutter-PicGo";
   static const deleteCommitMessage = "Delete by Flutter-PicGo";
 
-  @override
-  Future<Uploaded> delete(Uploaded uploaded) async {
-    throw UnimplementedError();
-  }
+  // @override
+  // Future<Uploaded> delete(Uploaded uploaded) async {
+  //   throw UnimplementedError();
+  // }
 
   // @override
   // Future<Uploaded> upload(File file, String renameImage) async {
