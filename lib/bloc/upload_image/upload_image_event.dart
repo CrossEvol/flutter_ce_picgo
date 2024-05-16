@@ -25,14 +25,16 @@ final class UploadImageEventUpdate extends UploadImageEvent {
   String? url;
   String? name;
   UploadState? state;
+  String? sha;
 
   @override
-  List<Object?> get props => [url, name, state];
+  List<Object?> get props => [url, name, state,sha];
 
   UploadImageEventUpdate({
     required this.filepath,
     this.url,
     this.name,
     this.state,
+    this.sha
   });
 }

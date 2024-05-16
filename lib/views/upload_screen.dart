@@ -47,7 +47,7 @@ class _UploadScreenState extends State<UploadScreen> {
                       var xFile =
                           Provider.of<ImageCacheModel>(context, listen: false)
                               .getXFile(image.filepath);
-                      var (url, state) = await uploadStrategy.upload1(
+                      var (url, state,sha) = await uploadStrategy.upload1(
                           xFile: xFile!,
                           rename:
                               '${DateTime.now().microsecondsSinceEpoch}.jpg');
@@ -56,7 +56,7 @@ class _UploadScreenState extends State<UploadScreen> {
                           UploadImageEventUpdate(
                               filepath: image.filepath,
                               url: url,
-                              state: state));
+                              state: state,sha:sha));
                     } catch (e) {
                       logger.e(e);
                     }

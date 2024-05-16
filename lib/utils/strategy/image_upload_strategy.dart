@@ -11,7 +11,7 @@ abstract class ImageUploadStrategy {
 
   Future<(String url, UploadState state)> upload0(UploadedImage uploadedImage);
 
-  Future<(String url, UploadState state)> upload1({required XFile xFile,required String rename});
+  Future<(String url, UploadState state,String sha)> upload1({required XFile xFile,required String rename});
 
   Future<UploadedImage> delete0(UploadedImage uploadedImage);
 }

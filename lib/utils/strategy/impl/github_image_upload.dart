@@ -78,7 +78,8 @@ class GithubImageUpload implements ImageUploadStrategy {
   }
 
   @override
-  Future<(String, UploadState)> upload1({required XFile xFile,required String rename}) async {
+  Future<(String, UploadState, String sha)> upload1(
+      {required XFile xFile, required String rename}) async {
     var configJson = await dbProvider.getImageStorageSettingConfig(
         type: ImageStorageType.github);
     var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
@@ -109,11 +110,15 @@ class GithubImageUpload implements ImageUploadStrategy {
       );
       var jsonData = response.data;
       var githubContent = GithubContent.fromJson(jsonData['content']);
-      return (githubContent.downloadUrl, UploadState.completed);
+      return (
+        githubContent.downloadUrl,
+        UploadState.completed,
+        githubContent.sha
+      );
       // sha = githubContent.sha;
     } catch (e) {
       logger.e(e);
-      return ('', UploadState.uploadFailed);
+      return ('', UploadState.uploadFailed, '');
     }
   }
 }
