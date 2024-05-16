@@ -45,3 +45,15 @@ in web platform, File class lack of compatibility.
 │ ⛔ UnimplementedError: CrossFile is not available in your current platform.
 └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ```
+
+## Image.network failed when using gitee
+```shell
+======== Exception caught by image resource service ================================================
+The following ProgressEvent$ object was thrown resolving an image codec:
+  [object ProgressEvent]
+
+When the exception was thrown, this was the stack: 
+Image provider: NetworkImage("https://gitee.com/youmuao/picgo_repo/raw/master/1715856977331000.jpg", scale: 1.0)
+Image key: NetworkImage("https://gitee.com/youmuao/picgo_repo/raw/master/1715856977331000.jpg", scale: 1.0)
+====================================================================================================
+```

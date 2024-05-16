@@ -54,7 +54,6 @@ class GithubImageUpload implements ImageUploadStrategy {
         UploadState.completed,
         githubContent.sha
       );
-      // sha = githubContent.sha;
     } catch (e) {
       logger.e(e);
       return ('', UploadState.uploadFailed, '');
