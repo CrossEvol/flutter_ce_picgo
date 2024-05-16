@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
@@ -146,6 +145,7 @@ class SqfliteDbProvider implements DbInterface {
         filepath TEXT NOT NULL DEFAULT '',
         storageType TEXT NOT NULL DEFAULT '',
         url TEXT NOT NULL DEFAULT '',
+        sha TEXT DEFAULT NULL,
         name TEXT NOT NULL DEFAULT '',
         state TEXT NOT NULL DEFAULT '',
         createTime TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,

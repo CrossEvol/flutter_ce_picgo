@@ -5,7 +5,6 @@ import '../common/converters/datetime_converter.dart';
 
 part 'uploaded_image.g.dart';
 
-
 @JsonSerializable()
 class UploadedImage {
   int id;
@@ -14,13 +13,13 @@ class UploadedImage {
   String url;
   String name;
   UploadState state;
+  String? sha;
 
   @DateTimeConverter()
   DateTime createTime;
 
   @DateTimeConverter()
   DateTime uploadTime;
-
 
   UploadedImage({
     required this.id,
@@ -31,6 +30,7 @@ class UploadedImage {
     required this.state,
     required this.createTime,
     required this.uploadTime,
+    this.sha,
   });
 
   factory UploadedImage.fromJson(Map<String, dynamic> json) =>
@@ -45,6 +45,7 @@ class UploadedImage {
     String? url,
     String? name,
     UploadState? state,
+    String? sha,
     DateTime? createTime,
     DateTime? uploadTime,
   }) {
@@ -55,6 +56,7 @@ class UploadedImage {
       url: url ?? this.url,
       name: name ?? this.name,
       state: state ?? this.state,
+      sha: sha ?? this.sha,
       createTime: createTime ?? this.createTime,
       uploadTime: uploadTime ?? this.uploadTime,
     );

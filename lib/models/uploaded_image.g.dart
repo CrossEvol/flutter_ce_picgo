@@ -18,6 +18,7 @@ UploadedImage _$UploadedImageFromJson(Map<String, dynamic> json) =>
           const DateTimeConverter().fromJson(json['createTime'] as String),
       uploadTime:
           const DateTimeConverter().fromJson(json['uploadTime'] as String),
+      sha: json['sha'] as String?,
     );
 
 Map<String, dynamic> _$UploadedImageToJson(UploadedImage instance) =>
@@ -28,6 +29,7 @@ Map<String, dynamic> _$UploadedImageToJson(UploadedImage instance) =>
       'url': instance.url,
       'name': instance.name,
       'state': _$UploadStateEnumMap[instance.state]!,
+      'sha': instance.sha,
       'createTime': const DateTimeConverter().toJson(instance.createTime),
       'uploadTime': const DateTimeConverter().toJson(instance.uploadTime),
     };
