@@ -1,0 +1,40 @@
+{
+  "content": {
+    "name": "1715842854200.jpg",
+    "path": "1715842854200.jpg",
+    "size": 72718,
+    "sha": "446008abaa36f66322ebed1de9b4d7217fe3cfce",
+    "type": "file",
+    "url": "https://gitee.com/api/v5/repos/youmuao/picgo_repo/contents/1715842854200.jpg",
+    "html_url": "https://gitee.com/youmuao/picgo_repo/blob/master/1715842854200.jpg",
+    "download_url": "https://gitee.com/youmuao/picgo_repo/raw/master/1715842854200.jpg",
+    "_links": {
+      "self": "https://gitee.com/api/v5/repos/youmuao/picgo_repo/contents/1715842854200.jpg",
+      "html": "https://gitee.com/youmuao/picgo_repo/blob/master/1715842854200.jpg"
+    }
+  },
+  "commit": {
+    "sha": "3737dbf12a3f060e625da865bc15ac74c2f375bc",
+    "author": {
+      "name": "悠木凹",
+      "email": "mf296662402@126.com",
+      "date": "2024-05-16T07:00:55+00:00"
+    },
+    "committer": {
+      "name": "Gitee",
+      "email": "noreply@gitee.com",
+      "date": "2024-05-16T07:00:55+00:00"
+    },
+    "message": "my commit message",
+    "tree": {
+      "sha": "af7d6c3bd1a9b4e4de5b8fd6f1a095aec105344b",
+      "url": "https://gitee.com/api/v5/repos/youmuao/picgo_repo/git/trees/af7d6c3bd1a9b4e4de5b8fd6f1a095aec105344b"
+    },
+    "parents": [
+      {
+        "sha": "f0264ccb7b505020bd1308996811b670177f99c7",
+        "url": "https://gitee.com/api/v5/repos/youmuao/picgo_repo/commits/f0264ccb7b505020bd1308996811b670177f99c7"
+      }
+    ]
+  }
+}
