@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,19 +35,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
         prefs?.getBool(SharedPreferencesKeys.settingIsUploadedTip) ?? false;
     isForceDelete =
         prefs?.getBool(SharedPreferencesKeys.settingIsForceDelete) ?? false;
-    // SpUtil.getInstance().then((u) {
-    //   setState(() {
-    //     isUploadedRename =
-    //         u?.getBool(SharedPreferencesKeys.settingIsUploadedRename) ?? false;
-    //     isTimestampRename =
-    //         u?.getBool(SharedPreferencesKeys.settingIsTimestampRename) ?? false;
-    //     isUploadedTip =
-    //         u?.getBool(SharedPreferencesKeys.settingIsUploadedTip) ?? false;
-    //     isForceDelete =
-    //         u?.getBool(SharedPreferencesKeys.settingIsForceDelete) ?? false;
-    //   });
-    // });
-    // update
+    fToast.init(context);
     _getLatestVersion();
   }
 
@@ -67,7 +56,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                   activeColor: Theme.of(context).colorScheme.primary,
                   value: isUploadedRename,
                   onChanged: (value) {
-                    _save(SharedPreferencesKeys.settingIsUploadedRename, value);
+                    save(SharedPreferencesKeys.settingIsUploadedRename, value);
                     setState(() {
                       isUploadedRename = value;
                     });
@@ -80,8 +69,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                   activeColor: Theme.of(context).colorScheme.primary,
                   value: isTimestampRename,
                   onChanged: (value) {
-                    _save(
-                        SharedPreferencesKeys.settingIsTimestampRename, value);
+                    save(SharedPreferencesKeys.settingIsTimestampRename, value);
                     setState(() {
                       isTimestampRename = value;
                     });
@@ -99,7 +87,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                       // await LocalNotificationUtil.getInstance()
                       //     .requestPermissions();
                     }
-                    _save(SharedPreferencesKeys.settingIsUploadedTip, value);
+                    save(SharedPreferencesKeys.settingIsUploadedTip, value);
                     setState(() {
                       isUploadedTip = value;
                     });
@@ -112,7 +100,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                   activeColor: Theme.of(context).colorScheme.primary,
                   value: isForceDelete,
                   onChanged: (value) {
-                    _save(SharedPreferencesKeys.settingIsForceDelete, value);
+                    save(SharedPreferencesKeys.settingIsForceDelete, value);
                     setState(() {
                       isForceDelete = value;
                     });
@@ -155,10 +143,12 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
     );
   }
 
-  _save(String key, bool value) async {
-    // var instance = await SpUtil.getInstance();
-    // instance.putBool(key, value);
-    // Toast.show('保存成功', context);
+  save(String key, bool value) async {
+    prefs
+        .setBool(key, value)
+        .then((value) => fToast.showSuccessToast(text: '保存成功', duration: 1))
+        .onError((error, stackTrace) =>
+            fToast.showErrorToast(text: '保存失败', duration: 1));
   }
 
   _getLatestVersion() async {

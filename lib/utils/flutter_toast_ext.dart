@@ -5,24 +5,24 @@ import 'package:fluttertoast/fluttertoast.dart';
 final FToast fToast = FToast();
 
 extension FlutterToastExtension on FToast {
-  void showSuccessToast({required String text}) {
+  void showSuccessToast({required String text, int duration = 2}) {
     Widget toast =
         createToastWidget(text: text, toastState: ToastState.success);
 
     fToast.showToast(
       child: toast,
       gravity: ToastGravity.BOTTOM,
-      toastDuration: const Duration(seconds: 2),
+      toastDuration: Duration(seconds: duration),
     );
   }
 
-  void showErrorToast({required String text}) {
+  void showErrorToast({required String text, int duration = 2}) {
     Widget toast = createToastWidget(text: text, toastState: ToastState.error);
 
     fToast.showToast(
       child: toast,
       gravity: ToastGravity.BOTTOM,
-      toastDuration: const Duration(seconds: 2),
+      toastDuration: Duration(seconds: duration),
     );
   }
 }
