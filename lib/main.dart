@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/theme_state/theme_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
@@ -60,7 +61,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
             create: (_) => UploadImageBloc()..add(UploadImageEventLoad())),
-        BlocProvider(create: (_) => ImageCacheBloc())
+        BlocProvider(create: (_) => ImageCacheBloc()),
+        BlocProvider(create: (_) => ThemeBloc()),
       ],
       child: MaterialApp.router(
         title: 'Flutter CE PicGo',

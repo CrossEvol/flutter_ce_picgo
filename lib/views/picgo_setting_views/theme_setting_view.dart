@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/models/enums/theme_mode.dart';
 
-import 'theme_state.dart';
+import '../../bloc/theme_state/theme_bloc.dart';
 
 class ThemeSettingView extends StatefulWidget {
   const ThemeSettingView({super.key});
@@ -18,35 +19,35 @@ class _ThemeSettingViewState extends State<ThemeSettingView> {
         centerTitle: true,
         title: const Text('主题设置'),
       ),
-      body: Consumer<ThemeState>(
-        builder: (context, themeState, child) {
+      body: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, state) {
           return ListView(
             children: <Widget>[
               ListTile(
-                title: Text(ThemeState.modeMap[ThemeMode.system]!),
-                trailing: themeState.currentMode == ThemeMode.system
+                title: Text(LocalThemeMode.system.toText()),
+                trailing: state.themeMode == LocalThemeMode.system
                     ? const Icon(Icons.check)
                     : null,
                 onTap: () {
-                  _changeThemeMode(themeState, ThemeMode.system);
+                  changeThemeMode(LocalThemeMode.system);
                 },
               ),
               ListTile(
-                title: Text(ThemeState.modeMap[ThemeMode.light]!),
-                trailing: themeState.currentMode == ThemeMode.light
+                title: Text(LocalThemeMode.light.toText()),
+                trailing: state.themeMode == LocalThemeMode.light
                     ? const Icon(Icons.check)
                     : null,
                 onTap: () {
-                  _changeThemeMode(themeState, ThemeMode.light);
+                  changeThemeMode(LocalThemeMode.light);
                 },
               ),
               ListTile(
-                title: Text(ThemeState.modeMap[ThemeMode.dark]!),
-                trailing: themeState.currentMode == ThemeMode.dark
+                title: Text(LocalThemeMode.dark.toText()),
+                trailing: state.themeMode == LocalThemeMode.dark
                     ? const Icon(Icons.check)
                     : null,
                 onTap: () {
-                  _changeThemeMode(themeState, ThemeMode.dark);
+                  changeThemeMode(LocalThemeMode.dark);
                 },
               )
             ],
@@ -56,7 +57,7 @@ class _ThemeSettingViewState extends State<ThemeSettingView> {
     );
   }
 
-  _changeThemeMode(ThemeState state, ThemeMode mode) {
-    state.changeThemeState(mode);
+  changeThemeMode(LocalThemeMode themeMode) {
+    context.read<ThemeBloc>().add(ThemeEventChange(themeMode: themeMode));
   }
 }
