@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_ce_picgo/models/github_content.dart';
+import 'package:flutter_ce_picgo/models/pubspec.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart';
@@ -34,6 +35,7 @@ void main() {
     print(utf8.decode(base64decode));
 
     var map = loadYaml(utf8.decode(base64decode));
-    logger.i(map);
+    var pubSpec = pubSpecModelFromJson(json.encode(map));
+    logger.i(pubSpec.toJson());
   });
 }
