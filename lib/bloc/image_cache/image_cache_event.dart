@@ -27,3 +27,10 @@ final class ImageCacheEventRemove extends ImageCacheEvent {
     required this.key,
   });
 }
+
+final class ImageCacheEventClear extends ImageCacheEvent {
+  @override
+  List<Object?> get props => [];
+
+  const ImageCacheEventClear();
+}

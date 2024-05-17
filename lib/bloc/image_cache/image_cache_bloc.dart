@@ -20,5 +20,9 @@ class ImageCacheBloc extends Bloc<ImageCacheEvent, ImageCacheState> {
       imageCache.remove(event.key);
       emit(state.copyWith(imageCache: imageCache));
     });
+
+    on<ImageCacheEventClear>((event, emit) {
+      emit(state.copyWith(imageCache: {}));
+    });
   }
 }

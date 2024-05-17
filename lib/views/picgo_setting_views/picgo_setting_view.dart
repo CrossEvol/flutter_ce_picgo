@@ -1,9 +1,12 @@
 import 'dart:io';
 
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -116,7 +119,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
               ListTile(
                 title: const Text('版本更新'),
                 onTap: () {
-                  _handleUpdateTap();
+                  handleUpdateTap();
                 },
                 trailing: CircleAvatar(
                   backgroundColor: Colors.transparent,
@@ -130,10 +133,17 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                   ),
                 ),
               ),
-              ListTile(
-                title: const Text('清除缓存'),
-                onTap: () {
-                  _handleClearCache();
+              BlocConsumer<ImageCacheBloc, ImageCacheState>(
+                listener: (context, state) {
+                  // TODO: implement listener
+                },
+                builder: (context, state) {
+                  return ListTile(
+                    title: const Text('清除缓存'),
+                    onTap: () {
+                      handleClearCache();
+                    },
+                  );
                 },
               )
             ],
@@ -171,26 +181,30 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
   }
 
   /// 无论有无更新都进行跳转，不允许放置蒲公英链接
-  _handleUpdateTap() async {
-    if (Platform.isAndroid) {
-      launch('https://github.com/PicGo/flutter-picgo/releases');
-    } else if (Platform.isIOS) {
-      launch('https://apps.apple.com/cn/app/flutter-picgo/id1519714305');
+  handleUpdateTap() async {
+    if (kIsWeb) {
+      launchUrl(
+          Uri.parse('https://github.com/CrossEvol/flutter_ce_picgo/releases'));
+    } else {
+      if (Platform.isAndroid || Platform.isWindows) {
+        launchUrl(Uri.parse(
+            'https://github.com/CrossEvol/flutter_ce_picgo/releases'));
+      } else if (Platform.isIOS) {
+        throw UnimplementedError('UnSupport');
+        // launchUrl(Uri.parse('https://apps.apple.com/cn/app/flutter-picgo/id1519714305'));
+      }
     }
   }
 
   /// 清空缓存
-  _handleClearCache() async {
-    /// extended_image
+  handleClearCache() async {
     try {
-      bool clear = await clearDiskCachedImages();
-      if (clear) {
-        // Toast.show('清除成功', context);
-      } else {
-        throw ('clear fail');
-      }
+      BlocProvider.of<ImageCacheBloc>(context)
+          .add(const ImageCacheEventClear());
+      fToast.showSuccessToast(text: '清除成功', duration: 1);
     } catch (e) {
-      // Toast.show('清除失败', context);
+      logger.e(e);
+      fToast.showSuccessToast(text: '清除失败', duration: 1);
     }
   }
 }
