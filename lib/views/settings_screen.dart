@@ -75,6 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ListTile(
             title: const Text('PicGo设置'),
             onTap: () {
+              context.go('/setting/picgo');
               // Application.router.navigateTo(context, Routes.settingPicgo,
               //     transition: TransitionType.cupertino);
             },

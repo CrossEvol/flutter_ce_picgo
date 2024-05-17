@@ -5,7 +5,6 @@ import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
-import 'package:provider/provider.dart';
 
 import '../models/enums/uploaded_state.dart';
 import '../utils/logger_util.dart';

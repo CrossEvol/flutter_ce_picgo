@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/views/album_screen.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/gitee_page/gitee_page.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/github/github_page.dart';
+import 'package:flutter_ce_picgo/views/picgo_setting_views/picgo_setting_view.dart';
+import 'package:flutter_ce_picgo/views/picgo_setting_views/theme_setting_view.dart';
 import 'package:flutter_ce_picgo/views/settings_screen.dart';
 import 'package:flutter_ce_picgo/views/upload_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -52,6 +54,18 @@ final GoRouter router = GoRouter(
           path: 'upload',
           builder: (BuildContext context, GoRouterState state) {
             return const UploadScreen();
+          },
+        ),
+        GoRoute(
+          path: 'setting/picgo',
+          builder: (BuildContext context, GoRouterState state) {
+            return const PicGoSettingView();
+          },
+        ),
+        GoRoute(
+          path: 'setting/picgo/theme',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ThemeSettingView();
           },
         ),
       ],
