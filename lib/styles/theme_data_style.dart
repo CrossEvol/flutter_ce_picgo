@@ -8,7 +8,7 @@ class ThemeDataStyle {
     colorScheme: ColorScheme.light(
       background: Colors.white,
       primary: Colors.lightBlueAccent.shade200,
-      secondary: Colors.lightBlue.shade300,
+      secondary: Colors.indigoAccent.shade200,
     ),
   );
 
@@ -16,9 +16,9 @@ class ThemeDataStyle {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: ColorScheme.dark(
-      background: Colors.grey.shade900,
-      primary: Colors.deepPurple.shade700,
-      secondary: Colors.deepPurple.shade900,
+      background: Colors.grey.shade800,
+      primary: Colors.deepPurple.shade600,
+      secondary: Colors.deepPurple.shade800,
     ),
   );
 

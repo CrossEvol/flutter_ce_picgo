@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
               currentPageIndex = index;
             });
           },
-          indicatorColor: Colors.lightBlue,
+          indicatorColor: Theme.of(context).colorScheme.secondary,
           selectedIndex: currentPageIndex,
           destinations: const <Widget>[
             NavigationDestination(

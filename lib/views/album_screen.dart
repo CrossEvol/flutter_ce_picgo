@@ -41,6 +41,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
     return Scaffold(
         appBar: HomePageAppBar(
           title: '相册',
+          backgroundColor: Theme.of(context).colorScheme.secondary,
         ),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -48,7 +49,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
-                backgroundColor: Colors.deepPurple,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
                 onPressed: () async {
                   if (_mediaFileList == null) {
                     showDialog(
@@ -84,9 +85,6 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     context.read<ImageCacheBloc>().add(ImageCacheEventPut(
                         key: _mediaFileList!.first.path,
                         xFile: _mediaFileList!.first));
-                    // Provider.of<ImageCacheModel>(context, listen: false)
-                    //     .setImageCache(
-                    //         _mediaFileList!.first.path, _mediaFileList!.first);
                     if (_mediaFileList!.isNotEmpty) {
                       context.read<UploadImageBloc>().add(UploadImageEventAdd(
                           uploadedImage: UploadedImage(
@@ -119,7 +117,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
-                backgroundColor: Colors.lightBlue,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 onPressed: () async {
                   try {
                     final XFile? pickedFile = await _picker.pickImage(

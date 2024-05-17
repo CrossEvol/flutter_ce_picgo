@@ -64,6 +64,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
               ListTile(
                 title: const Text('上传前重命名'),
                 trailing: CupertinoSwitch(
+                  activeColor: Theme.of(context).colorScheme.primary,
                   value: isUploadedRename,
                   onChanged: (value) {
                     _save(SharedPreferencesKeys.settingIsUploadedRename, value);
@@ -76,6 +77,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
               ListTile(
                 title: const Text('时间戳重命名'),
                 trailing: CupertinoSwitch(
+                  activeColor: Theme.of(context).colorScheme.primary,
                   value: isTimestampRename,
                   onChanged: (value) {
                     _save(
@@ -89,6 +91,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
               ListTile(
                 title: const Text('开启上传提示'),
                 trailing: CupertinoSwitch(
+                  activeColor: Theme.of(context).colorScheme.primary,
                   value: isUploadedTip,
                   onChanged: (value) async {
                     if (value) {
@@ -106,6 +109,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
               ListTile(
                 title: const Text('仅删除本地图片'),
                 trailing: CupertinoSwitch(
+                  activeColor: Theme.of(context).colorScheme.primary,
                   value: isForceDelete,
                   onChanged: (value) {
                     _save(SharedPreferencesKeys.settingIsForceDelete, value);

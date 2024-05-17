@@ -31,7 +31,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: HomePageAppBar(title: '设置'),
+      appBar: HomePageAppBar(
+        title: '设置',
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+      ),
       body: ListView(
         children: <Widget>[
           // 图标面板

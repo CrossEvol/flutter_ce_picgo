@@ -57,7 +57,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
                           backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).primaryColor)),
+                              Theme.of(context).colorScheme.primary)),
                       child: const Text('保存'),
                       onPressed: () {
                         if (validate) {
@@ -73,7 +73,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
                           backgroundColor:
-                              MaterialStateProperty.all(Colors.greenAccent)),
+                              MaterialStateProperty.all(Theme.of(context).colorScheme.secondary)),
                       child: const Text('设为默认图床'),
                       onPressed: () {
                         if (validate) {
