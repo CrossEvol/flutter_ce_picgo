@@ -1,4 +1,5 @@
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/material.dart';
 
 enum LocalThemeMode {
   light,
@@ -12,6 +13,14 @@ extension CurrentThemeModeExt on LocalThemeMode {
       LocalThemeMode.light => '浅色模式',
       LocalThemeMode.dark => '深色模式',
       LocalThemeMode.system => '跟随系统'
+    };
+  }
+
+  ThemeMode themeMode(){
+    return switch(this){
+      LocalThemeMode.light => ThemeMode.light,
+      LocalThemeMode.dark => ThemeMode.dark,
+      LocalThemeMode.system => ThemeMode.system
     };
   }
 }

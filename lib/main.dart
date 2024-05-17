@@ -7,11 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/theme_state/theme_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/models/enums/theme_mode.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
-import 'package:provider/provider.dart';
 
 import 'database/db_interface.dart';
+import 'styles/theme_data_style.dart';
 import 'utils/logger_util.dart';
 
 void main() async {
@@ -64,14 +65,21 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => ImageCacheBloc()),
         BlocProvider(create: (_) => ThemeBloc()),
       ],
-      child: MaterialApp.router(
-        title: 'Flutter CE PicGo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        debugShowCheckedModeBanner: false,
-        routerConfig: router,
+      child: BlocConsumer<ThemeBloc, ThemeState>(
+        listener: (context, state) {
+          // TODO: implement listener
+        },
+        builder: (context, state) {
+          return MaterialApp.router(
+            title: 'Flutter CE PicGo',
+            theme: ThemeDataStyle.light,
+            darkTheme: ThemeDataStyle.dark,
+            themeMode:
+                BlocProvider.of<ThemeBloc>(context).state.themeMode.themeMode(),
+            debugShowCheckedModeBanner: false,
+            routerConfig: router,
+          );
+        },
       ),
     );
   }
