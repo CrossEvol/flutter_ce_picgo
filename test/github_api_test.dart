@@ -3,11 +3,13 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_ce_picgo/models/github_content.dart';
+import 'package:flutter_ce_picgo/models/pubspec.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:yaml/yaml.dart';
 
 void main() async {
-  const githubToken = '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';
+  const githubToken = '<YOUR TOKEN>';
   const repo = 'CrossEvol/picgo-repo';
   var path = '';
   var sha = '';
@@ -123,21 +125,19 @@ void main() async {
     Dio dio = Dio();
 
     // Set headers
-    dio.options.headers['Accept'] = 'application/vnd.github+json';
-    dio.options.headers['Authorization'] = 'Bearer $githubToken';
-    dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
-    dio.options.headers['Content-Type'] = 'application/json';
+    dio.options.headers['Accept'] = 'text/html';
     dio.interceptors.add(LogInterceptor(
         requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
 
     try {
       var response = await dio
-          .get('https://api.github.com/repos/CrossEvol/flutter_ce_picgo/contents/pubspec.yaml');
+          .get('https://raw.githubusercontent.com/CrossEvol/flutter_ce_picgo/master/pubspec.yaml');
       expect(200, equals(response.statusCode));
       expect(response.data, isNotNull);
-      var githubContent = GithubContent.fromJson(response.data);
-      var content = base64Decode(githubContent.content!);
-      logger.i(content);
+      logger.i(response.data);
+      var yaml = loadYaml(response.data) as YamlMap;
+      var pubSpec = PubSpec.fromJson(jsonDecode(jsonEncode(yaml)));
+      logger.i(pubSpec.toJson());
     } catch (e) {
       logger.e(e);
     }

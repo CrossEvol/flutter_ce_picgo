@@ -7,7 +7,7 @@ import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() async {
-  const giteeToken = '5f29545bd0cab05994cacc62b3955de7';
+  const giteeToken = '<YOUR TOKEN>';
   const repo = 'youmuao/picgo_repo';
   var path = '';
 
