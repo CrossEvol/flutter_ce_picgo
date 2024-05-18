@@ -12,7 +12,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   ThemeBloc() : super(const ThemeState(LocalThemeMode.system)) {
     on<ThemeEventChange>((event, emit) {
       prefs.setString(
-          SharedPreferencesKeys.localThemeState, event.themeMode.name);
+          SharedPreferencesKeys.localThemeState.name, event.themeMode.name);
       emit(state.copyWith(themeMode: event.themeMode));
     });
     on<ThemeEvent>((event, emit) {
