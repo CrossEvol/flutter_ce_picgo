@@ -6,4 +6,7 @@ abstract class SharedPreferencesKeys {
   static const String settingDefaultStorage = 'settingDefaultStorage';
 
   static const String localThemeState = 'localThemeState';
+
+  static const String latestVersion = 'latestVersion';
+  static const String latestVersionExpiry = 'latestVersionExpiry';
 }

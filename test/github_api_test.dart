@@ -121,17 +121,20 @@ void main() async {
     }
   });
 
-  test('get version ', ()async{
+  test('get version ', () async {
     Dio dio = Dio();
 
     // Set headers
     dio.options.headers['Accept'] = 'text/html';
+    // dio.options.headers['Authorization'] = 'Bearer $githubToken';
+    // dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
+    // dio.options.headers['Content-Type'] = 'application/json';
     dio.interceptors.add(LogInterceptor(
         requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
 
     try {
-      var response = await dio
-          .get('https://raw.githubusercontent.com/CrossEvol/flutter_ce_picgo/master/pubspec.yaml');
+      var response = await dio.get(
+          'https://raw.githubusercontent.com/CrossEvol/flutter_ce_picgo/master/pubspec.yaml');
       expect(200, equals(response.statusCode));
       expect(response.data, isNotNull);
       logger.i(response.data);
@@ -142,4 +145,5 @@ void main() async {
       logger.e(e);
     }
   });
+
 }

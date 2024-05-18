@@ -8,8 +8,10 @@ import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../api/picgo_api.dart';
 import '../../constants/shared_preferences_keys.dart';
 import '../../utils/shared_preferences_ext.dart';
 
@@ -162,22 +164,29 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
   }
 
   _getLatestVersion() async {
-    // try {
-    //   Response res = await PicgoApi.getLatestVersion();
-    //   PackageInfo info = await PackageInfo.fromPlatform();
-    //   int version = int.parse(info.buildNumber);
-    //   int remoteVersion = 0;
-    //   if (Platform.isAndroid) {
-    //     remoteVersion = int.parse('${res.data["Android"]["versionCode"]}');
-    //   } else if (Platform.isIOS) {
-    //     remoteVersion = int.parse('${res.data["iOS"]["versionCode"]}');
-    //   }
-    //   if (version < remoteVersion) {
-    //     setState(() {
-    //       isNeedUpdate = true;
-    //     });
-    //   }
-    // } catch (e) {}
+    var latestVersionExpiry =
+        prefs.getString(SharedPreferencesKeys.latestVersionExpiry);
+    var expiry = DateTime.parse(latestVersionExpiry!);
+    if (expiry.compareTo(DateTime.now()) > 0) {
+      // var latestVersion = prefs.getString(SharedPreferencesKeys.latestVersion);
+      return;
+    }
+
+    try {
+      var latestVersion = await PicgoApi.getLatestVersion();
+      prefs.setString(SharedPreferencesKeys.latestVersion, latestVersion);
+      prefs.setString(SharedPreferencesKeys.latestVersionExpiry,
+          DateTime.now().add(const Duration(hours: 24)).toString());
+      PackageInfo info = await PackageInfo.fromPlatform();
+      String version = info.buildNumber;
+      if (version.compareTo(latestVersion) < 0) {
+        setState(() {
+          isNeedUpdate = true;
+        });
+      }
+    } catch (e) {
+      logger.e(e);
+    }
   }
 
   /// 无论有无更新都进行跳转，不允许放置蒲公英链接
