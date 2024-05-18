@@ -165,8 +165,9 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
 
   _getLatestVersion() async {
     var latestVersionExpiry =
-        prefs.getString(SharedPreferencesKeys.latestVersionExpiry);
-    var expiry = DateTime.parse(latestVersionExpiry!);
+        prefs.getString(SharedPreferencesKeys.latestVersionExpiry) ??
+            DateTime.now().subtract(Durations.short1).toString();
+    var expiry = DateTime.parse(latestVersionExpiry);
     if (expiry.compareTo(DateTime.now()) > 0) {
       // var latestVersion = prefs.getString(SharedPreferencesKeys.latestVersion);
       return;

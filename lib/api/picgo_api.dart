@@ -13,9 +13,9 @@ class PicgoApi {
 
     // Set headers
     dio.options.headers['Accept'] = 'text/html';
-    // dio.options.headers['Authorization'] = 'Bearer $githubToken';
-    // dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
-    // dio.options.headers['Content-Type'] = 'application/json';
+    dio.options.connectTimeout = const Duration(seconds: 5);
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.sendTimeout = const Duration(seconds: 5);
     dio.interceptors.add(LogInterceptor(
         requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
 
