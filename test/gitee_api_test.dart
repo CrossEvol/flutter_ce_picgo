@@ -4,11 +4,13 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_ce_picgo/models/gitee_content.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() async {
-  const giteeToken = '<YOUR TOKEN>';
-  const repo = 'youmuao/picgo_repo';
+  await dotenv.load(fileName: 'assets/env/.env.dev',mergeWith: {});
+  final giteeToken = dotenv.get('GITEE_TOKEN');
+  final repo = dotenv.get('GITEE_REPO');
   var path = '';
 
   await initLogger();

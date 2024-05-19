@@ -5,14 +5,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_ce_picgo/models/github_content.dart';
 import 'package:flutter_ce_picgo/models/pubspec.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yaml/yaml.dart';
 
 void main() async {
-  const githubToken = '<YOUR TOKEN>';
-  const repo = 'CrossEvol/picgo-repo';
+  await dotenv.load(fileName: 'assets/env/.env.dev', mergeWith: {});
+  final githubToken = dotenv.get('GITHUB_TOKEN');
+  final repo = dotenv.get('GITHUB_REPO');
   var path = '';
-  var sha = '';
 
   await initLogger();
 
@@ -57,7 +58,6 @@ void main() async {
       var jsonData = response.data;
       var githubContent = GithubContent.fromJson(jsonData['content']);
       logger.i(githubContent.toJson());
-      sha = githubContent.sha;
     } catch (e) {
       logger.e(e);
     }
@@ -145,5 +145,4 @@ void main() async {
       logger.e(e);
     }
   });
-
 }
