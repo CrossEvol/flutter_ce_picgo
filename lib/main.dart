@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeDataStyle.light,
             darkTheme: ThemeDataStyle.dark,
             themeMode:
-                BlocProvider.of<ThemeBloc>(context).state.themeMode.themeMode(),
+                BlocProvider.of<ThemeBloc>(context).state.themeMode,
             debugShowCheckedModeBanner: false,
             routerConfig: router,
           );
