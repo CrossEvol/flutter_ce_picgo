@@ -57,3 +57,11 @@ Image provider: NetworkImage("https://gitee.com/youmuao/picgo_repo/raw/master/17
 Image key: NetworkImage("https://gitee.com/youmuao/picgo_repo/raw/master/1715856977331000.jpg", scale: 1.0)
 ====================================================================================================
 ```
+
+## after build in windows, only boot in the daemon, but not visible in the UI
+[After desktop build application not open](https://github.com/tekartik/sqflite/issues/945)
+download the sqlite3.dll, put it under the `windows/`
+should insert the below code into `CMakeLists.txt`
+```text
+install(FILES sqlite3.dll DESTINATION "${CMAKE_INSTALL_PREFIX}" COMPONENT Runtime)
+```
