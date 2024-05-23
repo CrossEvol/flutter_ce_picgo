@@ -43,8 +43,12 @@ class ImageStorageSettingPagePresenter {
       var jsonMap = jsonDecode(jsonEncode(yamlMap)) as Map<String, dynamic>;
       jsonMap.forEach((key, value) async {
         if (value != null && value.toString().isNotEmpty) {
+          var safeMap = {};
+          for (var entry in (value as Map<String, dynamic>).entries) {
+            safeMap.putIfAbsent(entry.key, () => entry.value ?? '');
+          }
           await dbProvider.saveImageStorageSettingConfig(
-              type: key, config: jsonEncode(value));
+              type: key, config: jsonEncode(safeMap));
         }
       });
       _view.transferSuccess();
