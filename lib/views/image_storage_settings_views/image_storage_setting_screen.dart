@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ce_picgo/models/isar/isar_image_storage_setting.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/image_storage_setting_presenter.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../models/image_storage_setting.dart';
+import '../../utils/flutter_toast_ext.dart';
 
 class ImageStorageSettingScreen extends StatefulWidget {
   const ImageStorageSettingScreen({super.key});
@@ -28,6 +30,7 @@ class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
   void initState() {
     super.initState();
     _presenter.doLoadPb();
+    fToast.init(context);
   }
 
   @override
@@ -139,11 +142,11 @@ class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
   @override
   void exportConfigSuccess(String config) {
     Clipboard.setData(ClipboardData(text: config));
-    // Toast.show('已将配置导出至剪切板', context);
+    fToast.showSuccessToast(text: '已将配置导出至剪切板');
   }
 
   @override
   void exportConfigError(String message) {
-    // Toast.show('导出失败 : $message', context);
+    fToast.showErrorToast(text: '导出失败 : $message');
   }
 }

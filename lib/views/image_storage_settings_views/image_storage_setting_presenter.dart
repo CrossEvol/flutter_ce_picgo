@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
+import 'package:json2yaml/json2yaml.dart';
+
 import '../../database/db_interface.dart';
 import '../../models/image_storage_setting.dart';
 
@@ -27,16 +33,6 @@ class ImageStorageSettingPagePresenter {
     } catch (e) {
       _view.loadError(e.toString());
     }
-    // try {
-    //   var sql = Sql.setTable('pb_setting');
-    //   var list = await sql.get();
-    //   var realList = list.map((map) {
-    //     return PBSetting.fromMap(map);
-    //   }).toList();
-    //   _view.loadPb(realList);
-    // } catch (e) {
-    //   _view.loadError('${e.toString()}');
-    // }
   }
 
   /// transfer picgo json config to flutter-picgo
@@ -56,6 +52,19 @@ class ImageStorageSettingPagePresenter {
 
   /// 导出所有配置
   doExportConfig() async {
+    try {
+      var githubConfigJson = await dbProvider.getImageStorageSettingConfig(
+          type: ImageStorageType.github);
+      var giteeConfigJson = await dbProvider.getImageStorageSettingConfig(
+          type: ImageStorageType.gitee);
+      Map<String, dynamic> map = {};
+      map.putIfAbsent('github', () => jsonDecode(githubConfigJson));
+      map.putIfAbsent('gitee', () => jsonDecode(giteeConfigJson));
+      _view.exportConfigSuccess(json2yaml(map));
+    } catch (e) {
+      logger.e(e);
+      _view.exportConfigError('$e');
+    }
     // try {
     //   var sql = Sql.setTable(TABLE_NAME_PBSETTING);
     //   var list = await sql.get();
