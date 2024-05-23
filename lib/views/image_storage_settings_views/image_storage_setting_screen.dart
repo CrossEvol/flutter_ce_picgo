@@ -96,12 +96,32 @@ class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: '导出配置',
-        onPressed: () {
-          _presenter.doExportConfig();
-        },
-        child: const Icon(IconData(0xe62c, fontFamily: 'iconfont')),
+      floatingActionButton: Container(
+        padding: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.only(left: 32.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FloatingActionButton(
+              tooltip: '扫描配置',
+              heroTag: 'scan',
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              onPressed: () {
+                context.go('/barcode');
+              },
+              child: const Icon(Icons.document_scanner_sharp),
+            ),
+            FloatingActionButton(
+              tooltip: '导出配置',
+              heroTag: 'export',
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              onPressed: () {
+                _presenter.doExportConfig();
+              },
+              child: const Icon(IconData(0xe62c, fontFamily: 'iconfont')),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -136,15 +156,6 @@ class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
             });
       }
     }
-    // var status = await PermissionUtils.requestCemera();
-    // if (status == PermissionStatus.granted) {
-    //   var result = await BarcodeScanner.scan();
-    //   if (result.type == ResultType.Barcode) {
-    //     _presenter.doTransferJson(result.rawContent);
-    //   }
-    // } else {
-    //   PermissionUtils.showPermissionDialog(context);
-    // }
   }
 
   @override

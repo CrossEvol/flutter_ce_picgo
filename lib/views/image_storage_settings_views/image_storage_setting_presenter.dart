@@ -44,24 +44,13 @@ class ImageStorageSettingPagePresenter {
       jsonMap.forEach((key, value) async {
         if (value != null && value.toString().isNotEmpty) {
           await dbProvider.saveImageStorageSettingConfig(
-              type: key, config: value);
+              type: key, config: jsonEncode(value));
         }
       });
       _view.transferSuccess();
     } catch (e) {
       _view.transferError('转换失败，请确认配置无误');
     }
-    // try {
-    //   Map<String, dynamic> map = json.decode(jsonStr);
-    //   map.forEach((key, value) async {
-    //     var config = json.encode(value);
-    //     await ImageUploadUtils.savePBConfig(key, config);
-    //   });
-    //   // success
-    //   _view.transferSuccess();
-    // } catch (e) {
-    //   _view.transferError('转换失败，请确认配置无误');
-    // }
   }
 
   /// 导出所有配置

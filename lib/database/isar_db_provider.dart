@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
@@ -29,6 +31,9 @@ class IsarDbProvider implements DbInterface {
         .filter()
         .typeEqualTo(type)
         .findFirst();
+    if(kDebugMode){
+      logger.i(isarImageStorageSetting!.config);
+    }
     return isarImageStorageSetting!.config;
   }
 

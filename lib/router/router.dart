@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/views/album_screen.dart';
+import 'package:flutter_ce_picgo/views/barcode_view.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/gitee_page/gitee_page.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/github/github_page.dart';
 import 'package:flutter_ce_picgo/views/picgo_setting_views/picgo_setting_view.dart';
@@ -66,6 +67,12 @@ final GoRouter router = GoRouter(
           path: 'setting/picgo/theme',
           builder: (BuildContext context, GoRouterState state) {
             return const ThemeSettingView();
+          },
+        ),
+        GoRoute(
+          path: 'barcode',
+          builder: (BuildContext context, GoRouterState state) {
+            return const BarCodeView();
           },
         ),
       ],
