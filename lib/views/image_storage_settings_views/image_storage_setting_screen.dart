@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ce_picgo/models/isar/isar_image_storage_setting.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/image_storage_setting_presenter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../models/image_storage_setting.dart';
 import '../../utils/flutter_toast_ext.dart';
@@ -103,7 +107,35 @@ class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
   }
 
   /// 扫描二维码
-  _scanCode() async {
+  Future<void> _scanCode() async {
+    if (kIsWeb) {
+      return fToast.showErrorToast(text: 'ScanCode UnSupport Web!');
+    } else if (Platform.isWindows) {
+      return fToast.showErrorToast(text: 'ScanCode UnSupport Desktop!');
+    }
+    if ((await Permission.camera.request()).isGranted) {
+      var result = await BarcodeScanner.scan();
+      if (result.type == ResultType.Barcode) {
+        _presenter.doTransferJson(result.rawContent);
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('警告'),
+                content: Text('无法正常访问，因为没有权限'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('去设置'),
+                    onPressed: () {
+                      openAppSettings();
+                    },
+                  ),
+                ],
+              );
+            });
+      }
+    }
     // var status = await PermissionUtils.requestCemera();
     // if (status == PermissionStatus.granted) {
     //   var result = await BarcodeScanner.scan();
@@ -131,12 +163,12 @@ class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
 
   @override
   void transferError(String e) {
-    // Toast.show(e, context, duration: Toast.LENGTH_LONG);
+    fToast.showErrorToast(text: e);
   }
 
   @override
   void transferSuccess() {
-    // Toast.show('配置已转换', context);
+    fToast.showSuccessToast(text: '配置已转换');
   }
 
   @override

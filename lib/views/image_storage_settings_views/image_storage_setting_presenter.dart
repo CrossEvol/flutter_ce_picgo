@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:json2yaml/json2yaml.dart';
+import 'package:yaml/yaml.dart';
 
 import '../../database/db_interface.dart';
 import '../../models/image_storage_setting.dart';
@@ -36,7 +37,20 @@ class ImageStorageSettingPagePresenter {
   }
 
   /// transfer picgo json config to flutter-picgo
-  doTransferJson(String jsonStr) async {
+  doTransferJson(String yamlStr) async {
+    try {
+      var yamlMap = loadYaml(yamlStr);
+      var jsonMap = jsonDecode(jsonEncode(yamlMap)) as Map<String, dynamic>;
+      jsonMap.forEach((key, value) async {
+        if (value != null && value.toString().isNotEmpty) {
+          await dbProvider.saveImageStorageSettingConfig(
+              type: key, config: value);
+        }
+      });
+      _view.transferSuccess();
+    } catch (e) {
+      _view.transferError('转换失败，请确认配置无误');
+    }
     // try {
     //   Map<String, dynamic> map = json.decode(jsonStr);
     //   map.forEach((key, value) async {
@@ -65,19 +79,5 @@ class ImageStorageSettingPagePresenter {
       logger.e(e);
       _view.exportConfigError('$e');
     }
-    // try {
-    //   var sql = Sql.setTable(TABLE_NAME_PBSETTING);
-    //   var list = await sql.get();
-    //   Map<String, dynamic> map = {};
-    //   list.forEach((element) {
-    //     var pbItem = PBSetting.fromMap(element);
-    //     if (!isBlank(pbItem.config)) {
-    //       map[pbItem.type] = json.decode(pbItem.config);
-    //     }
-    //   });
-    //   _view.exportConfigSuccess(json.encode(map));
-    // } catch (e) {
-    //   _view.exportConfigError('$e');
-    // }
   }
 }
