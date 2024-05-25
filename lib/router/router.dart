@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 
 import '../views/home_screen.dart';
 import '../views/image_storage_settings_views/image_storage_setting_screen.dart';
+import '../views/repo_manage_screen.dart';
 
 /// The route configuration.
 final GoRouter router = GoRouter(
@@ -73,6 +74,14 @@ final GoRouter router = GoRouter(
           path: 'barcode',
           builder: (BuildContext context, GoRouterState state) {
             return const BarCodeView();
+          },
+        ),
+        GoRoute(
+          path: 'repo/:type',
+          builder: (BuildContext context, GoRouterState state) {
+            return RepoManageScreen(
+              storageType: state.pathParameters['type']!,
+            );
           },
         ),
       ],

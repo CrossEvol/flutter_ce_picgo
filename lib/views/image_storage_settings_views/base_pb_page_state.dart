@@ -72,8 +72,8 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
                       style: ButtonStyle(
                           foregroundColor:
                               MaterialStateProperty.all(Colors.white),
-                          backgroundColor:
-                              MaterialStateProperty.all(Theme.of(context).colorScheme.secondary)),
+                          backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.secondary)),
                       child: const Text('设为默认图床'),
                       onPressed: () {
                         if (validate) {
@@ -180,7 +180,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
   bool get isSupportManage => false;
 
   /// 子类重写，点击IconButton回调方法
-  handleManage() {}
+  void handleManage() {}
 
   /// 保存配置
   save() async {

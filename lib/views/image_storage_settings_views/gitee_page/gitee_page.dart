@@ -86,10 +86,7 @@ class _GiteePageState extends BasePBSettingPageState<GiteePage> {
   bool get isSupportManage => true;
 
   @override
-  handleManage() {
-    context.go('');
-    // Application.router.navigateTo(context,
-    //     '${Routes.settingPbGiteeRepo}?path=${Uri.encodeComponent("/")}',
-    //     transition: TransitionType.cupertino);
+  void handleManage() {
+    context.go('/repo/${ImageStorageType.gitee}');
   }
 }

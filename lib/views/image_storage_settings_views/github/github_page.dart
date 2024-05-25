@@ -79,10 +79,7 @@ class _GithubPageState extends BasePBSettingPageState<GithubPage> {
   bool get isSupportManage => true;
 
   @override
-  handleManage() {
-    context.go('');
-    // Application.router.navigateTo(context,
-    //     '${Routes.settingPbGitubRepo}?path=${Uri.encodeComponent("/")}',
-    //     transition: TransitionType.cupertino);
+  void handleManage() {
+    context.go('/repo/${ImageStorageType.github}');
   }
 }
