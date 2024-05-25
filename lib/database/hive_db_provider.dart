@@ -124,4 +124,10 @@ class HiveDbProvider implements DbInterface {
       return false;
     }
   }
+
+  @override
+  Future<bool> removeUploadImage(RemoveUploadImageVO removeUploadImageVO) {
+    // TODO: implement removeUploadImage
+    throw UnimplementedError();
+  }
 }

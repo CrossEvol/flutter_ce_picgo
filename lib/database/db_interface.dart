@@ -8,6 +8,13 @@ import 'db_interface_stub.dart'
 
 late DbInterface dbProvider;
 
+typedef RemoveUploadImageVO = (
+  int id,
+  String filepath,
+  String storageType,
+  String name
+);
+
 abstract interface class DbInterface {
   factory DbInterface() => getInstance();
 
@@ -25,6 +32,8 @@ abstract interface class DbInterface {
   Future<void> saveUploadedImage(UploadedImage uploadedImage);
 
   Future<List<UploadedImage>> getUploadedImages();
+
+  Future<bool> removeUploadImage(RemoveUploadImageVO removeUploadImageVO);
 
   Future<bool> updateUploadedImage(
       {required String filepath,

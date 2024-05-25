@@ -152,4 +152,10 @@ class IsarDbProvider implements DbInterface {
     });
     return bool;
   }
+
+  @override
+  Future<bool> removeUploadImage(RemoveUploadImageVO removeUploadImageVO) {
+    // TODO: implement removeUploadImage
+    throw UnimplementedError();
+  }
 }
