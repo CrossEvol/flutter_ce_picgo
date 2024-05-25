@@ -28,13 +28,21 @@ final class UploadImageEventUpdate extends UploadImageEvent {
   String? sha;
 
   @override
-  List<Object?> get props => [url, name, state,sha];
+  List<Object?> get props => [url, name, state, sha];
 
-  UploadImageEventUpdate({
+  UploadImageEventUpdate(
+      {required this.filepath, this.url, this.name, this.state, this.sha});
+}
+
+final class UploadImageEventRemove extends UploadImageEvent {
+  final int id;
+  final String filepath;
+
+  @override
+  List<Object?> get props => [id, filepath];
+
+  const UploadImageEventRemove({
+    required this.id,
     required this.filepath,
-    this.url,
-    this.name,
-    this.state,
-    this.sha
   });
 }

@@ -40,5 +40,13 @@ class UploadImageBloc extends Bloc<UploadImageEvent, UploadImageState> {
       await dbProvider.saveUploadedImage(event.uploadedImage);
       emit(state.copyWith(images: [...state.images, event.uploadedImage]));
     });
+
+    on<UploadImageEventRemove>((event, emit) async {
+      await dbProvider.removeUploadImage((event.id, event.filepath));
+      emit(state.copyWith(
+          images: state.images
+              .where((element) => element.filepath != event.filepath)
+              .toList()));
+    });
   }
 }

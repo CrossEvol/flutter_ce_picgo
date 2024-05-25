@@ -74,7 +74,14 @@ class _UploadScreenState extends State<UploadScreen> {
                 }
                 return Dismissible(
                   key: Key(state.images[index].filepath),
-                  background: Container(color: Colors.red,),
+                  background: Container(
+                    color: Colors.red,
+                  ),
+                  onDismissed: (DismissDirection direction) async {
+                    final image = state.images[index];
+                    context.read<UploadImageBloc>().add(UploadImageEventRemove(
+                        id: image.id, filepath: image.filepath));
+                  },
                   child: StatelessUploadItem(
                     uploadedImage: state.images[index],
                     fToast: fToast,
