@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_ce_picgo/api/github_api.dart';
+import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/models/github_content.dart';
 import 'package:flutter_ce_picgo/models/pubspec.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
@@ -12,7 +14,7 @@ import 'package:yaml/yaml.dart';
 void main() async {
   await dotenv.load(fileName: 'assets/env/.env.dev', mergeWith: {});
   final githubToken = dotenv.get('GITHUB_TOKEN');
-  final repo = dotenv.get('GITHUB_REPO');
+  final githubRepo = dotenv.get('GITHUB_REPO');
   var path = '';
 
   await initLogger();
@@ -50,7 +52,7 @@ void main() async {
     // Perform PUT request
     try {
       Response response = await dio.put(
-        'https://api.github.com/repos/$repo/contents/$path',
+        'https://api.github.com/repos/$githubRepo/contents/$path',
         data: requestBody,
         options: Options(contentType: Headers.jsonContentType),
       );
@@ -77,7 +79,7 @@ void main() async {
 
     try {
       var response = await dio
-          .get('https://api.github.com/repos/$repo/contents/$tempPath');
+          .get('https://api.github.com/repos/$githubRepo/contents/$tempPath');
       expect(200, equals(response.statusCode));
       expect(response.data, isNotNull);
       var githubContent = GithubContent.fromJson(response.data);
@@ -108,7 +110,7 @@ void main() async {
     // Perform DELETE request
     try {
       Response response = await dio.delete(
-        'https://api.github.com/repos/$repo/contents/$tempPath',
+        'https://api.github.com/repos/$githubRepo/contents/$tempPath',
         data: requestBody,
         options: Options(contentType: Headers.jsonContentType),
       );
@@ -143,6 +145,18 @@ void main() async {
       logger.i(pubSpec.toJson());
     } catch (e) {
       logger.e(e);
+    }
+  });
+
+  test('GetImages test', () async {
+    var list = await GithubApi.getImages(GithubConfig(
+        branch: '',
+        customUrl: '',
+        path: '',
+        repo: githubRepo,
+        token: githubToken));
+    for (var element in list) {
+      logger.i('name = ${element.$1}\n sha = ${element.$2}');
     }
   });
 }
