@@ -8,6 +8,7 @@ import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/theme_state/theme_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
+import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
 import 'database/db_interface.dart';
@@ -25,6 +26,10 @@ void main() async {
   logger.i('configure the database provider...');
   dbProvider = DbInterface();
   await dbProvider.init();
+
+  if (!kIsWeb) {
+    await setupAppDirectory();
+  }
 
   if (!kIsWeb && Platform.isWindows) {
     appWindow.size = const Size(375, 667);
@@ -73,8 +78,7 @@ class MyApp extends StatelessWidget {
             title: 'Flutter CE PicGo',
             theme: ThemeDataStyle.light,
             darkTheme: ThemeDataStyle.dark,
-            themeMode:
-                BlocProvider.of<ThemeBloc>(context).state.themeMode,
+            themeMode: BlocProvider.of<ThemeBloc>(context).state.themeMode,
             debugShowCheckedModeBanner: false,
             routerConfig: router,
           );
