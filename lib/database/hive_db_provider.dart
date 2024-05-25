@@ -126,8 +126,15 @@ class HiveDbProvider implements DbInterface {
   }
 
   @override
-  Future<bool> removeUploadImage(RemoveUploadImageVO removeUploadImageVO) {
-    // TODO: implement removeUploadImage
-    throw UnimplementedError();
+  Future<bool> removeUploadImage(
+      RemoveUploadImageVO removeUploadImageVO) async {
+    try {
+      final (_, filepath) = removeUploadImageVO;
+      await uploadedImageBox.delete(filepath);
+      return true;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 }

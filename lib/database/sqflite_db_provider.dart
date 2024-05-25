@@ -226,8 +226,16 @@ class SqfliteDbProvider implements DbInterface {
   }
 
   @override
-  Future<bool> removeUploadImage(RemoveUploadImageVO removeUploadImageVO) {
-    // TODO: implement removeUploadImage
-    throw UnimplementedError();
+  Future<bool> removeUploadImage(
+      RemoveUploadImageVO removeUploadImageVO) async {
+    final (id, filepath) = removeUploadImageVO;
+    try {
+      var i = await db.delete(UPLOADED_IMAGE_TABLE,
+          where: "id = ? or filepath = ?", whereArgs: [id, filepath]);
+      return i == 1;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 }

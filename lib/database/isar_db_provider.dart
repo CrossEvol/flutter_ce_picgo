@@ -31,7 +31,7 @@ class IsarDbProvider implements DbInterface {
         .filter()
         .typeEqualTo(type)
         .findFirst();
-    if(kDebugMode){
+    if (kDebugMode) {
       logger.i(isarImageStorageSetting!.config);
     }
     return isarImageStorageSetting!.config;
@@ -154,8 +154,20 @@ class IsarDbProvider implements DbInterface {
   }
 
   @override
-  Future<bool> removeUploadImage(RemoveUploadImageVO removeUploadImageVO) {
-    // TODO: implement removeUploadImage
-    throw UnimplementedError();
+  Future<bool> removeUploadImage(
+      RemoveUploadImageVO removeUploadImageVO) async {
+    final (id, filepath) = removeUploadImageVO;
+    try {
+      var i = await isar.isarUploadedImages
+          .filter()
+          .idEqualTo(id)
+          .or()
+          .filepathEqualTo(filepath)
+          .deleteAll();
+      return i >= 0;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 }

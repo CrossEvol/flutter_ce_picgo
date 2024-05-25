@@ -11,8 +11,6 @@ late DbInterface dbProvider;
 typedef RemoveUploadImageVO = (
   int id,
   String filepath,
-  String storageType,
-  String name
 );
 
 abstract interface class DbInterface {
