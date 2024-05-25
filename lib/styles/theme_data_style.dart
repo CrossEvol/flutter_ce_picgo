@@ -9,6 +9,7 @@ class ThemeDataStyle {
       background: Colors.white,
       primary: Colors.lightBlueAccent.shade200,
       secondary: Colors.indigoAccent.shade200,
+      error: Colors.redAccent.shade200
     ),
   );
 
@@ -19,6 +20,7 @@ class ThemeDataStyle {
       background: Colors.grey.shade800,
       primary: Colors.deepPurple.shade600,
       secondary: Colors.deepPurple.shade800,
+      error: Colors.red.shade900
     ),
   );
 

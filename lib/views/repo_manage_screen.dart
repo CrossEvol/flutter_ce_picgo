@@ -64,7 +64,10 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                       minimumSize:
                           MaterialStateProperty.all(const Size(120.0, 40.0)),
                     ),
-                    child: Text('确认($selectedCount/$totalCount)'),
+                    child: Text(
+                      '确认($selectedCount/$totalCount)',
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
                   ),
           ),
         ],
