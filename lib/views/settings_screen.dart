@@ -50,7 +50,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     height: 80,
                     child: ClipOval(
                       child: Image.asset(
-                        'assets/images/rocket_logo.jpg',
+                        'assets/logo/logo3.webp',
                         fit: BoxFit.cover,
                         width: 80,
                         height: 80,

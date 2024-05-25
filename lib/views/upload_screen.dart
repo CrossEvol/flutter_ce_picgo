@@ -63,12 +63,22 @@ class _UploadScreenState extends State<UploadScreen> {
                           .add(ImageCacheEventRemove(key: image.filepath));
                     } catch (e) {
                       logger.e(e);
+                      context.read<UploadImageBloc>().add(
+                          UploadImageEventUpdate(
+                              filepath: image.filepath,
+                              url: image.url,
+                              state: UploadState.uploadFailed,
+                              sha: image.sha));
                     }
                   });
                 }
-                return StatelessUploadItem(
-                  uploadedImage: state.images[index],
-                  fToast: fToast,
+                return Dismissible(
+                  key: Key(state.images[index].filepath),
+                  background: Container(color: Colors.red,),
+                  child: StatelessUploadItem(
+                    uploadedImage: state.images[index],
+                    fToast: fToast,
+                  ),
                 );
               });
         },
