@@ -195,4 +195,10 @@ class IsarDbProvider implements DbInterface {
     // TODO: implement clearDownloadedImages
     throw UnimplementedError();
   }
+
+  @override
+  Future<DownloadedImage> getDownloadedImage(GetDownloadedImageVo getDownloadedImageVo) {
+    // TODO: implement getDownloadedImage
+    throw UnimplementedError();
+  }
 }

@@ -16,6 +16,8 @@ typedef RemoveUploadImageVO = (
 
 typedef RemoveDownloadedImageVo = (String name, String filepath);
 
+typedef GetDownloadedImageVo = (String name, String filepath);
+
 abstract interface class DbInterface {
   factory DbInterface() => getInstance();
 
@@ -50,4 +52,7 @@ abstract interface class DbInterface {
   Future<bool> clearDownloadedImages();
 
   Future<List<DownloadedImage>> getDownloadedImages();
+
+  Future<DownloadedImage> getDownloadedImage(
+      GetDownloadedImageVo getDownloadedImageVo);
 }
