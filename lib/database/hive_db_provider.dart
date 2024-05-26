@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/constants/table_name_keys.dart';
+import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/hive/hive_uploaded_image.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
@@ -136,5 +137,29 @@ class HiveDbProvider implements DbInterface {
       logger.e(e);
       return false;
     }
+  }
+
+  @override
+  Future<List<DownloadedImage>> getDownloadedImages() {
+    // TODO: implement getDownloadedImages
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> removeDownloadedImage(RemoveDownloadedImageVo removeDownloadedImageVo) {
+    // TODO: implement removeDownloadedImage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> saveDownloadedImage(DownloadedImage downloadedImage) {
+    // TODO: implement saveDownloadedImage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> clearDownloadedImages() {
+    // TODO: implement clearDownloadedImages
+    throw UnimplementedError();
   }
 }

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
+import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/models/isar/isar_image_storage_setting.dart';
@@ -169,5 +170,29 @@ class IsarDbProvider implements DbInterface {
       logger.e(e);
       return false;
     }
+  }
+
+  @override
+  Future<List<DownloadedImage>> getDownloadedImages() {
+    // TODO: implement getDownloadedImages
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> removeDownloadedImage(RemoveDownloadedImageVo removeDownloadedImageVo) {
+    // TODO: implement removeDownloadedImage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> saveDownloadedImage(DownloadedImage downloadedImage) {
+    // TODO: implement saveDownloadedImage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> clearDownloadedImages() {
+    // TODO: implement clearDownloadedImages
+    throw UnimplementedError();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
@@ -12,6 +13,8 @@ typedef RemoveUploadImageVO = (
   int id,
   String filepath,
 );
+
+typedef RemoveDownloadedImageVo = (String name, String filepath);
 
 abstract interface class DbInterface {
   factory DbInterface() => getInstance();
@@ -38,4 +41,13 @@ abstract interface class DbInterface {
       String? url,
       String? name,
       UploadState? state});
+
+  Future<bool> saveDownloadedImage(DownloadedImage downloadedImage);
+
+  Future<bool> removeDownloadedImage(
+      RemoveDownloadedImageVo removeDownloadedImageVo);
+
+  Future<bool> clearDownloadedImages();
+
+  Future<List<DownloadedImage>> getDownloadedImages();
 }
