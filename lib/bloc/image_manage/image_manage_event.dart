@@ -5,14 +5,10 @@ sealed class ImageManageEvent extends Equatable {
 }
 
 final class ImageManageEventLoad extends ImageManageEvent {
-  final List<DownloadedImage> images;
 
   @override
-  List<Object?> get props => [images];
+  List<Object?> get props => [];
 
-  const ImageManageEventLoad({
-    required this.images,
-  });
 }
 
 final class ImageManageEventDelete extends ImageManageEvent {

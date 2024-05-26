@@ -55,4 +55,5 @@ abstract interface class DbInterface {
 
   Future<DownloadedImage> getDownloadedImage(
       GetDownloadedImageVo getDownloadedImageVo);
+
 }

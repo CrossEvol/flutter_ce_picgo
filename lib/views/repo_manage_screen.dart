@@ -143,7 +143,7 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
   void initState() {
     super.initState();
     fToast.init(context);
-    context.read<ImageManageBloc>().add(ImageManageEventLoad(images: []));
+    context.read<ImageManageBloc>().add(ImageManageEventLoad());
   }
 
   @override
