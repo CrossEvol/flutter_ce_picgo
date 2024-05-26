@@ -65,7 +65,7 @@ class ImageManageItem extends StatelessWidget {
       await dbProvider.saveDownloadedImage(DownloadedImage(
         id: 0,
         localUrl: dest,
-        remoteUrl: githubContent.downloadUrl,
+        remoteUrl: githubContent.url,
         name: githubContent.name,
         sha: githubContent.sha,
         createdAt: DateTime.now(),
