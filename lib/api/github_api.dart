@@ -6,7 +6,7 @@ import 'package:flutter_ce_picgo/utils/file_util.dart';
 
 import '../utils/logger_util.dart';
 
-typedef GetImagesResult = (String name, String sha);
+typedef GetImagesResult = (String name, String remoteUrl, String sha);
 
 class GithubApi {
   static Future<List<GetImagesResult>> getImages(
@@ -31,6 +31,7 @@ class GithubApi {
         .map((e) => GithubContent.fromJson(e))
         .where((element) => element.type == FileContentType.file)
         .map((e) => (
+              e.name,
               'https://api.github.com/repos/${githubConfig.repo}/contents/${e.name}',
               e.sha
             ))

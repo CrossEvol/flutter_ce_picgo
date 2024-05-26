@@ -23,10 +23,11 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       var images = list
           .map((e) => DownloadedImage(
               id: ++index,
-              path: e.$1,
+              localUrl: '', // it will be check in the child widget
+              remoteUrl: e.$2,
               name: e.$1,
-              sha: e.$2,
-              downloadedAt: DateTime.now()))
+              sha: e.$3,
+              createdAt: DateTime.now()))
           .toList();
       emit(state.copyWith(images: images));
     });

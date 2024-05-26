@@ -18,23 +18,28 @@ const IsarDownloadedImageSchema = CollectionSchema(
   name: r'IsarDownloadedImage',
   id: -6365592762204622006,
   properties: {
-    r'downloadedAt': PropertySchema(
+    r'createdAt': PropertySchema(
       id: 0,
-      name: r'downloadedAt',
+      name: r'createdAt',
       type: IsarType.dateTime,
     ),
-    r'name': PropertySchema(
+    r'localUrl': PropertySchema(
       id: 1,
+      name: r'localUrl',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
-    r'path': PropertySchema(
-      id: 2,
-      name: r'path',
+    r'remoteUrl': PropertySchema(
+      id: 3,
+      name: r'remoteUrl',
       type: IsarType.string,
     ),
     r'sha': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'sha',
       type: IsarType.string,
     )
@@ -45,14 +50,14 @@ const IsarDownloadedImageSchema = CollectionSchema(
   deserializeProp: _isarDownloadedImageDeserializeProp,
   idName: r'id',
   indexes: {
-    r'path': IndexSchema(
-      id: 8756705481922369689,
-      name: r'path',
+    r'localUrl': IndexSchema(
+      id: -1341171084344051942,
+      name: r'localUrl',
       unique: false,
       replace: false,
       properties: [
         IndexPropertySchema(
-          name: r'path',
+          name: r'localUrl',
           type: IndexType.value,
           caseSensitive: true,
         )
@@ -66,6 +71,19 @@ const IsarDownloadedImageSchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'name',
+          type: IndexType.value,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'remoteUrl': IndexSchema(
+      id: 726143022738629678,
+      name: r'remoteUrl',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'remoteUrl',
           type: IndexType.value,
           caseSensitive: true,
         )
@@ -86,8 +104,9 @@ int _isarDownloadedImageEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.localUrl.length * 3;
   bytesCount += 3 + object.name.length * 3;
-  bytesCount += 3 + object.path.length * 3;
+  bytesCount += 3 + object.remoteUrl.length * 3;
   bytesCount += 3 + object.sha.length * 3;
   return bytesCount;
 }
@@ -98,10 +117,11 @@ void _isarDownloadedImageSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.downloadedAt);
-  writer.writeString(offsets[1], object.name);
-  writer.writeString(offsets[2], object.path);
-  writer.writeString(offsets[3], object.sha);
+  writer.writeDateTime(offsets[0], object.createdAt);
+  writer.writeString(offsets[1], object.localUrl);
+  writer.writeString(offsets[2], object.name);
+  writer.writeString(offsets[3], object.remoteUrl);
+  writer.writeString(offsets[4], object.sha);
 }
 
 IsarDownloadedImage _isarDownloadedImageDeserialize(
@@ -111,12 +131,13 @@ IsarDownloadedImage _isarDownloadedImageDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = IsarDownloadedImage(
-    downloadedAt: reader.readDateTime(offsets[0]),
-    name: reader.readString(offsets[1]),
-    path: reader.readString(offsets[2]),
-    sha: reader.readString(offsets[3]),
+    createdAt: reader.readDateTime(offsets[0]),
+    id: id,
+    localUrl: reader.readString(offsets[1]),
+    name: reader.readString(offsets[2]),
+    remoteUrl: reader.readString(offsets[3]),
+    sha: reader.readString(offsets[4]),
   );
-  object.id = id;
   return object;
 }
 
@@ -134,6 +155,8 @@ P _isarDownloadedImageDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -163,10 +186,10 @@ extension IsarDownloadedImageQueryWhereSort
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhere>
-      anyPath() {
+      anyLocalUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'path'),
+        const IndexWhereClause.any(indexName: r'localUrl'),
       );
     });
   }
@@ -176,6 +199,15 @@ extension IsarDownloadedImageQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'name'),
+      );
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhere>
+      anyRemoteUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'remoteUrl'),
       );
     });
   }
@@ -252,44 +284,44 @@ extension IsarDownloadedImageQueryWhere
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
-      pathEqualTo(String path) {
+      localUrlEqualTo(String localUrl) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'path',
-        value: [path],
+        indexName: r'localUrl',
+        value: [localUrl],
       ));
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
-      pathNotEqualTo(String path) {
+      localUrlNotEqualTo(String localUrl) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'path',
+              indexName: r'localUrl',
               lower: [],
-              upper: [path],
+              upper: [localUrl],
               includeUpper: false,
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'path',
-              lower: [path],
+              indexName: r'localUrl',
+              lower: [localUrl],
               includeLower: false,
               upper: [],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'path',
-              lower: [path],
+              indexName: r'localUrl',
+              lower: [localUrl],
               includeLower: false,
               upper: [],
             ))
             .addWhereClause(IndexWhereClause.between(
-              indexName: r'path',
+              indexName: r'localUrl',
               lower: [],
-              upper: [path],
+              upper: [localUrl],
               includeUpper: false,
             ));
       }
@@ -297,14 +329,14 @@ extension IsarDownloadedImageQueryWhere
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
-      pathGreaterThan(
-    String path, {
+      localUrlGreaterThan(
+    String localUrl, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'path',
-        lower: [path],
+        indexName: r'localUrl',
+        lower: [localUrl],
         includeLower: include,
         upper: [],
       ));
@@ -312,80 +344,80 @@ extension IsarDownloadedImageQueryWhere
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
-      pathLessThan(
-    String path, {
+      localUrlLessThan(
+    String localUrl, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'path',
+        indexName: r'localUrl',
         lower: [],
-        upper: [path],
+        upper: [localUrl],
         includeUpper: include,
       ));
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
-      pathBetween(
-    String lowerPath,
-    String upperPath, {
+      localUrlBetween(
+    String lowerLocalUrl,
+    String upperLocalUrl, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'path',
-        lower: [lowerPath],
+        indexName: r'localUrl',
+        lower: [lowerLocalUrl],
         includeLower: includeLower,
-        upper: [upperPath],
+        upper: [upperLocalUrl],
         includeUpper: includeUpper,
       ));
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
-      pathStartsWith(String PathPrefix) {
+      localUrlStartsWith(String LocalUrlPrefix) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'path',
-        lower: [PathPrefix],
-        upper: ['$PathPrefix\u{FFFFF}'],
+        indexName: r'localUrl',
+        lower: [LocalUrlPrefix],
+        upper: ['$LocalUrlPrefix\u{FFFFF}'],
       ));
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
-      pathIsEmpty() {
+      localUrlIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'path',
+        indexName: r'localUrl',
         value: [''],
       ));
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
-      pathIsNotEmpty() {
+      localUrlIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(IndexWhereClause.lessThan(
-              indexName: r'path',
+              indexName: r'localUrl',
               upper: [''],
             ))
             .addWhereClause(IndexWhereClause.greaterThan(
-              indexName: r'path',
+              indexName: r'localUrl',
               lower: [''],
             ));
       } else {
         return query
             .addWhereClause(IndexWhereClause.greaterThan(
-              indexName: r'path',
+              indexName: r'localUrl',
               lower: [''],
             ))
             .addWhereClause(IndexWhereClause.lessThan(
-              indexName: r'path',
+              indexName: r'localUrl',
               upper: [''],
             ));
       }
@@ -532,50 +564,191 @@ extension IsarDownloadedImageQueryWhere
       }
     });
   }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      remoteUrlEqualTo(String remoteUrl) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'remoteUrl',
+        value: [remoteUrl],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      remoteUrlNotEqualTo(String remoteUrl) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'remoteUrl',
+              lower: [],
+              upper: [remoteUrl],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'remoteUrl',
+              lower: [remoteUrl],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'remoteUrl',
+              lower: [remoteUrl],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'remoteUrl',
+              lower: [],
+              upper: [remoteUrl],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      remoteUrlGreaterThan(
+    String remoteUrl, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'remoteUrl',
+        lower: [remoteUrl],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      remoteUrlLessThan(
+    String remoteUrl, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'remoteUrl',
+        lower: [],
+        upper: [remoteUrl],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      remoteUrlBetween(
+    String lowerRemoteUrl,
+    String upperRemoteUrl, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'remoteUrl',
+        lower: [lowerRemoteUrl],
+        includeLower: includeLower,
+        upper: [upperRemoteUrl],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      remoteUrlStartsWith(String RemoteUrlPrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'remoteUrl',
+        lower: [RemoteUrlPrefix],
+        upper: ['$RemoteUrlPrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      remoteUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'remoteUrl',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      remoteUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'remoteUrl',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'remoteUrl',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'remoteUrl',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'remoteUrl',
+              upper: [''],
+            ));
+      }
+    });
+  }
 }
 
 extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
     IsarDownloadedImage, QFilterCondition> {
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      downloadedAtEqualTo(DateTime value) {
+      createdAtEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'downloadedAt',
+        property: r'createdAt',
         value: value,
       ));
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      downloadedAtGreaterThan(
+      createdAtGreaterThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'downloadedAt',
+        property: r'createdAt',
         value: value,
       ));
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      downloadedAtLessThan(
+      createdAtLessThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'downloadedAt',
+        property: r'createdAt',
         value: value,
       ));
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      downloadedAtBetween(
+      createdAtBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
@@ -583,7 +756,7 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'downloadedAt',
+        property: r'createdAt',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -644,6 +817,142 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'localUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'localUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'localUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'localUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'localUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'localUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'localUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'localUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'localUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      localUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'localUrl',
+        value: '',
       ));
     });
   }
@@ -785,13 +1094,13 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathEqualTo(
+      remoteUrlEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'path',
+        property: r'remoteUrl',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -799,7 +1108,7 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathGreaterThan(
+      remoteUrlGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -807,7 +1116,7 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'path',
+        property: r'remoteUrl',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -815,7 +1124,7 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathLessThan(
+      remoteUrlLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -823,7 +1132,7 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'path',
+        property: r'remoteUrl',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -831,7 +1140,7 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathBetween(
+      remoteUrlBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -840,7 +1149,7 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'path',
+        property: r'remoteUrl',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -851,13 +1160,13 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathStartsWith(
+      remoteUrlStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'path',
+        property: r'remoteUrl',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -865,13 +1174,13 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathEndsWith(
+      remoteUrlEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'path',
+        property: r'remoteUrl',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -879,10 +1188,10 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathContains(String value, {bool caseSensitive = true}) {
+      remoteUrlContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'path',
+        property: r'remoteUrl',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -890,10 +1199,10 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathMatches(String pattern, {bool caseSensitive = true}) {
+      remoteUrlMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'path',
+        property: r'remoteUrl',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -901,20 +1210,20 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathIsEmpty() {
+      remoteUrlIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'path',
+        property: r'remoteUrl',
         value: '',
       ));
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
-      pathIsNotEmpty() {
+      remoteUrlIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'path',
+        property: r'remoteUrl',
         value: '',
       ));
     });
@@ -1066,16 +1375,30 @@ extension IsarDownloadedImageQueryLinks on QueryBuilder<IsarDownloadedImage,
 extension IsarDownloadedImageQuerySortBy
     on QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QSortBy> {
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
-      sortByDownloadedAt() {
+      sortByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'downloadedAt', Sort.asc);
+      return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
-      sortByDownloadedAtDesc() {
+      sortByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'downloadedAt', Sort.desc);
+      return query.addSortBy(r'createdAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
+      sortByLocalUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'localUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
+      sortByLocalUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'localUrl', Sort.desc);
     });
   }
 
@@ -1094,16 +1417,16 @@ extension IsarDownloadedImageQuerySortBy
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
-      sortByPath() {
+      sortByRemoteUrl() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'path', Sort.asc);
+      return query.addSortBy(r'remoteUrl', Sort.asc);
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
-      sortByPathDesc() {
+      sortByRemoteUrlDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'path', Sort.desc);
+      return query.addSortBy(r'remoteUrl', Sort.desc);
     });
   }
 
@@ -1125,16 +1448,16 @@ extension IsarDownloadedImageQuerySortBy
 extension IsarDownloadedImageQuerySortThenBy
     on QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QSortThenBy> {
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
-      thenByDownloadedAt() {
+      thenByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'downloadedAt', Sort.asc);
+      return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
-      thenByDownloadedAtDesc() {
+      thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'downloadedAt', Sort.desc);
+      return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
@@ -1153,6 +1476,20 @@ extension IsarDownloadedImageQuerySortThenBy
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
+      thenByLocalUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'localUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
+      thenByLocalUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'localUrl', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
       thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1167,16 +1504,16 @@ extension IsarDownloadedImageQuerySortThenBy
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
-      thenByPath() {
+      thenByRemoteUrl() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'path', Sort.asc);
+      return query.addSortBy(r'remoteUrl', Sort.asc);
     });
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
-      thenByPathDesc() {
+      thenByRemoteUrlDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'path', Sort.desc);
+      return query.addSortBy(r'remoteUrl', Sort.desc);
     });
   }
 
@@ -1198,9 +1535,16 @@ extension IsarDownloadedImageQuerySortThenBy
 extension IsarDownloadedImageQueryWhereDistinct
     on QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QDistinct> {
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QDistinct>
-      distinctByDownloadedAt() {
+      distinctByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'downloadedAt');
+      return query.addDistinctBy(r'createdAt');
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QDistinct>
+      distinctByLocalUrl({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'localUrl', caseSensitive: caseSensitive);
     });
   }
 
@@ -1212,9 +1556,9 @@ extension IsarDownloadedImageQueryWhereDistinct
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QDistinct>
-      distinctByPath({bool caseSensitive = true}) {
+      distinctByRemoteUrl({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'path', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'remoteUrl', caseSensitive: caseSensitive);
     });
   }
 
@@ -1235,9 +1579,16 @@ extension IsarDownloadedImageQueryProperty
   }
 
   QueryBuilder<IsarDownloadedImage, DateTime, QQueryOperations>
-      downloadedAtProperty() {
+      createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'downloadedAt');
+      return query.addPropertyName(r'createdAt');
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, String, QQueryOperations>
+      localUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'localUrl');
     });
   }
 
@@ -1247,9 +1598,10 @@ extension IsarDownloadedImageQueryProperty
     });
   }
 
-  QueryBuilder<IsarDownloadedImage, String, QQueryOperations> pathProperty() {
+  QueryBuilder<IsarDownloadedImage, String, QQueryOperations>
+      remoteUrlProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'path');
+      return query.addPropertyName(r'remoteUrl');
     });
   }
 

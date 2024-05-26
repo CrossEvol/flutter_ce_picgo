@@ -8,33 +8,48 @@ class IsarDownloadedImage {
   Id id = Isar.autoIncrement;
 
   @Index(type: IndexType.value)
-  final String path;
+  final String localUrl;
 
   @Index(type: IndexType.value)
   final String name;
 
+  @Index(type: IndexType.value)
+  final String remoteUrl;
+
   final String sha;
 
-  final DateTime downloadedAt;
+  final DateTime createdAt;
 
   IsarDownloadedImage({
-    required this.path,
+    required this.id,
+    required this.localUrl,
     required this.name,
+    required this.remoteUrl,
     required this.sha,
-    required this.downloadedAt,
+    required this.createdAt,
   });
 }
 
 extension IsarDownloadedImageExt on IsarDownloadedImage {
   DownloadedImage fromIsarObject() {
     return DownloadedImage(
-        id: id, path: path, name: name, sha: sha, downloadedAt: downloadedAt);
+        id: id,
+        localUrl: localUrl,
+        remoteUrl: remoteUrl,
+        name: name,
+        sha: sha,
+        createdAt: createdAt);
   }
 }
 
 extension DownloadedImageExt on DownloadedImage {
   IsarDownloadedImage toIsarObject() {
     return IsarDownloadedImage(
-        path: path, name: name, sha: sha, downloadedAt: downloadedAt);
+        id: id,
+        localUrl: localUrl,
+        name: name,
+        remoteUrl: remoteUrl,
+        sha: sha,
+        createdAt: createdAt);
   }
 }

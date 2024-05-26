@@ -182,13 +182,13 @@ class IsarDbProvider implements DbInterface {
   @override
   Future<bool> removeDownloadedImage(
       RemoveDownloadedImageVo removeDownloadedImageVo) async {
-    final (name, filepath) = removeDownloadedImageVo;
+    final (name, _, remoteUrl) = removeDownloadedImageVo;
     return await isar.writeTxn(() async {
       var i = await isar.isarDownloadedImages
           .filter()
           .nameEqualTo(name)
           .and()
-          .pathEqualTo(filepath)
+          .remoteUrlEqualTo(remoteUrl)
           .deleteAll();
       return i > 0;
     });
@@ -214,12 +214,12 @@ class IsarDbProvider implements DbInterface {
   @override
   Future<DownloadedImage> getDownloadedImage(
       GetDownloadedImageVo getDownloadedImageVo) async {
-    final (name, filepath) = getDownloadedImageVo;
+    final (name, _, remoteUrl) = getDownloadedImageVo;
     var isarDownloadedImage = await isar.isarDownloadedImages
         .filter()
         .nameEqualTo(name)
-        .or()
-        .pathEqualTo(filepath)
+        .and()
+        .remoteUrlEqualTo(remoteUrl)
         .findFirst();
     return isarDownloadedImage!.fromIsarObject();
   }

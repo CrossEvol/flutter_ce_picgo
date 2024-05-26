@@ -9,17 +9,19 @@ part of 'downloaded_image.dart';
 DownloadedImage _$DownloadedImageFromJson(Map<String, dynamic> json) =>
     DownloadedImage(
       id: (json['id'] as num).toInt(),
-      path: json['path'] as String,
+      localUrl: json['local_url'] as String,
+      remoteUrl: json['remote_url'] as String,
       name: json['name'] as String,
       sha: json['sha'] as String,
-      downloadedAt: DateTime.parse(json['downloaded_at'] as String),
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$DownloadedImageToJson(DownloadedImage instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'path': instance.path,
+      'local_url': instance.localUrl,
+      'remote_url': instance.remoteUrl,
       'name': instance.name,
       'sha': instance.sha,
-      'downloaded_at': instance.downloadedAt.toIso8601String(),
+      'created_at': instance.createdAt.toIso8601String(),
     };

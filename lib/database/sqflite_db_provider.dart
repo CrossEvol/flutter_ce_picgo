@@ -68,6 +68,9 @@ class SqfliteDbProvider implements DbInterface {
           // 创建 uploaded_image 表
           await _initUploadedImages(db);
 
+          // 创建 downloaded_image 表
+          await _initDownloadedImages(db);
+
           // 创建uploaded表
           await db.execute('''
           CREATE TABLE $UPLOADED_TABLE (
@@ -81,6 +84,8 @@ class SqfliteDbProvider implements DbInterface {
           await _initPb(db);
 
           await _initUploadedImages(db);
+
+          await _initDownloadedImages(db);
 
           /// v1 to v2
           if (oldVersion == 1) {
@@ -159,10 +164,11 @@ class SqfliteDbProvider implements DbInterface {
     await db.execute('''
      CREATE TABLE IF NOT EXISTS $DOWNLOADED_IMAGE_TABLE  (
         id INTEGER PRIMARY KEY,
-        path TEXT NOT NULL DEFAULT '',
-        sha TEXT DEFAULT NULL,
         name TEXT NOT NULL DEFAULT '',
-        downloaded_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        localUrl TEXT NOT NULL DEFAULT '',
+        remoteUrl TEXT NOT NULL DEFAULT '',
+        sha TEXT DEFAULT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     );
      ''');
   }
@@ -267,9 +273,9 @@ class SqfliteDbProvider implements DbInterface {
   Future<bool> removeDownloadedImage(
       RemoveDownloadedImageVo removeDownloadedImageVo) async {
     try {
-      final (name, filepath) = removeDownloadedImageVo;
+      final (name, _, remoteUrl) = removeDownloadedImageVo;
       var i = await db.delete(DOWNLOADED_IMAGE_TABLE,
-          where: 'name = ? and path = ?', whereArgs: [name, filepath]);
+          where: 'name = ? and remoteUrl = ? ', whereArgs: [name, remoteUrl]);
       return i > 0;
     } catch (e) {
       logger.e(e);
@@ -303,10 +309,10 @@ class SqfliteDbProvider implements DbInterface {
   Future<DownloadedImage> getDownloadedImage(
       GetDownloadedImageVo getDownloadedImageVo) async {
     try {
-      final (name, filepath) = getDownloadedImageVo;
+      final (name, _, remoteUrl) = getDownloadedImageVo;
       var list = await db.query(DOWNLOADED_IMAGE_TABLE,
-          where: 'name = ? or path = ?',
-          whereArgs: [name, filepath],
+          where: 'name = ? and remoteUrl = ?',
+          whereArgs: [name, remoteUrl],
           distinct: true,
           limit: 1);
       return DownloadedImage.fromJson(list.first);
