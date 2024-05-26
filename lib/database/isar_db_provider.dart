@@ -5,6 +5,7 @@ import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
+import 'package:flutter_ce_picgo/models/isar/isar_downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/isar/isar_image_storage_setting.dart';
 import 'package:flutter_ce_picgo/models/isar/isar_uploaded_image.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
@@ -173,32 +174,53 @@ class IsarDbProvider implements DbInterface {
   }
 
   @override
-  Future<List<DownloadedImage>> getDownloadedImages() {
-    // TODO: implement getDownloadedImages
-    throw UnimplementedError();
+  Future<List<DownloadedImage>> getDownloadedImages() async {
+    var list = await isar.isarDownloadedImages.where().findAll();
+    return list.map((e) => e.fromIsarObject()).toList();
   }
 
   @override
-  Future<bool> removeDownloadedImage(RemoveDownloadedImageVo removeDownloadedImageVo) {
-    // TODO: implement removeDownloadedImage
-    throw UnimplementedError();
+  Future<bool> removeDownloadedImage(
+      RemoveDownloadedImageVo removeDownloadedImageVo) async {
+    final (name, filepath) = removeDownloadedImageVo;
+    return await isar.writeTxn(() async {
+      var i = await isar.isarDownloadedImages
+          .filter()
+          .nameEqualTo(name)
+          .and()
+          .pathEqualTo(filepath)
+          .deleteAll();
+      return i > 0;
+    });
   }
 
   @override
-  Future<bool> saveDownloadedImage(DownloadedImage downloadedImage) {
-    // TODO: implement saveDownloadedImage
-    throw UnimplementedError();
+  Future<bool> saveDownloadedImage(DownloadedImage downloadedImage) async {
+    return await isar.writeTxn(() async {
+      var i =
+          await isar.isarDownloadedImages.put(downloadedImage.toIsarObject());
+      return i > 0;
+    });
   }
 
   @override
-  Future<bool> clearDownloadedImages() {
-    // TODO: implement clearDownloadedImages
-    throw UnimplementedError();
+  Future<bool> clearDownloadedImages() async {
+    return await isar.writeTxn(() async {
+      var i = await isar.isarDownloadedImages.where().deleteAll();
+      return i > 0;
+    });
   }
 
   @override
-  Future<DownloadedImage> getDownloadedImage(GetDownloadedImageVo getDownloadedImageVo) {
-    // TODO: implement getDownloadedImage
-    throw UnimplementedError();
+  Future<DownloadedImage> getDownloadedImage(
+      GetDownloadedImageVo getDownloadedImageVo) async {
+    final (name, filepath) = getDownloadedImageVo;
+    var isarDownloadedImage = await isar.isarDownloadedImages
+        .filter()
+        .nameEqualTo(name)
+        .or()
+        .pathEqualTo(filepath)
+        .findFirst();
+    return isarDownloadedImage!.fromIsarObject();
   }
 }
