@@ -253,33 +253,66 @@ class SqfliteDbProvider implements DbInterface {
   }
 
   @override
-  Future<List<DownloadedImage>> getDownloadedImages() {
-    // TODO: implement getDownloadedImages
-    throw UnimplementedError();
+  Future<List<DownloadedImage>> getDownloadedImages() async {
+    try {
+      var list = await db.query(DOWNLOADED_IMAGE_TABLE);
+      return list.map((e) => DownloadedImage.fromJson(e)).toList();
+    } catch (e) {
+      logger.e(e);
+      return [];
+    }
   }
 
   @override
   Future<bool> removeDownloadedImage(
-      RemoveDownloadedImageVo removeDownloadedImageVo) {
-    // TODO: implement removeDownloadedImage
-    throw UnimplementedError();
+      RemoveDownloadedImageVo removeDownloadedImageVo) async {
+    try {
+      final (name, filepath) = removeDownloadedImageVo;
+      var i = await db.delete(DOWNLOADED_IMAGE_TABLE,
+          where: 'name = ? and path = ?', whereArgs: [name, filepath]);
+      return i > 0;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 
   @override
-  Future<bool> saveDownloadedImage(DownloadedImage downloadedImage) {
-    // TODO: implement saveDownloadedImage
-    throw UnimplementedError();
+  Future<bool> saveDownloadedImage(DownloadedImage downloadedImage) async {
+    try {
+      var i = await db.insert(DOWNLOADED_IMAGE_TABLE, downloadedImage.toJson());
+      return i > 0;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 
   @override
-  Future<bool> clearDownloadedImages() {
-    // TODO: implement clearDownloadedImages
-    throw UnimplementedError();
+  Future<bool> clearDownloadedImages() async {
+    try {
+      var i = await db.delete(DOWNLOADED_IMAGE_TABLE);
+      return i >= 0;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 
   @override
-  Future<DownloadedImage> getDownloadedImage(GetDownloadedImageVo getDownloadedImageVo) {
-    // TODO: implement getDownloadedImage
-    throw UnimplementedError();
+  Future<DownloadedImage> getDownloadedImage(
+      GetDownloadedImageVo getDownloadedImageVo) async {
+    try {
+      final (name, filepath) = getDownloadedImageVo;
+      var list = await db.query(DOWNLOADED_IMAGE_TABLE,
+          where: 'name = ? or path = ?',
+          whereArgs: [name, filepath],
+          distinct: true,
+          limit: 1);
+      return DownloadedImage.fromJson(list.first);
+    } catch (e) {
+      logger.e(e);
+      rethrow;
+    }
   }
 }
