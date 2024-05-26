@@ -323,8 +323,12 @@ class SqfliteDbProvider implements DbInterface {
   }
 
   @override
-  Future<bool> existsDownloadedImage(ExistsDownloadedImageVo existsDownloadedImageVo) {
-    // TODO: implement existsDownloadedImage
-    throw UnimplementedError();
+  Future<bool> existsDownloadedImage(
+      ExistsDownloadedImageVo existsDownloadedImageVo) async {
+    final (name, remoteUrl) = existsDownloadedImageVo;
+    var list = await db.rawQuery(
+        'SELECT COUNT(*) as count  FROM $DOWNLOADED_IMAGE_TABLE WHERE name = ? and remote_url = ?',
+        [name, remoteUrl]);
+    return list.first['count'] as int > 0;
   }
 }

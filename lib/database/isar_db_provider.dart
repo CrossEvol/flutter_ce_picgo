@@ -225,8 +225,15 @@ class IsarDbProvider implements DbInterface {
   }
 
   @override
-  Future<bool> existsDownloadedImage(ExistsDownloadedImageVo existsDownloadedImageVo) {
-    // TODO: implement existsDownloadedImage
-    throw UnimplementedError();
+  Future<bool> existsDownloadedImage(
+      ExistsDownloadedImageVo existsDownloadedImageVo) async {
+    final (name, remoteUrl) = existsDownloadedImageVo;
+    var i = await isar.isarDownloadedImages
+        .filter()
+        .nameEqualTo(name)
+        .and()
+        .remoteUrlEqualTo(remoteUrl)
+        .count();
+    return i > 0;
   }
 }
