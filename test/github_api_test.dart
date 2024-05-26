@@ -6,6 +6,7 @@ import 'package:flutter_ce_picgo/api/github_api.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/models/github_content.dart';
 import 'package:flutter_ce_picgo/models/pubspec.dart';
+import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -158,5 +159,19 @@ void main() async {
     for (var element in list) {
       logger.i('name = ${element.$1}\n sha = ${element.$2}');
     }
+  });
+
+  test('download image test', () async {
+    appDirectory = 'tmp';
+    var filename = '1716704439275735.jpg';
+    var flag = await GithubApi.downloadImage(
+        githubConfig: GithubConfig(
+            branch: '',
+            customUrl: '',
+            path: '',
+            repo: githubRepo,
+            token: githubToken),
+        filename: filename);
+    expect(flag, isTrue);
   });
 }
