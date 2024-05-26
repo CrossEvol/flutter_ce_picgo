@@ -155,6 +155,18 @@ class SqfliteDbProvider implements DbInterface {
      ''');
   }
 
+  Future<void> _initDownloadedImages(Database db) async {
+    await db.execute('''
+     CREATE TABLE IF NOT EXISTS $DOWNLOADED_IMAGE_TABLE  (
+        id INTEGER PRIMARY KEY,
+        path TEXT NOT NULL DEFAULT '',
+        sha TEXT DEFAULT NULL,
+        name TEXT NOT NULL DEFAULT '',
+        downloaded_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    );
+     ''');
+  }
+
   /// db版本升级
   Future<void> _upgradeDbV1ToV2(Database db) async {
     await db
@@ -247,7 +259,8 @@ class SqfliteDbProvider implements DbInterface {
   }
 
   @override
-  Future<bool> removeDownloadedImage(RemoveDownloadedImageVo removeDownloadedImageVo) {
+  Future<bool> removeDownloadedImage(
+      RemoveDownloadedImageVo removeDownloadedImageVo) {
     // TODO: implement removeDownloadedImage
     throw UnimplementedError();
   }

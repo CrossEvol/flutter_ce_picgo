@@ -12,7 +12,7 @@ DownloadedImage _$DownloadedImageFromJson(Map<String, dynamic> json) =>
       path: json['path'] as String,
       name: json['name'] as String,
       sha: json['sha'] as String,
-      downloadedAt: DateTime.parse(json['downloadedAt'] as String),
+      downloadedAt: DateTime.parse(json['downloaded_at'] as String),
     );
 
 Map<String, dynamic> _$DownloadedImageToJson(DownloadedImage instance) =>
@@ -21,5 +21,5 @@ Map<String, dynamic> _$DownloadedImageToJson(DownloadedImage instance) =>
       'path': instance.path,
       'name': instance.name,
       'sha': instance.sha,
-      'downloadedAt': instance.downloadedAt.toIso8601String(),
+      'downloaded_at': instance.downloadedAt.toIso8601String(),
     };
