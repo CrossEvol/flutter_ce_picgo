@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:go_router/go_router.dart';
@@ -211,6 +212,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
     try {
       BlocProvider.of<ImageCacheBloc>(context)
           .add(const ImageCacheEventClear());
+      BlocProvider.of<ImageManageBloc>(context).add(const ImageManageEventDelete(ids: []));
       fToast.showSuccessToast(text: '清除成功', duration: 1);
     } catch (e) {
       logger.e(e);

@@ -23,7 +23,8 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       var images = list
           .map((e) => DownloadedImage(
               id: ++index,
-              localUrl: '', // it will be check in the child widget
+              localUrl: '',
+              // it will be check in the child widget
               remoteUrl: e.$2,
               name: e.$1,
               sha: e.$3,
@@ -32,7 +33,12 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       emit(state.copyWith(images: images));
     });
 
-    on<ImageManageEventDelete>((event, emit) {
+    on<ImageManageEventDelete>((event, emit) async {
+      if (event.ids.isEmpty) {
+        var flag = await dbProvider.clearDownloadedImages();
+        if (flag) emit(state.copyWith(images: []));
+        return;
+      }
       emit(state.copyWith(
           images: state.images
               .where((element) => !event.ids.contains(element.id))
