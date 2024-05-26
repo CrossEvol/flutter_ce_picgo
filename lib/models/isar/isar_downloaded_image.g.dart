@@ -132,12 +132,12 @@ IsarDownloadedImage _isarDownloadedImageDeserialize(
 ) {
   final object = IsarDownloadedImage(
     createdAt: reader.readDateTime(offsets[0]),
-    id: id,
     localUrl: reader.readString(offsets[1]),
     name: reader.readString(offsets[2]),
     remoteUrl: reader.readString(offsets[3]),
     sha: reader.readString(offsets[4]),
   );
+  object.id = id;
   return object;
 }
 

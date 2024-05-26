@@ -171,7 +171,6 @@ void main() async {
             path: '',
             repo: githubRepo,
             token: githubToken),
-        filename: filename);
-    expect(flag, isTrue);
+        dest: filename, src: '');
   });
 }

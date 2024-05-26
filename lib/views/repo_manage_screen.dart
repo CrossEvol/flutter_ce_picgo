@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
+import 'package:flutter_ce_picgo/widgets/image_manage_item.dart';
 
 class RepoManageScreen extends StatefulWidget {
   // final String storageType;
 
-  final List<ImageItem> images;
+  final List<ImageItemVO> images;
 
   const RepoManageScreen({
     super.key,
@@ -18,14 +17,16 @@ class RepoManageScreen extends StatefulWidget {
   State<RepoManageScreen> createState() => _RepoManageScreenState();
 }
 
-class ImageItem {
+class ImageItemVO {
   int id;
-  String url;
+  String name;
+  String remoteUrl;
   bool selected;
 
-  ImageItem({
+  ImageItemVO({
     required this.id,
-    required this.url,
+    required this.name,
+    required this.remoteUrl,
     required this.selected,
   });
 }
@@ -86,15 +87,20 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
         ),
         itemCount: totalCount,
         itemBuilder: (context, index) {
+          var image = widget.images[index];
           return Padding(
             padding: const EdgeInsets.all(2.0),
             child: Stack(
               children: [
-                Image.network(
-                  widget.images[index].url,
-                  fit: BoxFit.cover, // Adjust fit as needed
+                ImageManageItem(
+                  name: image.name,
+                  remoteUrl: image.remoteUrl,
                 ),
-                widget.images[index].selected
+                // Image.network(
+                //   widget.images[index].remoteUrl,
+                //   fit: BoxFit.cover, // Adjust fit as needed
+                // ),
+                image.selected
                     ? Container(
                         color: Colors.grey.withOpacity(
                             0.5), // Adjust opacity for desired mask intensity
@@ -111,10 +117,10 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                     checkColor: Colors.white,
                     activeColor: Theme.of(context).colorScheme.error,
                     // fillColor: MaterialStateProperty.resolveWith(getColor),
-                    value: widget.images[index].selected,
+                    value: image.selected,
                     onChanged: (bool? value) {
                       setState(() {
-                        widget.images[index].selected = value!;
+                        image.selected = value!;
                       });
                     },
                   ),
@@ -143,7 +149,6 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
   void initState() {
     super.initState();
     fToast.init(context);
-    context.read<ImageManageBloc>().add(ImageManageEventLoad());
   }
 
   @override

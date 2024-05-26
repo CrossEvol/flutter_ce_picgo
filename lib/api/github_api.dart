@@ -39,7 +39,7 @@ class GithubApi {
   }
 
   static Future<GithubContent> downloadImage(
-      {required GithubConfig githubConfig, required String filename}) async {
+      {required GithubConfig githubConfig,required String src, required String dest}) async {
     Dio dio = Dio();
 
     // Set headers
@@ -51,7 +51,7 @@ class GithubApi {
         requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
 
     var response = await dio.get(
-        'https://api.github.com/repos/${githubConfig.repo}/contents/$filename');
+        'https://api.github.com/repos/${githubConfig.repo}/contents/$src');
     if (response.statusCode != 200) {
       throw DioException(
           requestOptions: RequestOptions(
@@ -60,7 +60,7 @@ class GithubApi {
     }
     var githubContent =
         GithubContent.fromJson(response.data! as Map<String, dynamic>);
-    var flag = await saveBase64ToFile(githubContent.content!, filename);
+    var flag = await saveBase64ToFile(githubContent.content!, dest);
     if (flag) {
       return githubContent;
     } else {

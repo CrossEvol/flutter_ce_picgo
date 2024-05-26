@@ -165,10 +165,10 @@ class SqfliteDbProvider implements DbInterface {
      CREATE TABLE IF NOT EXISTS $DOWNLOADED_IMAGE_TABLE  (
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL DEFAULT '',
-        localUrl TEXT NOT NULL DEFAULT '',
-        remoteUrl TEXT NOT NULL DEFAULT '',
+        local_url TEXT NOT NULL DEFAULT '',
+        remote_url TEXT NOT NULL DEFAULT '',
         sha TEXT DEFAULT NULL,
-        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
      ''');
   }
@@ -286,7 +286,9 @@ class SqfliteDbProvider implements DbInterface {
   @override
   Future<bool> saveDownloadedImage(DownloadedImage downloadedImage) async {
     try {
-      var i = await db.insert(DOWNLOADED_IMAGE_TABLE, downloadedImage.toJson());
+      var map = downloadedImage.toJson();
+      map.remove('id');
+      var i = await db.insert(DOWNLOADED_IMAGE_TABLE, map);
       return i > 0;
     } catch (e) {
       logger.e(e);
@@ -325,10 +327,15 @@ class SqfliteDbProvider implements DbInterface {
   @override
   Future<bool> existsDownloadedImage(
       ExistsDownloadedImageVo existsDownloadedImageVo) async {
-    final (name, remoteUrl) = existsDownloadedImageVo;
-    var list = await db.rawQuery(
-        'SELECT COUNT(*) as count  FROM $DOWNLOADED_IMAGE_TABLE WHERE name = ? and remote_url = ?',
-        [name, remoteUrl]);
-    return list.first['count'] as int > 0;
+    try {
+      final (name, remoteUrl) = existsDownloadedImageVo;
+      var list = await db.rawQuery(
+          'SELECT COUNT(*) as count  FROM $DOWNLOADED_IMAGE_TABLE WHERE name = ? and remote_url = ?',
+          [name, remoteUrl]);
+      return list.first['count'] as int > 0;
+    } catch (e) {
+      logger.e(e);
+      return false;
+    }
   }
 }

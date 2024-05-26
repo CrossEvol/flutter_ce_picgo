@@ -21,7 +21,6 @@ class IsarDownloadedImage {
   final DateTime createdAt;
 
   IsarDownloadedImage({
-    required this.id,
     required this.localUrl,
     required this.name,
     required this.remoteUrl,
@@ -45,7 +44,6 @@ extension IsarDownloadedImageExt on IsarDownloadedImage {
 extension DownloadedImageExt on DownloadedImage {
   IsarDownloadedImage toIsarObject() {
     return IsarDownloadedImage(
-        id: id,
         localUrl: localUrl,
         name: name,
         remoteUrl: remoteUrl,

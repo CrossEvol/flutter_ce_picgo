@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,10 @@ import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:path/path.dart';
+
+/*
+* TODO : has some performance problem, reload too many , does it download the file repeatedly?
+* */
 
 class ImageManageItem extends StatelessWidget {
   final String name;
@@ -26,7 +31,7 @@ class ImageManageItem extends StatelessWidget {
         if (snapshot.hasError) {
           return Image.network('');
         }
-        return Image(image: snapshot.data!);
+        return Image(image: snapshot.data!, fit: BoxFit.cover);
       },
       future: setupFileImage(),
     );
@@ -34,28 +39,38 @@ class ImageManageItem extends StatelessWidget {
 
   Future<FileImage> setupFileImage() async {
     var exists = await dbProvider.existsDownloadedImage((name, remoteUrl));
+    var localUrl = join(appDirectory, ImageStorageType.github, name);
     if (exists) {
-      var localUrl = join(appDirectory, ImageStorageType.github, name);
       var file = File(localUrl);
       if (file.existsSync()) {
         return FileImage(file);
       } else {
+        // remote the outdated mismatched data
         await dbProvider.removeDownloadedImage((name, '', remoteUrl));
-        var githubContent = await GithubApi.downloadImage(
-            githubConfig: GithubConfig.none(), filename: name);
-        Future.delayed(Duration.zero, () async {
-          await dbProvider.saveDownloadedImage(DownloadedImage(
-            id: 0,
-            localUrl: localUrl,
-            remoteUrl: githubContent.downloadUrl,
-            name: githubContent.name,
-            sha: githubContent.sha,
-            createdAt: DateTime.now(),
-          ));
-        });
-        return FileImage(file);
+        return await createLocalImageCache(name, localUrl);
       }
+    } else {
+      return await createLocalImageCache(name, localUrl);
     }
-    throw const FileSystemException('Not Found');
+  }
+
+  Future<FileImage> createLocalImageCache(String src, String dest) async {
+    var configJson = await dbProvider.getImageStorageSettingConfig(
+        type: ImageStorageType.github);
+    var githubContent = await GithubApi.downloadImage(
+        githubConfig: GithubConfig.fromJson(jsonDecode(configJson)),
+        src: src,
+        dest: dest);
+    Future.delayed(Duration.zero, () async {
+      await dbProvider.saveDownloadedImage(DownloadedImage(
+        id: 0,
+        localUrl: dest,
+        remoteUrl: githubContent.downloadUrl,
+        name: githubContent.name,
+        sha: githubContent.sha,
+        createdAt: DateTime.now(),
+      ));
+    });
+    return FileImage(File(dest));
   }
 }
