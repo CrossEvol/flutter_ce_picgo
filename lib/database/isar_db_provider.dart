@@ -223,4 +223,10 @@ class IsarDbProvider implements DbInterface {
         .findFirst();
     return isarDownloadedImage!.fromIsarObject();
   }
+
+  @override
+  Future<bool> existsDownloadedImage(ExistsDownloadedImageVo existsDownloadedImageVo) {
+    // TODO: implement existsDownloadedImage
+    throw UnimplementedError();
+  }
 }

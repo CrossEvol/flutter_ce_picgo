@@ -38,7 +38,7 @@ class GithubApi {
         .toList();
   }
 
-  static Future<bool> downloadImage(
+  static Future<GithubContent> downloadImage(
       {required GithubConfig githubConfig, required String filename}) async {
     Dio dio = Dio();
 
@@ -53,10 +53,21 @@ class GithubApi {
     var response = await dio.get(
         'https://api.github.com/repos/${githubConfig.repo}/contents/$filename');
     if (response.statusCode != 200) {
-      throw DioException(requestOptions: RequestOptions());
+      throw DioException(
+          requestOptions: RequestOptions(
+              sourceStackTrace:
+                  StackTrace.fromString(('failed to download image..'))));
     }
     var githubContent =
         GithubContent.fromJson(response.data! as Map<String, dynamic>);
-    return await saveBase64ToFile(githubContent.content!, filename);
+    var flag = await saveBase64ToFile(githubContent.content!, filename);
+    if (flag) {
+      return githubContent;
+    } else {
+      throw DioException(
+          requestOptions: RequestOptions(
+              sourceStackTrace:
+                  StackTrace.fromString('failed to save image...')));
+    }
   }
 }

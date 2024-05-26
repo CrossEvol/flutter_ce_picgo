@@ -14,9 +14,15 @@ typedef RemoveUploadImageVO = (
   String filepath,
 );
 
-typedef RemoveDownloadedImageVo = (String name, String localUrl, String remoteUrl);
+typedef RemoveDownloadedImageVo = (
+  String name,
+  String localUrl,
+  String remoteUrl
+);
 
 typedef GetDownloadedImageVo = (String name, String localUrl, String remoteUrl);
+
+typedef ExistsDownloadedImageVo = (String name, String remoteUrl);
 
 abstract interface class DbInterface {
   factory DbInterface() => getInstance();
@@ -55,4 +61,7 @@ abstract interface class DbInterface {
 
   Future<DownloadedImage> getDownloadedImage(
       GetDownloadedImageVo getDownloadedImageVo);
+
+  Future<bool> existsDownloadedImage(
+      ExistsDownloadedImageVo existsDownloadedImageVo);
 }

@@ -321,4 +321,10 @@ class SqfliteDbProvider implements DbInterface {
       rethrow;
     }
   }
+
+  @override
+  Future<bool> existsDownloadedImage(ExistsDownloadedImageVo existsDownloadedImageVo) {
+    // TODO: implement existsDownloadedImage
+    throw UnimplementedError();
+  }
 }

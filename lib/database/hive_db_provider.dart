@@ -168,4 +168,10 @@ class HiveDbProvider implements DbInterface {
     // TODO: implement getDownloadedImage
     throw UnimplementedError();
   }
+
+  @override
+  Future<bool> existsDownloadedImage(ExistsDownloadedImageVo existsDownloadedImageVo) {
+    // TODO: implement existsDownloadedImage
+    throw UnimplementedError();
+  }
 }
