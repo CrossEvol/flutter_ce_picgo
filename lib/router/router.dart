@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
 import 'package:flutter_ce_picgo/views/album_screen.dart';
 import 'package:flutter_ce_picgo/views/barcode_view.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/gitee_page/gitee_page.dart';
@@ -79,8 +81,21 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'repo/:type',
           builder: (BuildContext context, GoRouterState state) {
-            return RepoManageScreen(
-              storageType: state.pathParameters['type']!,
+            var storageType = state.pathParameters['type']!;
+            return BlocBuilder<ImageManageBloc, ImageManageState>(
+              builder: (context, state) {
+                final List<ImageItem> images = List.generate(
+                    18,
+                    (index) => ImageItem(
+                        id: index,
+                        url:
+                            'https://avatars.githubusercontent.com/u/67866644?v=4',
+                        selected: false));
+
+                return RepoManageScreen(
+                  images: images,
+                );
+              },
             );
           },
         ),

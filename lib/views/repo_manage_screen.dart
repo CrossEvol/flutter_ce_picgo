@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 
 class RepoManageScreen extends StatefulWidget {
-  final String storageType;
+  // final String storageType;
 
-  const RepoManageScreen({super.key, required this.storageType});
+  final List<ImageItem> images;
+
+  const RepoManageScreen({
+    super.key,
+    required this.images,
+    /*required this.storageType*/
+  });
 
   @override
   State<RepoManageScreen> createState() => _RepoManageScreenState();
@@ -23,17 +31,17 @@ class ImageItem {
 }
 
 class _RepoManageScreenState extends State<RepoManageScreen> {
-  final List<ImageItem> imagePaths = List.generate(
-      18,
-      (index) => ImageItem(
-          id: index,
-          url: 'https://avatars.githubusercontent.com/u/67866644?v=4',
-          selected: false));
+  // final List<ImageItem> images = List.generate(
+  //     18,
+  //     (index) => ImageItem(
+  //         id: index,
+  //         url: 'https://avatars.githubusercontent.com/u/67866644?v=4',
+  //         selected: false));
 
   int get selectedCount =>
-      imagePaths.where((element) => element.selected).toList().length;
+      widget.images.where((element) => element.selected).toList().length;
 
-  int get totalCount => imagePaths.length;
+  int get totalCount => widget.images.length;
 
   _RepoManageScreenState();
 
@@ -76,17 +84,17 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, // Adjust column count as desired
         ),
-        itemCount: imagePaths.length,
+        itemCount: totalCount,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(2.0),
             child: Stack(
               children: [
                 Image.network(
-                  imagePaths[index].url,
+                  widget.images[index].url,
                   fit: BoxFit.cover, // Adjust fit as needed
                 ),
-                imagePaths[index].selected
+                widget.images[index].selected
                     ? Container(
                         color: Colors.grey.withOpacity(
                             0.5), // Adjust opacity for desired mask intensity
@@ -103,10 +111,10 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                     checkColor: Colors.white,
                     activeColor: Theme.of(context).colorScheme.error,
                     // fillColor: MaterialStateProperty.resolveWith(getColor),
-                    value: imagePaths[index].selected,
+                    value: widget.images[index].selected,
                     onChanged: (bool? value) {
                       setState(() {
-                        imagePaths[index].selected = value!;
+                        widget.images[index].selected = value!;
                       });
                     },
                   ),
@@ -135,6 +143,7 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
   void initState() {
     super.initState();
     fToast.init(context);
+    context.read<ImageManageBloc>().add(ImageManageEventLoad(images: []));
   }
 
   @override
