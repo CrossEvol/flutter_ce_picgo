@@ -17,9 +17,22 @@ Future<void> setupAppDirectory() async {
   }
 }
 
+// TODO: in android, does it need any permission?
 Future<void> createImageCacheDir(String type) async {
-  var githubDir = Directory(join(appDirectory, type));
-  if (!githubDir.existsSync()) {
-    await githubDir.create(recursive: true);
+  var dir = Directory(join(appDirectory, type));
+  if (!dir.existsSync()) {
+    await dir.create(recursive: true);
+  }
+}
+
+// TODO: in android, does it need any permission?
+Future<bool> clearImageCacheDir(String type) async {
+  try {
+    var dir = Directory(join(appDirectory, type));
+    if (dir.existsSync()) await dir.delete(recursive: true);
+    return true;
+  } catch (e) {
+    logger.e(e);
+    return false;
   }
 }

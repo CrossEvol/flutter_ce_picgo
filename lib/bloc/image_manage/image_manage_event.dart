@@ -5,10 +5,8 @@ sealed class ImageManageEvent extends Equatable {
 }
 
 final class ImageManageEventLoad extends ImageManageEvent {
-
   @override
   List<Object?> get props => [];
-
 }
 
 final class ImageManageEventDelete extends ImageManageEvent {
@@ -20,4 +18,11 @@ final class ImageManageEventDelete extends ImageManageEvent {
   const ImageManageEventDelete({
     required this.ids,
   });
+}
+
+final class ImageManageEventReset extends ImageManageEvent {
+  @override
+  List<Object?> get props => [];
+
+  const ImageManageEventReset();
 }

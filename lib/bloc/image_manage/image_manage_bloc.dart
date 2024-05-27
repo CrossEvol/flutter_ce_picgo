@@ -7,6 +7,7 @@ import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
+import 'package:flutter_ce_picgo/utils/dir_util.dart';
 
 part 'image_manage_event.dart';
 
@@ -43,6 +44,19 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
           images: state.images
               .where((element) => !event.ids.contains(element.id))
               .toList()));
+    });
+
+    on<ImageManageEventReset>((event, emit) async {
+      var flag = await dbProvider.clearDownloadedImages();
+      if (flag) {
+        Future.delayed(Duration.zero, () async {
+          // TODO : reduce the fine-grained
+          var flag = await clearImageCacheDir(ImageStorageType.github);
+          if (flag) await createImageCacheDir(ImageStorageType.github);
+        });
+        emit(state.copyWith(images: []));
+      }
+      ;
     });
 
     on<ImageManageEvent>((event, emit) {

@@ -34,13 +34,17 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
   void initState() {
     super.initState();
     isUploadedRename =
-        prefs?.getBool(SharedPreferencesKeys.settingIsUploadedRename.name) ?? false;
+        prefs?.getBool(SharedPreferencesKeys.settingIsUploadedRename.name) ??
+            false;
     isTimestampRename =
-        prefs?.getBool(SharedPreferencesKeys.settingIsTimestampRename.name) ?? false;
+        prefs?.getBool(SharedPreferencesKeys.settingIsTimestampRename.name) ??
+            false;
     isUploadedTip =
-        prefs?.getBool(SharedPreferencesKeys.settingIsUploadedTip.name) ?? false;
+        prefs?.getBool(SharedPreferencesKeys.settingIsUploadedTip.name) ??
+            false;
     isForceDelete =
-        prefs?.getBool(SharedPreferencesKeys.settingIsForceDelete.name) ?? false;
+        prefs?.getBool(SharedPreferencesKeys.settingIsForceDelete.name) ??
+            false;
     fToast.init(context);
     _getLatestVersion();
   }
@@ -62,7 +66,8 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                   activeColor: Theme.of(context).colorScheme.primary,
                   value: isUploadedRename,
                   onChanged: (value) {
-                    save(SharedPreferencesKeys.settingIsUploadedRename.name, value);
+                    save(SharedPreferencesKeys.settingIsUploadedRename.name,
+                        value);
                     setState(() {
                       isUploadedRename = value;
                     });
@@ -75,7 +80,8 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                   activeColor: Theme.of(context).colorScheme.primary,
                   value: isTimestampRename,
                   onChanged: (value) {
-                    save(SharedPreferencesKeys.settingIsTimestampRename.name, value);
+                    save(SharedPreferencesKeys.settingIsTimestampRename.name,
+                        value);
                     setState(() {
                       isTimestampRename = value;
                     });
@@ -93,7 +99,8 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                       // await LocalNotificationUtil.getInstance()
                       //     .requestPermissions();
                     }
-                    save(SharedPreferencesKeys.settingIsUploadedTip.name, value);
+                    save(
+                        SharedPreferencesKeys.settingIsUploadedTip.name, value);
                     setState(() {
                       isUploadedTip = value;
                     });
@@ -106,7 +113,8 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                   activeColor: Theme.of(context).colorScheme.primary,
                   value: isForceDelete,
                   onChanged: (value) {
-                    save(SharedPreferencesKeys.settingIsForceDelete.name, value);
+                    save(
+                        SharedPreferencesKeys.settingIsForceDelete.name, value);
                     setState(() {
                       isForceDelete = value;
                     });
@@ -212,7 +220,8 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
     try {
       BlocProvider.of<ImageCacheBloc>(context)
           .add(const ImageCacheEventClear());
-      BlocProvider.of<ImageManageBloc>(context).add(const ImageManageEventDelete(ids: []));
+      BlocProvider.of<ImageManageBloc>(context)
+          .add(const ImageManageEventReset());
       fToast.showSuccessToast(text: '清除成功', duration: 1);
     } catch (e) {
       logger.e(e);
