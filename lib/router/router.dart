@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
+import 'package:flutter_ce_picgo/router/router_extra.dart';
 import 'package:flutter_ce_picgo/views/album_screen.dart';
 import 'package:flutter_ce_picgo/views/barcode_view.dart';
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/gitee_page/gitee_page.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_ce_picgo/views/image_storage_settings_views/github/githu
 import 'package:flutter_ce_picgo/views/picgo_setting_views/picgo_setting_view.dart';
 import 'package:flutter_ce_picgo/views/picgo_setting_views/theme_setting_view.dart';
 import 'package:flutter_ce_picgo/views/settings_screen.dart';
+import 'package:flutter_ce_picgo/views/single_image_view.dart';
 import 'package:flutter_ce_picgo/views/upload_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -103,6 +105,15 @@ final GoRouter router = GoRouter(
                       .toList(),
                 );
               },
+            );
+          },
+        ),
+        GoRoute(
+          path: 'image',
+          builder: (BuildContext context, GoRouterState state) {
+            var imageExtra = state.extra as ImageExtra;
+            return SingleImageView(
+              imageExtra: imageExtra,
             );
           },
         ),

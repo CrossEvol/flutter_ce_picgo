@@ -7,7 +7,9 @@ import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
+import 'package:flutter_ce_picgo/router/router_extra.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path/path.dart';
 
 /*
@@ -31,7 +33,16 @@ class ImageManageItem extends StatelessWidget {
         if (snapshot.hasError) {
           return Image.network('');
         }
-        return Image(image: snapshot.data!, fit: BoxFit.cover);
+        return GestureDetector(
+            onTap: () {
+              context.go(
+                '/image',
+                extra: ImageExtra(
+                    localUrl: snapshot.data!.file.absolute.path,
+                    type: ImageStorageType.github),
+              );
+            },
+            child: Image(image: snapshot.data!, fit: BoxFit.cover));
       },
       future: setupFileImage(),
     );

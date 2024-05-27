@@ -96,14 +96,17 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                   name: image.name,
                   remoteUrl: image.remoteUrl,
                 ),
-                // Image.network(
-                //   widget.images[index].remoteUrl,
-                //   fit: BoxFit.cover, // Adjust fit as needed
-                // ),
                 image.selected
-                    ? Container(
-                        color: Colors.grey.withOpacity(
-                            0.5), // Adjust opacity for desired mask intensity
+                    ? GestureDetector(
+                        onDoubleTap: () {
+                          setState(() {
+                            image.selected = false;
+                          });
+                        },
+                        child: Container(
+                          color: Colors.grey.withOpacity(
+                              0.5), // Adjust opacity for desired mask intensity
+                        ),
                       )
                     : Container(),
                 Positioned(
