@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 
 part 'image_manage_event.dart';
 
@@ -24,6 +26,7 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       var images = list
           .map((e) => DownloadedImage(
               id: ++index,
+              // idx in the bloc is not the same as in the database
               localUrl: '',
               // it will be check in the child widget
               remoteUrl: e.$2,
@@ -35,14 +38,45 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
     });
 
     on<ImageManageEventDelete>((event, emit) async {
-      if (event.ids.isEmpty) {
-        var flag = await dbProvider.clearDownloadedImages();
-        if (flag) emit(state.copyWith(images: []));
-        return;
+      var removeList = state.images
+          .where((element) => event.ids.contains(element.id))
+          .toList();
+      // remove in remote → db → fs
+      var configJson = await dbProvider.getImageStorageSettingConfig(
+          type: ImageStorageType.github);
+      var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
+      var removedIds =
+          <int>[]; // not care whether the data in db and fs has been removed success
+      for (var element in removeList) {
+        var downloadedImage = await dbProvider.getDownloadedImage(
+            (element.name, element.localUrl, element.remoteUrl));
+        var isDeletedInRemote = await GithubApi.removeImage(
+            githubConfig: githubConfig, downloadedImage: downloadedImage);
+        if (!isDeletedInRemote) {
+          logger.e(
+              'Failed to remove image [${element.name}](${element.remoteUrl}) in repo.');
+          return;
+        }
+        removedIds.add(element.id);
+        var isDeletedInDB = await dbProvider.removeDownloadedImage(
+            (element.name, element.localUrl, element.remoteUrl));
+        if (!isDeletedInDB) {
+          logger.e('Failed to remove image record in Database.');
+          return;
+        }
+        try {
+          var file = File(element.localUrl);
+          if (await file.exists()) {
+            await file.delete();
+          }
+        } catch (e) {
+          logger.e(
+              'Failed to remove image [${element.name}](${element.localUrl}) in FileSystem.');
+        }
       }
       emit(state.copyWith(
           images: state.images
-              .where((element) => !event.ids.contains(element.id))
+              .where((element) => !removedIds.contains(element.id))
               .toList()));
     });
 
