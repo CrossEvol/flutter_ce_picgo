@@ -64,15 +64,17 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
           logger.e('Failed to remove image record in Database.');
           return;
         }
-        try {
-          var file = File(element.localUrl);
-          if (await file.exists()) {
-            await file.delete();
+        Future.delayed(Duration.zero, () async {
+          try {
+            var file = File(downloadedImage.localUrl);
+            if (await file.exists()) {
+              await file.delete();
+            }
+          } catch (e) {
+            logger.e(
+                'Failed to remove image [${element.name}](${element.localUrl}) in FileSystem.');
           }
-        } catch (e) {
-          logger.e(
-              'Failed to remove image [${element.name}](${element.localUrl}) in FileSystem.');
-        }
+        });
       }
       emit(state.copyWith(
           images: state.images

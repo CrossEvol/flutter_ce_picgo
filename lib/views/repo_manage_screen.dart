@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/widgets/image_manage_item.dart';
 
@@ -65,7 +67,13 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                   )
                 : FilledButton(
                     onPressed: () {
-                      fToast.showErrorToast(text: 'UnImplemented');
+                      context.read<ImageManageBloc>().add(
+                          ImageManageEventDelete(
+                              ids: widget.images
+                                  .where((element) => element.selected)
+                                  .map((e) => e.id)
+                                  .toList()));
+                      // fToast.showErrorToast(text: 'UnImplemented');
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith(

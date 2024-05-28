@@ -275,7 +275,7 @@ class SqfliteDbProvider implements DbInterface {
     try {
       final (name, _, remoteUrl) = removeDownloadedImageVo;
       var i = await db.delete(DOWNLOADED_IMAGE_TABLE,
-          where: 'name = ? and remoteUrl = ? ', whereArgs: [name, remoteUrl]);
+          where: 'name = ? and remote_url = ? ', whereArgs: [name, remoteUrl]);
       return i > 0;
     } catch (e) {
       logger.e(e);
@@ -313,7 +313,7 @@ class SqfliteDbProvider implements DbInterface {
     try {
       final (name, _, remoteUrl) = getDownloadedImageVo;
       var list = await db.query(DOWNLOADED_IMAGE_TABLE,
-          where: 'name = ? and remoteUrl = ?',
+          where: 'name = ? and remote_url = ?',
           whereArgs: [name, remoteUrl],
           distinct: true,
           limit: 1);
