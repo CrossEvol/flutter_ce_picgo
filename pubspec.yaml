@@ -107,6 +107,7 @@ flutter:
     - assets/logo/logo2.webp
     - assets/logo/logo3.webp
     - assets/logo/logo4.webp
+    - assets/image_load_error.jpg
   fonts:
     - family: Iconfont
       fonts:

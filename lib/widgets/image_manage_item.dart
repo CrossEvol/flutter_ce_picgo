@@ -31,7 +31,7 @@ class ImageManageItem extends StatelessWidget {
           return const CircularProgressIndicator();
         }
         if (snapshot.hasError) {
-          return Image.network('');
+          return Image.asset('assets/image_load_error.jpg', fit: BoxFit.cover);
         }
         return GestureDetector(
             onTap: () {
