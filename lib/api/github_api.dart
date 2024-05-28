@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/file.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/models/github_content.dart';
@@ -6,7 +7,12 @@ import 'package:flutter_ce_picgo/utils/file_util.dart';
 
 import '../utils/logger_util.dart';
 
-typedef GetImagesResult = (String name, String remoteUrl,String downloadUrl, String sha);
+typedef GetImagesResult = (
+  String name,
+  String remoteUrl,
+  String downloadUrl,
+  String sha
+);
 
 class GithubApi {
   static Future<List<GetImagesResult>> getImages(
@@ -41,7 +47,9 @@ class GithubApi {
   }
 
   static Future<GithubContent> downloadImage(
-      {required GithubConfig githubConfig,required String src, required String dest}) async {
+      {required GithubConfig githubConfig,
+      required String src,
+      required String dest}) async {
     Dio dio = Dio();
 
     // Set headers
@@ -52,8 +60,8 @@ class GithubApi {
     dio.interceptors.add(LogInterceptor(
         requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
 
-    var response = await dio.get(
-        'https://api.github.com/repos/${githubConfig.repo}/contents/$src');
+    var response = await dio
+        .get('https://api.github.com/repos/${githubConfig.repo}/contents/$src');
     if (response.statusCode != 200) {
       throw DioException(
           requestOptions: RequestOptions(
@@ -70,6 +78,43 @@ class GithubApi {
           requestOptions: RequestOptions(
               sourceStackTrace:
                   StackTrace.fromString('failed to save image...')));
+    }
+  }
+
+  static Future<bool> removeImage(
+      {required GithubConfig githubConfig,
+      required DownloadedImage downloadedImage}) async {
+    Dio dio = Dio();
+
+    // Set headers
+    dio.options.headers['Accept'] = 'application/vnd.github+json';
+    dio.options.headers['Authorization'] = 'Bearer ${githubConfig.token}';
+    dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
+    dio.options.headers['Content-Type'] = 'application/json';
+    dio.interceptors.add(LogInterceptor(
+        requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
+
+    Map<String, dynamic> requestBody = {
+      'message': 'my commit message',
+      'sha': downloadedImage.sha,
+    };
+
+    // Perform DELETE request
+    try {
+      Response response = await dio.delete(
+        // 'https://api.github.com/repos/${githubConfig.repo}/contents/${downloadedImage.name}',
+        downloadedImage.remoteUrl,
+        data: requestBody,
+        options: Options(contentType: Headers.jsonContentType),
+      );
+      if (response.statusCode == 200 && response.data['content'] == null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      logger.e(e);
+      return false;
     }
   }
 }
