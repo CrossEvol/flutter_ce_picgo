@@ -2,11 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('', () {
-    var boy = ParentFactory.instance.getChild(Sex.boy);
+    Boy boy = ParentFactory.instance.getChild<Boy>(Sex.boy);
     print(boy.a());
     print(boy.b());
     print(boy.c());
-    var girl = ParentFactory.instance.getChild(Sex.girl);
+    Girl girl = ParentFactory.instance.getChild<Girl>(Sex.girl);
     print(girl.a());
     print(girl.b());
     print(girl.c());
@@ -20,12 +20,12 @@ class ParentFactory {
 
   static ParentFactory get instance => _instance;
 
-  Parent getChild(Sex sex) {
+  T getChild<T extends Parent>(Sex sex) {
     switch (sex) {
       case Sex.boy:
-        return Boy();
+        return Boy() as T;
       case Sex.girl:
-        return Girl();
+        return Girl() as T;
     }
   }
 }
