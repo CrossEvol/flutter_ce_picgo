@@ -3,29 +3,44 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_ce_picgo/api/github_api.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
+import 'package:flutter_ce_picgo/models/gitee_config.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
 
+import '../../common/interfaces/interface.dart';
+
 part 'image_manage_event.dart';
 
 part 'image_manage_state.dart';
 
+Future<IConfig> _getConfig(String storageType) async {
+  var configJson =
+      await dbProvider.getImageStorageSettingConfig(type: storageType);
+  if (storageType case ImageStorageType.github) {
+    {
+      return GithubConfig.fromJson(jsonDecode(configJson));
+    }
+  } else if (storageType case ImageStorageType.gitee) {
+    {
+      return GiteeConfig.fromJson(jsonDecode(configJson));
+    }
+  } else {
+    throw UnimplementedError();
+  }
+}
+
 class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
   ImageManageBloc() : super(const ImageManageState(images: [])) {
     on<ImageManageEventLoad>((event, emit) async {
-      var configJson = await dbProvider.getImageStorageSettingConfig(
-          type: event.storageType);
-      var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
+      var config = await _getConfig(event.storageType);
       var uploadStrategy =
           UploadStrategyFactory.instance.getUploadStrategy(event.storageType);
-      var list = await uploadStrategy.getImages(githubConfig);
-      // var list = await GithubApi.getImages(githubConfig);
+      var list = await uploadStrategy.getImages(config);
       int index = 0;
       var images = list
           .map((e) => DownloadedImage(
@@ -46,9 +61,7 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
           .where((element) => event.ids.contains(element.id))
           .toList();
       // remove in remote → db → fs
-      var configJson = await dbProvider.getImageStorageSettingConfig(
-          type: ImageStorageType.github);
-      var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
+      var config = await _getConfig(event.storageType);
       var removedIds =
           <int>[]; // not care whether the data in db and fs has been removed success
       for (var element in removeList) {
@@ -57,9 +70,7 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
         var uploadStrategy =
             UploadStrategyFactory.instance.getUploadStrategy(event.storageType);
         var isDeletedInRemote = await uploadStrategy.removeImage(
-            config: githubConfig, download: downloadedImage);
-        // var isDeletedInRemote = await GithubApi.removeImage(
-        //     githubConfig: githubConfig, downloadedImage: downloadedImage);
+            config: config, download: downloadedImage);
         if (!isDeletedInRemote) {
           logger.e(
               'Failed to remove image [${element.name}](${element.remoteUrl}) in repo.');
