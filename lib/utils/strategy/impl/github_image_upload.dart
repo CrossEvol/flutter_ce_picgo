@@ -16,7 +16,7 @@ import 'package:flutter_ce_picgo/api/github_api.dart';
 
 class GithubImageUpload
     implements
-        ImageUploadStrategy<GetImagesResult, GithubConfig, GithubContent,
+        ImageUploadStrategy<GithubImagesResult, GithubConfig, GithubContent,
             DownloadedImage> {
   static const uploadCommitMessage = "Upload by Flutter-PicGo";
   static const deleteCommitMessage = "Delete by Flutter-PicGo";
@@ -81,7 +81,7 @@ class GithubImageUpload
   }
 
   @override
-  Future<List<GetImagesResult>> getImages(GithubConfig config) async {
+  Future<List<GithubImagesResult>> getImages(GithubConfig config) async {
     return await GithubApi.getImages(config);
   }
 

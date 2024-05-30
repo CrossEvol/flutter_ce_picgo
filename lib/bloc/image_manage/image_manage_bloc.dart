@@ -10,6 +10,7 @@ import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
+import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
 
 part 'image_manage_event.dart';
 
@@ -21,6 +22,9 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       var configJson = await dbProvider.getImageStorageSettingConfig(
           type: event.storageType);
       var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
+      var uploadStrategy =
+          UploadStrategyFactory.instance.getUploadStrategy(event.storageType);
+      uploadStrategy.getImages(githubConfig);
       var list = await GithubApi.getImages(githubConfig);
       int index = 0;
       var images = list

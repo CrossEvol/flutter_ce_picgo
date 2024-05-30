@@ -41,8 +41,8 @@ class _UploadScreenState extends State<UploadScreen> {
                   Future.delayed(const Duration(seconds: 1), () async {
                     try {
                       var type = await prefs.getDefaultStorage();
-                      var uploadStrategy =
-                          UploadStrategyFactory.getUploadStrategy(type);
+                      var uploadStrategy = UploadStrategyFactory.instance
+                          .getUploadStrategy(type);
                       var xFile = context
                           .read<ImageCacheBloc>()
                           .state

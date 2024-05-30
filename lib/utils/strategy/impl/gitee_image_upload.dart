@@ -16,7 +16,7 @@ import '../image_upload_strategy.dart';
 
 class GiteeImageUpload
     implements
-        ImageUploadStrategy<GetImagesResult, GiteeConfig, GiteeContent,
+        ImageUploadStrategy<GiteeImagesResult, GiteeConfig, GiteeContent,
             DownloadedImage> {
   static const uploadCommitMessage = "Upload by Flutter-PicGo";
   static const deleteCommitMessage = "Delete by Flutter-PicGo";
@@ -80,7 +80,7 @@ class GiteeImageUpload
   }
 
   @override
-  Future<List<GetImagesResult>> getImages(GiteeConfig config) async {
+  Future<List<GiteeImagesResult>> getImages(GiteeConfig config) async {
     return await GiteeApi.getImages(config);
   }
 

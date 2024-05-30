@@ -7,7 +7,7 @@ import 'package:flutter_ce_picgo/utils/file_util.dart';
 
 import '../utils/logger_util.dart';
 
-typedef GetImagesResult = (
+typedef GithubImagesResult = (
   String name,
   String remoteUrl,
   String downloadUrl,
@@ -15,7 +15,7 @@ typedef GetImagesResult = (
 );
 
 class GithubApi {
-  static Future<List<GetImagesResult>> getImages(
+  static Future<List<GithubImagesResult>> getImages(
       GithubConfig githubConfig) async {
     Dio dio = Dio();
 

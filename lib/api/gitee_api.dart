@@ -3,7 +3,7 @@ import 'package:flutter_ce_picgo/models/gitee_content.dart';
 
 import '../models/downloaded_image.dart';
 
-typedef GetImagesResult = (
+typedef GiteeImagesResult = (
   String name,
   String remoteUrl,
   String downloadUrl,
@@ -11,7 +11,7 @@ typedef GetImagesResult = (
 );
 
 class GiteeApi {
-  static Future<List<GetImagesResult>> getImages(
+  static Future<List<GiteeImagesResult>> getImages(
       GiteeConfig giteeConfig) async {
     throw UnimplementedError();
   }
