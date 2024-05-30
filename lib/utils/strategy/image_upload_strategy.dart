@@ -3,13 +3,13 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../common/interfaces/interface.dart';
 import '../../models/enums/uploaded_state.dart';
+import '../../models/get_image_result.dart';
 
 typedef UploadResult = (String url, UploadState state, String sha);
 
 typedef DeleteResult = UploadedImage;
 
 abstract class ImageUploadStrategy<
-    GetImages extends IGetImages,
     Config extends IConfig,
     Content extends IContent,
     Download extends IDownload> {
@@ -17,7 +17,7 @@ abstract class ImageUploadStrategy<
 
   Future<DeleteResult> delete(UploadedImage uploadedImage);
 
-  Future<List<GetImages>> getImages(Config config) async {
+  Future<List<GetImagesResult>> getImages(Config config) async {
     throw UnimplementedError();
   }
 

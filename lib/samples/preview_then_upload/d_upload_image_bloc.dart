@@ -6,7 +6,6 @@ import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import '../../models/enums/uploaded_state.dart';
 
 part 'd_upload_image_event.dart';
-
 part 'd_upload_image_state.dart';
 
 class DUploadImageBloc extends Bloc<DUploadImageEvent, DUploadImageState> {

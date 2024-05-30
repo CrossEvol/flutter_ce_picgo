@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 
 class SimpleBlocObserver extends BlocObserver {

@@ -1,32 +1,12 @@
-import 'package:flutter_ce_picgo/common/interfaces/interface.dart';
 import 'package:flutter_ce_picgo/models/gitee_config.dart';
 import 'package:flutter_ce_picgo/models/gitee_content.dart';
 
 import '../models/downloaded_image.dart';
+import '../models/get_image_result.dart';
 
-// typedef GiteeImagesResult = (
-//   String name,
-//   String remoteUrl,
-//   String downloadUrl,
-//   String sha
-// );
-
-class GiteeImagesResult implements IGetImages{
-  final String name;
-  final String remoteUrl;
-  final String downloadUrl;
-  final String sha;
-
-  const GiteeImagesResult({
-    required this.name,
-    required this.remoteUrl,
-    required this.downloadUrl,
-    required this.sha,
-  });
-}
 
 class GiteeApi {
-  static Future<List<GiteeImagesResult>> getImages(
+  static Future<List<GetImagesResult>> getImages(
       GiteeConfig giteeConfig) async {
     throw UnimplementedError();
   }

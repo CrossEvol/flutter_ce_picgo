@@ -1,5 +1,4 @@
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
-import 'package:flutter_ce_picgo/models/github_config.dart';
 
 import 'image_upload_strategy.dart';
 import 'impl/gitee_image_upload.dart';

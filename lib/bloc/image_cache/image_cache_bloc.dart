@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
 
 part 'image_cache_event.dart';
-
 part 'image_cache_state.dart';
 
 class ImageCacheBloc extends Bloc<ImageCacheEvent, ImageCacheState> {

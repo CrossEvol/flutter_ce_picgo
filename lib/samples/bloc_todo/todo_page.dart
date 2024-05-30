@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ce_picgo/samples/bloc_todo/stateful_todo_item.dart';
 import 'package:flutter_ce_picgo/samples/bloc_todo/stateless_todo_item.dart';
 import 'package:flutter_ce_picgo/samples/bloc_todo/todo_bloc.dart';
 

@@ -9,7 +9,6 @@ import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:flutter_ce_picgo/samples/preview_then_upload/d_upload_image_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 import '../../database/db_interface.dart';
 import '../../models/enums/uploaded_state.dart';

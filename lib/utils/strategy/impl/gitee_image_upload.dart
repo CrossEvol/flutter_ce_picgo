@@ -9,15 +9,14 @@ import 'package:image_picker/image_picker.dart';
 import '../../../api/gitee_api.dart';
 import '../../../constants/image_storage_type.dart';
 import '../../../database/db_interface.dart';
+import '../../../models/get_image_result.dart';
 import '../../../models/gitee_config.dart';
 import '../../../models/gitee_content.dart';
 import '../../logger_util.dart';
 import '../image_upload_strategy.dart';
 
 class GiteeImageUpload
-    implements
-        ImageUploadStrategy<GiteeImagesResult, GiteeConfig, GiteeContent,
-            DownloadedImage> {
+    implements ImageUploadStrategy<GiteeConfig, GiteeContent, DownloadedImage> {
   static const uploadCommitMessage = "Upload by Flutter-PicGo";
   static const deleteCommitMessage = "Delete by Flutter-PicGo";
 
@@ -79,16 +78,18 @@ class GiteeImageUpload
         giteeConfig: config, src: src, dest: dest);
   }
 
-  @override
-  Future<List<GiteeImagesResult>> getImages(GiteeConfig config) async {
-    return await GiteeApi.getImages(config);
-  }
 
   @override
   Future<bool> removeImage(
       {required GiteeConfig config, required DownloadedImage download}) async {
     return await GiteeApi.removeImage(
         giteeConfig: config, downloadedImage: download);
+  }
+
+  @override
+  Future<List<GetImagesResult>> getImages(GiteeConfig config) {
+    // TODO: implement getImages
+    throw UnimplementedError();
   }
 }
 

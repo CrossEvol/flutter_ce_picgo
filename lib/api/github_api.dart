@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_ce_picgo/common/interfaces/interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/file.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/models/github_content.dart';
 import 'package:flutter_ce_picgo/utils/file_util.dart';
 
+import '../models/get_image_result.dart';
 import '../utils/logger_util.dart';
 
 // typedef GithubImagesResult = (
@@ -15,22 +15,10 @@ import '../utils/logger_util.dart';
 //   String sha
 // );
 
-class GithubImagesResult implements IGetImages {
-  final String name;
-  final String remoteUrl;
-  final String downloadUrl;
-  final String sha;
 
-  const GithubImagesResult({
-    required this.name,
-    required this.remoteUrl,
-    required this.downloadUrl,
-    required this.sha,
-  });
-}
 
 class GithubApi {
-  static Future<List<GithubImagesResult>> getImages(
+  static Future<List<GetImagesResult>> getImages(
       GithubConfig githubConfig) async {
     Dio dio = Dio();
 
@@ -51,7 +39,7 @@ class GithubApi {
         .map((e) => e as Map<String, dynamic>)
         .map((e) => GithubContent.fromJson(e))
         .where((element) => element.type == FileContentType.file)
-        .map((e) => GithubImagesResult(
+        .map((e) => GetImagesResult(
                 name: e.name,
                 remoteUrl: e.url,
                 downloadUrl: e.downloadUrl,

@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/constants/table_name_keys.dart';
+import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/hive/hive_uploaded_image.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
-import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:hive_flutter/adapters.dart';

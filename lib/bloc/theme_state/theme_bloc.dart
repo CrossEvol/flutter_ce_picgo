@@ -5,7 +5,6 @@ import 'package:flutter_ce_picgo/models/enums/theme_mode.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
 part 'theme_event.dart';
-
 part 'theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
