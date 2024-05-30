@@ -5,15 +5,12 @@ import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/widgets/image_manage_item.dart';
 
 class RepoManageScreen extends StatefulWidget {
-  // final String storageType;
+  final String storageType;
 
   final List<ImageItemVO> images;
 
-  const RepoManageScreen({
-    super.key,
-    required this.images,
-    /*required this.storageType*/
-  });
+  const RepoManageScreen(
+      {super.key, required this.images, required this.storageType});
 
   @override
   State<RepoManageScreen> createState() => _RepoManageScreenState();
@@ -34,7 +31,6 @@ class ImageItemVO {
 }
 
 class _RepoManageScreenState extends State<RepoManageScreen> {
-
   int get selectedCount =>
       widget.images.where((element) => element.selected).toList().length;
 
@@ -63,6 +59,7 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                     onPressed: () {
                       context.read<ImageManageBloc>().add(
                           ImageManageEventDelete(
+                              storageType: widget.storageType,
                               ids: widget.images
                                   .where((element) => element.selected)
                                   .map((e) => e.id)

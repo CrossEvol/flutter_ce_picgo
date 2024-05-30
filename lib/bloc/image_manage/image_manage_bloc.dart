@@ -13,6 +13,7 @@ import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
 
 part 'image_manage_event.dart';
+
 part 'image_manage_state.dart';
 
 class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
@@ -23,7 +24,7 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
       var uploadStrategy =
           UploadStrategyFactory.instance.getUploadStrategy(event.storageType);
-     var list = await uploadStrategy.getImages(githubConfig);
+      var list = await uploadStrategy.getImages(githubConfig);
       // var list = await GithubApi.getImages(githubConfig);
       int index = 0;
       var images = list
@@ -53,8 +54,12 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       for (var element in removeList) {
         var downloadedImage = await dbProvider.getDownloadedImage(
             (element.name, element.localUrl, element.remoteUrl));
-        var isDeletedInRemote = await GithubApi.removeImage(
-            githubConfig: githubConfig, downloadedImage: downloadedImage);
+        var uploadStrategy =
+            UploadStrategyFactory.instance.getUploadStrategy(event.storageType);
+        var isDeletedInRemote = await uploadStrategy.removeImage(
+            config: githubConfig, download: downloadedImage);
+        // var isDeletedInRemote = await GithubApi.removeImage(
+        //     githubConfig: githubConfig, downloadedImage: downloadedImage);
         if (!isDeletedInRemote) {
           logger.e(
               'Failed to remove image [${element.name}](${element.remoteUrl}) in repo.');
@@ -90,8 +95,14 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       if (flag) {
         Future.delayed(Duration.zero, () async {
           // TODO : reduce the fine-grained
-          var flag = await clearImageCacheDir(ImageStorageType.github);
-          if (flag) await createImageCacheDir(ImageStorageType.github);
+          {
+            var flag = await clearImageCacheDir(ImageStorageType.github);
+            if (flag) await createImageCacheDir(ImageStorageType.github);
+          }
+          {
+            var flag = await clearImageCacheDir(ImageStorageType.gitee);
+            if (flag) await createImageCacheDir(ImageStorageType.gitee);
+          }
         });
         emit(state.copyWith(images: []));
       }

@@ -90,6 +90,7 @@ final GoRouter router = GoRouter(
             return BlocBuilder<ImageManageBloc, ImageManageState>(
               builder: (context, state) {
                 return RepoManageScreen(
+                  storageType: storageType,
                   images: state.images
                       .map((e) => ImageItemVO(
                           id: e.id,

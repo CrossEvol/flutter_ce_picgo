@@ -17,12 +17,14 @@ final class ImageManageEventLoad extends ImageManageEvent {
 
 final class ImageManageEventDelete extends ImageManageEvent {
   final List<int> ids;
+  final String storageType;
 
   @override
-  List<Object?> get props => [ids];
+  List<Object?> get props => [storageType, ids];
 
   const ImageManageEventDelete({
     required this.ids,
+    required this.storageType,
   });
 }
 
