@@ -157,7 +157,7 @@ void main() async {
         repo: githubRepo,
         token: githubToken));
     for (var element in list) {
-      logger.i('name = ${element.$1}\n sha = ${element.$2}');
+      logger.i('name = ${element.name}\n sha = ${element.sha}');
     }
   });
 

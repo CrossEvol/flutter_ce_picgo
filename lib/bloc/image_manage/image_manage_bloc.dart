@@ -22,9 +22,9 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       var configJson = await dbProvider.getImageStorageSettingConfig(
           type: event.storageType);
       var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
-      var uploadStrategy =
-          UploadStrategyFactory.instance.getUploadStrategy(event.storageType);
-      uploadStrategy.getImages(githubConfig);
+      // var uploadStrategy =
+      //     UploadStrategyFactory.instance.getUploadStrategy(event.storageType);
+      // uploadStrategy.getImages(githubConfig);
       var list = await GithubApi.getImages(githubConfig);
       int index = 0;
       var images = list
@@ -33,9 +33,9 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
               // idx in the bloc is not the same as in the database
               localUrl: '',
               // it will be check in the child widget
-              remoteUrl: e.$2,
-              name: e.$1,
-              sha: e.$3,
+              remoteUrl: e.remoteUrl,
+              name: e.name,
+              sha: e.sha,
               createdAt: DateTime.now()))
           .toList();
       emit(state.copyWith(images: images));

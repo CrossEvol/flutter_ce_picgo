@@ -1,9 +1,10 @@
+import 'package:flutter_ce_picgo/common/interfaces/interface.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'github_config.g.dart';
 
 @JsonSerializable()
-class GithubConfig {
+class GithubConfig implements IConfig {
   String branch;
   String customUrl;
   String path;

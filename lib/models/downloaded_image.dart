@@ -1,9 +1,10 @@
+import 'package:flutter_ce_picgo/common/interfaces/interface.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'downloaded_image.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class DownloadedImage {
+class DownloadedImage implements IDownload{
   final int id;
   final String localUrl;
   final String remoteUrl;

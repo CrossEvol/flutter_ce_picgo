@@ -1,3 +1,4 @@
+import 'package:flutter_ce_picgo/common/interfaces/interface.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'file.dart';
@@ -5,7 +6,7 @@ import 'file.dart';
 part 'github_content.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: true)
-class GithubContent {
+class GithubContent implements IContent {
   String name;
   String path;
   String sha;

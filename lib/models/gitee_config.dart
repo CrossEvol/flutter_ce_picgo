@@ -1,9 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../common/interfaces/interface.dart';
+
 part 'gitee_config.g.dart';
 
 @JsonSerializable()
-class GiteeConfig {
+class GiteeConfig implements IConfig {
   String owner;
   String path;
   String repo;
