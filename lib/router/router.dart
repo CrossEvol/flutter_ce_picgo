@@ -84,17 +84,11 @@ final GoRouter router = GoRouter(
           path: 'repo/:type',
           builder: (BuildContext context, GoRouterState state) {
             var storageType = state.pathParameters['type']!;
-            context.read<ImageManageBloc>().add(ImageManageEventLoad());
+            context
+                .read<ImageManageBloc>()
+                .add(ImageManageEventLoad(storageType: storageType));
             return BlocBuilder<ImageManageBloc, ImageManageState>(
               builder: (context, state) {
-                // final List<ImageItem> images = List.generate(
-                //     18,
-                //     (index) => ImageItem(
-                //         id: index,
-                //         url:
-                //             'https://avatars.githubusercontent.com/u/67866644?v=4',
-                //         selected: false));
-
                 return RepoManageScreen(
                   images: state.images
                       .map((e) => ImageItemVO(

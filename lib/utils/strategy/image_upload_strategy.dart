@@ -7,8 +7,24 @@ typedef UploadResult = (String url, UploadState state, String sha);
 
 typedef DeleteResult = UploadedImage;
 
-abstract class ImageUploadStrategy {
+abstract class ImageUploadStrategy<GetImages, Config, Content, Download> {
   Future<UploadResult> upload({required XFile xFile, required String rename});
 
   Future<DeleteResult> delete(UploadedImage uploadedImage);
+
+  Future<List<GetImages>> getImages(Config config) async {
+    throw UnimplementedError();
+  }
+
+  Future<Content> downloadImage(
+      {required Config config,
+      required String src,
+      required String dest}) async {
+    throw UnimplementedError();
+  }
+
+  Future<bool> removeImage(
+      {required Config config, required Download download}) async {
+    throw UnimplementedError();
+  }
 }

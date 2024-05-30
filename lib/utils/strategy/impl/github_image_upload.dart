@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
+import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,8 +12,12 @@ import '../../../models/enums/uploaded_state.dart';
 import '../../../models/github_content.dart';
 import '../../logger_util.dart';
 import '../image_upload_strategy.dart';
+import 'package:flutter_ce_picgo/api/github_api.dart';
 
-class GithubImageUpload implements ImageUploadStrategy {
+class GithubImageUpload
+    implements
+        ImageUploadStrategy<GetImagesResult, GithubConfig, GithubContent,
+            DownloadedImage> {
   static const uploadCommitMessage = "Upload by Flutter-PicGo";
   static const deleteCommitMessage = "Delete by Flutter-PicGo";
 
@@ -64,6 +69,27 @@ class GithubImageUpload implements ImageUploadStrategy {
   Future<DeleteResult> delete(UploadedImage uploadedImage) {
     // TODO: implement delete0
     throw UnimplementedError();
+  }
+
+  @override
+  Future<GithubContent> downloadImage(
+      {required GithubConfig config,
+      required String src,
+      required String dest}) async {
+    return await GithubApi.downloadImage(
+        githubConfig: config, src: src, dest: dest);
+  }
+
+  @override
+  Future<List<GetImagesResult>> getImages(GithubConfig config) async {
+    return await GithubApi.getImages(config);
+  }
+
+  @override
+  Future<bool> removeImage(
+      {required GithubConfig config, required DownloadedImage download}) async {
+    return await GithubApi.removeImage(
+        githubConfig: config, downloadedImage: download);
   }
 }
 

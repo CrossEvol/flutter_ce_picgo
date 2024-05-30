@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../api/gitee_api.dart';
 import '../../../constants/image_storage_type.dart';
 import '../../../database/db_interface.dart';
 import '../../../models/gitee_config.dart';
@@ -12,7 +14,10 @@ import '../../../models/gitee_content.dart';
 import '../../logger_util.dart';
 import '../image_upload_strategy.dart';
 
-class GiteeImageUpload implements ImageUploadStrategy {
+class GiteeImageUpload
+    implements
+        ImageUploadStrategy<GetImagesResult, GiteeConfig, GiteeContent,
+            DownloadedImage> {
   static const uploadCommitMessage = "Upload by Flutter-PicGo";
   static const deleteCommitMessage = "Delete by Flutter-PicGo";
 
@@ -57,15 +62,33 @@ class GiteeImageUpload implements ImageUploadStrategy {
       logger.e(e);
       return ('', UploadState.uploadFailed, '');
     }
-
-    // TODO: implement upload1
-    throw UnimplementedError();
   }
 
   @override
   Future<DeleteResult> delete(UploadedImage uploadedImage) {
     // TODO: implement delete0
     throw UnimplementedError();
+  }
+
+  @override
+  Future<GiteeContent> downloadImage(
+      {required GiteeConfig config,
+      required String src,
+      required String dest}) async {
+    return await GiteeApi.downloadImage(
+        giteeConfig: config, src: src, dest: dest);
+  }
+
+  @override
+  Future<List<GetImagesResult>> getImages(GiteeConfig config) async {
+    return await GiteeApi.getImages(config);
+  }
+
+  @override
+  Future<bool> removeImage(
+      {required GiteeConfig config, required DownloadedImage download}) async {
+    return await GiteeApi.removeImage(
+        giteeConfig: config, downloadedImage: download);
   }
 }
 
@@ -104,10 +127,10 @@ class GiteeUploadedInfo {
 
   Map<String, dynamic> toMap() {
     return {
-      'sha': this.sha,
-      'branch': this.branch,
-      'path': this.path,
-      'ownerRepo': this.ownerRepo,
+      'sha': sha,
+      'branch': branch,
+      'path': path,
+      'ownerRepo': ownerRepo,
     };
   }
 

@@ -19,7 +19,7 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
   ImageManageBloc() : super(const ImageManageState(images: [])) {
     on<ImageManageEventLoad>((event, emit) async {
       var configJson = await dbProvider.getImageStorageSettingConfig(
-          type: ImageStorageType.github);
+          type: event.storageType);
       var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
       var list = await GithubApi.getImages(githubConfig);
       int index = 0;

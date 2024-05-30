@@ -5,8 +5,14 @@ sealed class ImageManageEvent extends Equatable {
 }
 
 final class ImageManageEventLoad extends ImageManageEvent {
+  final String storageType;
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [storageType];
+
+  const ImageManageEventLoad({
+    required this.storageType,
+  });
 }
 
 final class ImageManageEventDelete extends ImageManageEvent {

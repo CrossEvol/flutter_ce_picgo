@@ -34,12 +34,6 @@ class ImageItemVO {
 }
 
 class _RepoManageScreenState extends State<RepoManageScreen> {
-  // final List<ImageItem> images = List.generate(
-  //     18,
-  //     (index) => ImageItem(
-  //         id: index,
-  //         url: 'https://avatars.githubusercontent.com/u/67866644?v=4',
-  //         selected: false));
 
   int get selectedCount =>
       widget.images.where((element) => element.selected).toList().length;
