@@ -7,17 +7,17 @@ import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../models/enums/uploaded_state.dart';
 import '../../../models/get_image_result.dart';
 import '../../../models/github_content.dart';
-import '../../logger_util.dart';
-import '../image_upload_strategy.dart';
+import '../storage_service.dart';
 
-class GithubImageUpload
+class GithubRepoService
     implements
-        ImageUploadStrategy< GithubConfig, GithubContent,
+        StorageService< GithubConfig, GithubContent,
             DownloadedImage> {
   static const uploadCommitMessage = "Upload by Flutter-PicGo";
   static const deleteCommitMessage = "Delete by Flutter-PicGo";
@@ -64,12 +64,6 @@ class GithubImageUpload
       logger.e(e);
       return ('', UploadState.uploadFailed, '');
     }
-  }
-
-  @override
-  Future<DeleteResult> delete(UploadedImage uploadedImage) {
-    // TODO: implement delete0
-    throw UnimplementedError();
   }
 
   @override

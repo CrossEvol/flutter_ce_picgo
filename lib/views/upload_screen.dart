@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/service/repo/storage_service_factory.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
-import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
 
 import '../models/enums/uploaded_state.dart';
 import '../utils/logger_util.dart';
@@ -41,13 +41,13 @@ class _UploadScreenState extends State<UploadScreen> {
                   Future.delayed(const Duration(seconds: 1), () async {
                     try {
                       var type = await prefs.getDefaultStorage();
-                      var uploadStrategy = UploadStrategyFactory.instance
+                      var storageService = StorageServiceFactory.instance
                           .getUploadStrategy(type);
                       var xFile = context
                           .read<ImageCacheBloc>()
                           .state
                           .imageCache[image.filepath];
-                      var (url, state, sha) = await uploadStrategy.upload(
+                      var (url, state, sha) = await storageService.upload(
                           xFile: xFile!,
                           rename:
                               '${DateTime.now().microsecondsSinceEpoch}.jpg');

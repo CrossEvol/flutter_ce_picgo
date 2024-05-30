@@ -12,11 +12,11 @@ import '../../../database/db_interface.dart';
 import '../../../models/get_image_result.dart';
 import '../../../models/gitee_config.dart';
 import '../../../models/gitee_content.dart';
-import '../../logger_util.dart';
-import '../image_upload_strategy.dart';
+import '../../../utils/logger_util.dart';
+import '../storage_service.dart';
 
-class GiteeImageUpload
-    implements ImageUploadStrategy<GiteeConfig, GiteeContent, DownloadedImage> {
+class GiteeRepoService
+    implements StorageService<GiteeConfig, GiteeContent, DownloadedImage> {
   static const uploadCommitMessage = "Upload by Flutter-PicGo";
   static const deleteCommitMessage = "Delete by Flutter-PicGo";
 
@@ -61,12 +61,6 @@ class GiteeImageUpload
       logger.e(e);
       return ('', UploadState.uploadFailed, '');
     }
-  }
-
-  @override
-  Future<DeleteResult> delete(UploadedImage uploadedImage) {
-    // TODO: implement delete0
-    throw UnimplementedError();
   }
 
   @override

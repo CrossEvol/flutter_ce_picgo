@@ -13,7 +13,7 @@ class PicgoApi {
 
     // Set headers
     dio.options.headers['Accept'] = 'text/html';
-    dio.options.connectTimeout = const Duration(seconds: 5);
+    dio.options.connectTimeout = const Duration(seconds: 5); // maybe need more time, but should be care about the page loading
     dio.options.receiveTimeout = const Duration(seconds: 5);
     dio.options.sendTimeout = const Duration(seconds: 5);
     dio.interceptors.add(LogInterceptor(

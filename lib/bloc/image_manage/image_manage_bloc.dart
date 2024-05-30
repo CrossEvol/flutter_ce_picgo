@@ -8,9 +8,10 @@ import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/gitee_config.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
+import 'package:flutter_ce_picgo/service/repo/storage_service.dart';
+import 'package:flutter_ce_picgo/service/repo/storage_service_factory.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
-import 'package:flutter_ce_picgo/utils/strategy/upload_strategy_factory.dart';
 
 import '../../common/interfaces/interface.dart';
 
@@ -38,9 +39,9 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
   ImageManageBloc() : super(const ImageManageState(images: [])) {
     on<ImageManageEventLoad>((event, emit) async {
       var config = await _getConfig(event.storageType);
-      var uploadStrategy =
-          UploadStrategyFactory.instance.getUploadStrategy(event.storageType);
-      var list = await uploadStrategy.getImages(config);
+      var storageService =
+          StorageServiceFactory.instance.getUploadStrategy(event.storageType);
+      var list = await storageService.getImages(config);
       int index = 0;
       var images = list
           .map((e) => DownloadedImage(
@@ -67,9 +68,9 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       for (var element in removeList) {
         var downloadedImage = await dbProvider.getDownloadedImage(
             (element.name, element.localUrl, element.remoteUrl));
-        var uploadStrategy =
-            UploadStrategyFactory.instance.getUploadStrategy(event.storageType);
-        var isDeletedInRemote = await uploadStrategy.removeImage(
+        var storageService =
+            StorageServiceFactory.instance.getUploadStrategy(event.storageType);
+        var isDeletedInRemote = await storageService.removeImage(
             config: config, download: downloadedImage);
         if (!isDeletedInRemote) {
           logger.e(
