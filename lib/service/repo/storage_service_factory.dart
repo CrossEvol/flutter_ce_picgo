@@ -19,10 +19,10 @@ class StorageServiceFactory {
       throw ArgumentError();
     }
     if (cache[type] == null) {
-      if (type == ImageStorageType.github) {
+      if (type == ImageStorageType.github.name) {
         /// Github
         cache[type] = GithubRepoService();
-      } else if (type == ImageStorageType.gitee) {
+      } else if (type == ImageStorageType.gitee.name) {
         /// Gitee
         cache[type] = GiteeRepoService();
       } else {

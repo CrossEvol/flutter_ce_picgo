@@ -70,7 +70,7 @@ class _GithubPageState extends BasePBSettingPageState<GithubPage> {
   }
 
   @override
-  String get pbType => ImageStorageType.github;
+  String get pbType => ImageStorageType.github.name;
 
   @override
   String get title => 'Github图床';
@@ -80,6 +80,6 @@ class _GithubPageState extends BasePBSettingPageState<GithubPage> {
 
   @override
   void handleManage() {
-    context.go('/repo/${ImageStorageType.github}');
+    context.go('/repo/${ImageStorageType.github.name}');
   }
 }

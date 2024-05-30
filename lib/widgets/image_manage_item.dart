@@ -39,7 +39,7 @@ class ImageManageItem extends StatelessWidget {
                 '/image',
                 extra: ImageExtra(
                     localUrl: snapshot.data!.file.absolute.path,
-                    type: ImageStorageType.github),
+                    type: ImageStorageType.github.name),
               );
             },
             child: Image(image: snapshot.data!, fit: BoxFit.cover));
@@ -50,7 +50,7 @@ class ImageManageItem extends StatelessWidget {
 
   Future<FileImage> setupFileImage() async {
     var exists = await dbProvider.existsDownloadedImage((name, remoteUrl));
-    var localUrl = join(appDirectory, ImageStorageType.github, name);
+    var localUrl = join(appDirectory, ImageStorageType.github.name, name);
     if (exists) {
       var file = File(localUrl);
       if (file.existsSync()) {
@@ -67,7 +67,7 @@ class ImageManageItem extends StatelessWidget {
 
   Future<FileImage> createLocalImageCache(String src, String dest) async {
     var configJson = await dbProvider.getImageStorageSettingConfig(
-        type: ImageStorageType.github);
+        type: ImageStorageType.github.name);
     var githubContent = await GithubApi.downloadImage(
         githubConfig: GithubConfig.fromJson(jsonDecode(configJson)),
         src: src,

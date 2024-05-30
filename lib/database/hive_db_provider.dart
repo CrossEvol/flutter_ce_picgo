@@ -39,24 +39,24 @@ class HiveDbProvider implements DbInterface {
     if (kDebugMode) {
       await uploadedImageBox.clear();
     }
-    if (!issBox.containsKey(ImageStorageType.github)) {
+    if (!issBox.containsKey(ImageStorageType.github.name)) {
       await issBox.put(
-          ImageStorageType.github,
+          ImageStorageType.github.name,
           HiveImageStorageSetting(
               id: 0,
-              type: ImageStorageType.github,
+              type: ImageStorageType.github.name,
               name: "Github图床",
               config: "",
               path: "/settings/pb/github",
               visible: true));
     }
 
-    if (!issBox.containsKey(ImageStorageType.gitee)) {
+    if (!issBox.containsKey(ImageStorageType.gitee.name)) {
       await issBox.put(
-          ImageStorageType.gitee,
+          ImageStorageType.gitee.name,
           HiveImageStorageSetting(
               id: 0,
-              type: ImageStorageType.github,
+              type: ImageStorageType.github.name,
               name: "Gitee图床",
               config: "",
               path: "/settings/pb/gitee",

@@ -77,7 +77,7 @@ class _GiteePageState extends BasePBSettingPageState<GiteePage> {
   }
 
   @override
-  String get pbType => ImageStorageType.gitee;
+  String get pbType => ImageStorageType.gitee.name;
 
   @override
   String get title => 'Gitee图床';
@@ -87,6 +87,6 @@ class _GiteePageState extends BasePBSettingPageState<GiteePage> {
 
   @override
   void handleManage() {
-    context.go('/repo/${ImageStorageType.gitee}');
+    context.go('/repo/${ImageStorageType.gitee.name}');
   }
 }

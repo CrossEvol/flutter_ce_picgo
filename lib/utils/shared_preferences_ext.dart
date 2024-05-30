@@ -8,7 +8,7 @@ late SharedPreferences prefs;
 extension SharedPreferencesExtension on SharedPreferences {
   Future<String> getDefaultStorage() async {
     return getString(SharedPreferencesKeys.settingDefaultStorage.name) ??
-        ImageStorageType.github;
+        ImageStorageType.github.name;
   }
 
   Future<void> setDefaultStorage(String type) async {

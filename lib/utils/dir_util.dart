@@ -10,8 +10,8 @@ late String appDirectory;
 
 Future<void> setupAppDirectory() async {
   appDirectory = (await getApplicationDocumentsDirectory()).path;
-  await createImageCacheDir(ImageStorageType.github);
-  await createImageCacheDir(ImageStorageType.gitee);
+  await createImageCacheDir(ImageStorageType.github.name);
+  await createImageCacheDir(ImageStorageType.gitee.name);
   if (kDebugMode) {
     logger.i(appDirectory);
   }

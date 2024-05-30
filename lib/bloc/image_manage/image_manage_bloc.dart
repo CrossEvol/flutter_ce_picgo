@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/gitee_config.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
-import 'package:flutter_ce_picgo/service/repo/storage_service.dart';
 import 'package:flutter_ce_picgo/service/repo/storage_service_factory.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
@@ -22,16 +22,14 @@ part 'image_manage_state.dart';
 Future<IConfig> _getConfig(String storageType) async {
   var configJson =
       await dbProvider.getImageStorageSettingConfig(type: storageType);
-  if (storageType case ImageStorageType.github) {
-    {
+  var storageTypeEnum = EnumToString.fromString(ImageStorageType.values, storageType);
+  switch(storageTypeEnum){
+    case ImageStorageType.github:
       return GithubConfig.fromJson(jsonDecode(configJson));
-    }
-  } else if (storageType case ImageStorageType.gitee) {
-    {
+    case ImageStorageType.gitee:
       return GiteeConfig.fromJson(jsonDecode(configJson));
-    }
-  } else {
-    throw UnimplementedError();
+    case null:
+      throw UnimplementedError('Unknown Storage Type');
   }
 }
 
@@ -108,12 +106,12 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
         Future.delayed(Duration.zero, () async {
           // TODO : reduce the fine-grained
           {
-            var flag = await clearImageCacheDir(ImageStorageType.github);
-            if (flag) await createImageCacheDir(ImageStorageType.github);
+            var flag = await clearImageCacheDir(ImageStorageType.github.name);
+            if (flag) await createImageCacheDir(ImageStorageType.github.name);
           }
           {
-            var flag = await clearImageCacheDir(ImageStorageType.gitee);
-            if (flag) await createImageCacheDir(ImageStorageType.gitee);
+            var flag = await clearImageCacheDir(ImageStorageType.gitee.name);
+            if (flag) await createImageCacheDir(ImageStorageType.gitee.name);
           }
         });
         emit(state.copyWith(images: []));

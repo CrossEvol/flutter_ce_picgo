@@ -90,7 +90,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                           uploadedImage: UploadedImage(
                               id: 0,
                               filepath: _mediaFileList!.first!.path,
-                              storageType: ImageStorageType.github,
+                              storageType: ImageStorageType.github.name,
                               url: '',
                               name:
                                   '${DateTime.now().microsecondsSinceEpoch}.jpg',

@@ -70,9 +70,9 @@ class _BarCodeViewState extends State<BarCodeView> {
 
   Future<String> getConfig() async {
     var githubConfigJson = await dbProvider.getImageStorageSettingConfig(
-        type: ImageStorageType.github);
+        type: ImageStorageType.github.name);
     var giteeConfigJson = await dbProvider.getImageStorageSettingConfig(
-        type: ImageStorageType.gitee);
+        type: ImageStorageType.gitee.name);
     Map<String, dynamic> map = {};
     map.putIfAbsent('github', () => jsonDecode(githubConfigJson));
     map.putIfAbsent('gitee', () => jsonDecode(giteeConfigJson));

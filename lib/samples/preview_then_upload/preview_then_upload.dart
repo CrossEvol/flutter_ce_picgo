@@ -144,7 +144,7 @@ class _MyAppState extends State<_MyApp> {
                     uploadedImage: UploadedImage(
                         id: 0,
                         filepath: mediaFile!.path,
-                        storageType: ImageStorageType.github,
+                        storageType: ImageStorageType.github.name,
                         url: '',
                         name: '${DateTime.now().microsecondsSinceEpoch}.jpg',
                         state: UploadState.uploading,

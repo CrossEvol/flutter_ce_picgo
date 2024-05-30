@@ -26,7 +26,7 @@ class GithubRepoService
   Future<UploadResult> upload(
       {required XFile xFile, required String rename}) async {
     var configJson = await dbProvider.getImageStorageSettingConfig(
-        type: ImageStorageType.github);
+        type: ImageStorageType.github.name);
     var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
 
     Dio dio = Dio();

@@ -57,17 +57,17 @@ class IsarDbProvider implements DbInterface {
       });
     }
     await isar.writeTxn(() async {
-      if (!(await containsType(type: ImageStorageType.github))) {
+      if (!(await containsType(type: ImageStorageType.github.name))) {
         await isar.isarImageStorageSettings.put(IsarImageStorageSetting(
-            type: ImageStorageType.github,
+            type: ImageStorageType.github.name,
             name: "Github图床",
             config: "",
             path: "/settings/pb/github",
             visible: true)); //
       }
-      if (!(await containsType(type: ImageStorageType.gitee))) {
+      if (!(await containsType(type: ImageStorageType.gitee.name))) {
         await isar.isarImageStorageSettings.put(IsarImageStorageSetting(
-            type: ImageStorageType.gitee,
+            type: ImageStorageType.gitee.name,
             name: "Gitee图床",
             config: "",
             path: "/settings/pb/gitee",

@@ -26,7 +26,7 @@ class GiteeRepoService
     Dio dio = Dio();
 
     var configJson = await dbProvider.getImageStorageSettingConfig(
-        type: ImageStorageType.gitee);
+        type: ImageStorageType.gitee.name);
     var giteeConfig = GiteeConfig.fromJson(jsonDecode(configJson));
 
     // Set headers
