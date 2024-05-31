@@ -57,6 +57,7 @@ class ImageStorageSettingPagePresenter {
     }
   }
 
+  /// TODO: when the config not conform with yaml format, it can not export and generate the barcode
   /// 导出所有配置
   doExportConfig() async {
     try {

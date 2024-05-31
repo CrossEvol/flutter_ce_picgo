@@ -47,7 +47,11 @@ class IsarDbProvider implements DbInterface {
   Future<void> init({bool isCreate = false}) async {
     final dir = await getApplicationDocumentsDirectory();
     isar = await Isar.open(
-      [IsarImageStorageSettingSchema, IsarUploadedImageSchema],
+      [
+        IsarImageStorageSettingSchema,
+        IsarUploadedImageSchema,
+        IsarDownloadedImageSchema
+      ],
       directory: dir.path,
     );
     if (kDebugMode) {
