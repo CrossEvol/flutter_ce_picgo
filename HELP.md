@@ -46,3 +46,38 @@ use the curl to test the contents API , response is
 ]
 ```
 should modify the api, use the url to get the specific content, and use the download_url as the identifier.
+
+# 422 error
+```shell
+flutter: ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+flutter: │ #0   _UploadScreenState.build.<anonymous closure>.<anonymous closure> (package:flutter_ce_picgo/views/upload_screen.dart:41:26)
+flutter: │ #1   SliverChildBuilderDelegate.build (package:flutter/src/widgets/scroll_delegate.dart:490:22)
+flutter: ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+flutter: │ ! start uploading...
+flutter: └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+flutter: ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+flutter: │ #0   GithubRepoService.upload (package:flutter_ce_picgo/service/repo/impl/github_repo_service.dart:69:14)
+flutter: │ #1   <asynchronous suspension>
+flutter: ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+flutter: │ ⛔ DioException [bad response]: This exception was thrown because the response has a status code of 422 and RequestOptions.validateStatus was configured to throw for this status code.
+flutter: │ ⛔ The status code of 422 has the following meaning: "Client error - the request contains bad syntax or cannot be fulfilled"
+flutter: │ ⛔ Read more about status codes at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+flutter: │ ⛔ In order to resolve this exception you typically have either to verify and fix your request code or you have to fix the server code.
+flutter: │ ⛔ 
+flutter: └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+flutter: ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+flutter: │ #0   _UploadScreenState.build.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:flutter_ce_picgo/views/upload_screen.dart:59:30)
+flutter: │ #1   <asynchronous suspension>
+flutter: ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+flutter: │ ! end uploading...
+flutter: └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+```
+find the detailed response error message: 
+```json
+{
+  "message": "Invalid request.\n\n\"sha\" wasn't supplied.",
+  "documentation_url": "https://docs.github.com/rest/repos/contents#create-or-update-file-contents",
+  "status": "422"
+}
+```
+analyze the repo, find out that the images can be upload repeatedly.

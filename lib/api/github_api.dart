@@ -3,6 +3,8 @@ import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/file.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/models/github_content.dart';
+import 'package:flutter_ce_picgo/utils/dio_util.dart';
+import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/file_util.dart';
 
 import '../models/get_image_result.dart';
@@ -15,20 +17,23 @@ import '../utils/logger_util.dart';
 //   String sha
 // );
 
-
-
 class GithubApi {
   static Future<List<GetImagesResult>> getImages(
       GithubConfig githubConfig) async {
     Dio dio = Dio();
 
     // Set headers
+    dio.setTimeout();
     dio.options.headers['Accept'] = 'application/vnd.github+json';
     dio.options.headers['Authorization'] = 'Bearer ${githubConfig.token}';
     dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
     dio.options.headers['Content-Type'] = 'application/json';
-    dio.interceptors.add(LogInterceptor(
-        requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
+    if (env.logEnabled) {
+      dio.interceptors.add(LogInterceptor(
+          requestBody: false,
+          responseBody: true,
+          logPrint: (o) => logger.w(o)));
+    }
 
     var response = await dio.get<List<dynamic>>(
         'https://api.github.com/repos/${githubConfig.repo}/contents');
@@ -62,6 +67,7 @@ class GithubApi {
     Dio dio = Dio();
 
     // Set headers
+    dio.setTimeout();
     dio.options.headers['Accept'] = 'application/vnd.github+json';
     dio.options.headers['Authorization'] = 'Bearer ${githubConfig.token}';
     dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
@@ -96,6 +102,7 @@ class GithubApi {
     Dio dio = Dio();
 
     // Set headers
+    dio.setTimeout();
     dio.options.headers['Accept'] = 'application/vnd.github+json';
     dio.options.headers['Authorization'] = 'Bearer ${githubConfig.token}';
     dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';

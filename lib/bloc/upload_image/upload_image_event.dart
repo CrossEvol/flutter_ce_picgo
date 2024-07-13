@@ -10,13 +10,13 @@ final class UploadImageEventLoad extends UploadImageEvent {
 }
 
 final class UploadImageEventAdd extends UploadImageEvent {
-  final UploadedImage uploadedImage;
+  final List<UploadedImage> uploadedImages;
 
   @override
-  List<Object?> get props => [uploadedImage];
+  List<Object?> get props => [uploadedImages];
 
   const UploadImageEventAdd({
-    required this.uploadedImage,
+    required this.uploadedImages,
   });
 }
 

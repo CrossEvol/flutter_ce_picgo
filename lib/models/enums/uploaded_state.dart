@@ -15,5 +15,7 @@ enum UploadState {
   @HiveField(3)
   uploadFailed,
   @HiveField(4)
-  saveFailed
+  saveFailed,
+  @HiveField(5)
+  unknown, // mark for 422 client error
 }

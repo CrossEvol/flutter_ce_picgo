@@ -47,17 +47,24 @@ class _UploadScreenState extends State<UploadScreen> {
                           .read<ImageCacheBloc>()
                           .state
                           .imageCache[image.filepath];
+                      var uploadedImage = context
+                          .read<UploadImageBloc>()
+                          .state
+                          .images
+                          .firstWhere(
+                              (element) => element.filepath == xFile?.path);
                       var (url, state, sha) = await storageService.upload(
-                          xFile: xFile!,
-                          rename:
-                              '${DateTime.now().microsecondsSinceEpoch}.jpg');
+                          xFile: xFile!, rename: uploadedImage.name);
                       logger.w('end uploading...');
-                      context.read<UploadImageBloc>().add(
-                          UploadImageEventUpdate(
-                              filepath: image.filepath,
-                              url: url,
-                              state: state,
-                              sha: sha));
+                      if (state != UploadState.unknown) {
+                        context.read<UploadImageBloc>().add(
+                            UploadImageEventUpdate(
+                                filepath: image.filepath,
+                                url: url,
+                                state: state,
+                                sha: sha));
+                      }
+                      // delay clear the image cache
                       context
                           .read<ImageCacheBloc>()
                           .add(ImageCacheEventRemove(key: image.filepath));

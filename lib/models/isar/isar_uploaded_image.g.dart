@@ -192,6 +192,7 @@ const _IsarUploadedImagestateEnumValueMap = {
   r'completed': r'completed',
   r'uploadFailed': r'uploadFailed',
   r'saveFailed': r'saveFailed',
+  r'unknown': r'unknown',
 };
 const _IsarUploadedImagestateValueEnumMap = {
   r'uploading': UploadState.uploading,
@@ -199,6 +200,7 @@ const _IsarUploadedImagestateValueEnumMap = {
   r'completed': UploadState.completed,
   r'uploadFailed': UploadState.uploadFailed,
   r'saveFailed': UploadState.saveFailed,
+  r'unknown': UploadState.unknown,
 };
 
 Id _isarUploadedImageGetId(IsarUploadedImage object) {

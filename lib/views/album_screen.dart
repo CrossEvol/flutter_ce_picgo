@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../constants/image_storage_type.dart';
 import '../models/enums/uploaded_state.dart';
 import '../models/uploaded_image.dart';
+import '../utils/faker_util.dart';
 
 class AlbumScreen extends StatefulWidget {
   const AlbumScreen({super.key});
@@ -31,7 +32,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   dynamic _pickImageError;
 
   void _setImageFileListFromFile(XFile? value) {
-    _mediaFileList = value == null ? null : <XFile>[value];
+    _mediaFileList = value == null ? null : [...?_mediaFileList, value!];
   }
 
   _AlbumScreenState();
@@ -82,21 +83,24 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                 ]));
                     return;
                   } else {
-                    context.read<ImageCacheBloc>().add(ImageCacheEventPut(
-                        key: _mediaFileList!.first.path,
-                        xFile: _mediaFileList!.first));
                     if (_mediaFileList!.isNotEmpty) {
+                      _mediaFileList?.forEach((element) {
+                        context.read<ImageCacheBloc>().add(ImageCacheEventPut(
+                            key: element.path, xFile: element));
+                      });
                       context.read<UploadImageBloc>().add(UploadImageEventAdd(
-                          uploadedImage: UploadedImage(
-                              id: 0,
-                              filepath: _mediaFileList!.first!.path,
-                              storageType: ImageStorageType.github.name,
-                              url: '',
-                              name:
-                                  '${DateTime.now().microsecondsSinceEpoch}.jpg',
-                              state: UploadState.uploading,
-                              createTime: DateTime.now(),
-                              uploadTime: DateTime.now())));
+                          uploadedImages: _mediaFileList!
+                              .map((e) => UploadedImage(
+                                  id: 0,
+                                  filepath: e.path,
+                                  storageType: ImageStorageType.github.name,
+                                  url: '',
+                                  name:
+                                      '${DateTime.now().microsecondsSinceEpoch}-${faker.lorem.word()}.jpg',
+                                  state: UploadState.uploading,
+                                  createTime: DateTime.now(),
+                                  uploadTime: DateTime.now()))
+                              .toList()));
                     }
                   }
                   setState(() {

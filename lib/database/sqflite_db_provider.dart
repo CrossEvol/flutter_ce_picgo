@@ -7,6 +7,7 @@ import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
+import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -231,10 +232,21 @@ class SqfliteDbProvider implements DbInterface {
               whereArgs: [filepath],
               limit: 1))
           .first);
+      if (env.dbLogEnabled) {
+        logger.d('${DateTime.now()} Old Image -->');
+        logger.d(oldImage.toJson());
+      }
+
       var newImage = oldImage.copyWith(url: url, name: name, state: state);
+      if (env.dbLogEnabled) {
+        logger.d('${DateTime.now()} New Image -->');
+        logger.d(newImage.toJson());
+      }
+
       var map = newImage.toJson();
       map.remove('id');
-      var i = await db.update(UPLOADED_IMAGE_TABLE, map);
+      var i = await db.update(UPLOADED_IMAGE_TABLE, map,
+          where: 'filepath = ?', whereArgs: [filepath]);
       if (i > 0) {
         return true;
       }

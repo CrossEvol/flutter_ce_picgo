@@ -1,8 +1,8 @@
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 
-import 'storage_service.dart';
 import 'impl/gitee_repo_service.dart';
 import 'impl/github_repo_service.dart';
+import 'storage_service.dart';
 
 class StorageServiceFactory {
   StorageServiceFactory._();

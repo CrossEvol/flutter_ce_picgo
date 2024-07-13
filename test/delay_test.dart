@@ -14,4 +14,10 @@ void main() {
 
     sleep(const Duration(seconds: 3));
   });
+
+  test('TimeTest', () {
+    print('${DateTime.now().millisecondsSinceEpoch}');
+    print('${DateTime.now().microsecondsSinceEpoch}');
+    print('${DateTime.now().microsecondsSinceEpoch}');
+  });
 }

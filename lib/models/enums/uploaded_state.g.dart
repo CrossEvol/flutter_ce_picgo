@@ -23,6 +23,8 @@ class UploadStateAdapter extends TypeAdapter<UploadState> {
         return UploadState.uploadFailed;
       case 4:
         return UploadState.saveFailed;
+      case 5:
+        return UploadState.unknown;
       default:
         return UploadState.uploading;
     }
@@ -45,6 +47,9 @@ class UploadStateAdapter extends TypeAdapter<UploadState> {
         break;
       case UploadState.saveFailed:
         writer.writeByte(4);
+        break;
+      case UploadState.unknown:
+        writer.writeByte(5);
         break;
     }
   }

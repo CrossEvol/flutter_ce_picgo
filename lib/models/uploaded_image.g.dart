@@ -40,4 +40,5 @@ const _$UploadStateEnumMap = {
   UploadState.completed: 'completed',
   UploadState.uploadFailed: 'uploadFailed',
   UploadState.saveFailed: 'saveFailed',
+  UploadState.unknown: 'unknown',
 };

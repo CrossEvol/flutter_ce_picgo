@@ -16,7 +16,6 @@ import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import '../../common/interfaces/interface.dart';
 
 part 'image_manage_event.dart';
-
 part 'image_manage_state.dart';
 
 Future<IConfig> _getConfig(String storageType) async {

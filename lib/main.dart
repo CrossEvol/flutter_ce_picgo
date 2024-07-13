@@ -10,6 +10,7 @@ import 'package:flutter_ce_picgo/bloc/theme_state/theme_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
+import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
 import 'database/db_interface.dart';
@@ -19,6 +20,7 @@ import 'utils/logger_util.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await EnvUtil.setup();
   await initLogger();
 
   logger.i('configure the usage of SharedPreferences...');

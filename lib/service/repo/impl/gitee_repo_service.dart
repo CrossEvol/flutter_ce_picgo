@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
-import 'package:flutter_ce_picgo/models/uploaded_image.dart';
+import 'package:flutter_ce_picgo/utils/dio_util.dart';
+import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../api/gitee_api.dart';
@@ -30,9 +31,14 @@ class GiteeRepoService
     var giteeConfig = GiteeConfig.fromJson(jsonDecode(configJson));
 
     // Set headers
+    dio.setTimeout();
     dio.options.headers['Content-Type'] = ' application/json;charset=UTF-8';
-    dio.interceptors.add(LogInterceptor(
-        requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
+    if (env.logEnabled) {
+      dio.interceptors.add(LogInterceptor(
+          requestBody: false,
+          responseBody: true,
+          logPrint: (o) => logger.w(o)));
+    }
 
     var fileData = await xFile.readAsBytes();
 
@@ -71,7 +77,6 @@ class GiteeRepoService
     return await GiteeApi.downloadImage(
         giteeConfig: config, src: src, dest: dest);
   }
-
 
   @override
   Future<bool> removeImage(

@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'notification.dart';
 
 part 'notification_event.dart';
-
 part 'notification_state.dart';
 
 var notificationIndex = 0;

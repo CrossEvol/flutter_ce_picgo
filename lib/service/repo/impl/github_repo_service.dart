@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_ce_picgo/api/github_api.dart';
@@ -6,7 +7,8 @@ import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/github_config.dart';
-import 'package:flutter_ce_picgo/models/uploaded_image.dart';
+import 'package:flutter_ce_picgo/utils/dio_util.dart';
+import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -16,9 +18,7 @@ import '../../../models/github_content.dart';
 import '../storage_service.dart';
 
 class GithubRepoService
-    implements
-        StorageService< GithubConfig, GithubContent,
-            DownloadedImage> {
+    implements StorageService<GithubConfig, GithubContent, DownloadedImage> {
   static const uploadCommitMessage = "Upload by Flutter-PicGo";
   static const deleteCommitMessage = "Delete by Flutter-PicGo";
 
@@ -31,18 +31,23 @@ class GithubRepoService
 
     Dio dio = Dio();
     // Set headers
+    dio.setTimeout();
     dio.options.headers['Accept'] = 'application/vnd.github+json';
     dio.options.headers['Authorization'] = 'Bearer ${githubConfig.token}';
     dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
     dio.options.headers['Content-Type'] = 'application/json';
-    dio.interceptors.add(LogInterceptor(
-        requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
+    if (env.logEnabled) {
+      dio.interceptors.add(LogInterceptor(
+          requestBody: false,
+          responseBody: true,
+          logPrint: (o) => logger.w(o)));
+    }
 
     var fileData = await xFile.readAsBytes();
 
     // Set request body
     Map<String, dynamic> requestBody = {
-      'message': 'my commit message',
+      'message': rename,
       'content': base64Encode(fileData),
     };
 
@@ -61,8 +66,23 @@ class GithubRepoService
         githubContent.sha
       );
     } catch (e) {
-      logger.e(e);
-      return ('', UploadState.uploadFailed, '');
+      switch (e.runtimeType) {
+        case DioException:
+          {
+            if (((e as DioException).response?.data
+                    as Map<String, dynamic>)['status'] ==
+                HttpStatus.unprocessableEntity.toString()) {
+              logger.w('unknown error for 422');
+              return ('', UploadState.unknown, '');
+            }
+            return ('', UploadState.uploadFailed, '');
+          }
+        default:
+          {
+            logger.e(e);
+            return ('', UploadState.uploadFailed, '');
+          }
+      }
     }
   }
 

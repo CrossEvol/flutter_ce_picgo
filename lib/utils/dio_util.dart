@@ -17,3 +17,11 @@ Future<void> setupDio() async {
         requestBody: true, responseBody: true, logPrint: (o) => logger.w(o)));
   }
 }
+
+extension DioExtension on Dio {
+  void setTimeout() {
+    options.connectTimeout = const Duration(seconds: 30000);
+    options.receiveTimeout = const Duration(seconds: 30000);
+    options.sendTimeout = const Duration(seconds: 30000);
+  }
+}
