@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -103,10 +104,22 @@ class _AlbumScreenState extends State<AlbumScreen> {
                               .toList()));
                     }
                   }
-                  setState(() {
-                    _mediaFileList = null;
+
+                  fToast.showSuccessToast(
+                      text: 'Waiting...',
+                      duration: _mediaFileList != null
+                          ? _mediaFileList!.length ~/ 2
+                          : 2);
+                  Future.delayed(
+                      Duration(
+                          seconds: _mediaFileList != null
+                              ? _mediaFileList!.length ~/ 2
+                              : 0), () {
+                    setState(() {
+                      _mediaFileList = null;
+                    });
+                    context.go('/upload');
                   });
-                  context.go('/upload');
                 },
                 heroTag: 'upload',
                 tooltip: 'Upload Image to cloud',
@@ -280,10 +293,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
   @override
   void initState() {
     super.initState();
+    fToast.init(context);
   }
 
   @override
   void dispose() {
+    fToast.removeQueuedCustomToasts();
     super.dispose();
   }
 

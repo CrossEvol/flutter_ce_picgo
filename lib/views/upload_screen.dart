@@ -108,6 +108,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
   @override
   void dispose() {
+    fToast.removeQueuedCustomToasts();
     super.dispose();
   }
 }
