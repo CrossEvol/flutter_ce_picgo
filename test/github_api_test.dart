@@ -162,7 +162,7 @@ void main() async {
   });
 
   test('download image test', () async {
-    appDirectory = 'tmp';
+    appStorageDirectory = 'tmp';
     var filename = '1716704439275735.jpg';
     var flag = await GithubApi.downloadImage(
         githubConfig: GithubConfig(

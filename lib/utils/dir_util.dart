@@ -6,20 +6,27 @@ import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-late String appDirectory;
+late String appStorageDirectory;
 
 Future<void> setupAppDirectory() async {
-  appDirectory = (await getApplicationDocumentsDirectory()).path;
+  if (Platform.isWindows) {
+    appStorageDirectory = (await getApplicationDocumentsDirectory()).path;
+  } else if (Platform.isAndroid) {
+    appStorageDirectory =
+        (await getExternalStorageDirectories(type: StorageDirectory.pictures))!
+            .first
+            .path;
+  }
   await createImageCacheDir(ImageStorageType.github.name);
   await createImageCacheDir(ImageStorageType.gitee.name);
   if (kDebugMode) {
-    logger.i(appDirectory);
+    logger.i(appStorageDirectory);
   }
 }
 
 // TODO: in android, does it need any permission?
 Future<void> createImageCacheDir(String type) async {
-  var dir = Directory(join(appDirectory, type));
+  var dir = Directory(join(appStorageDirectory, type));
   if (!dir.existsSync()) {
     await dir.create(recursive: true);
   }
@@ -28,7 +35,7 @@ Future<void> createImageCacheDir(String type) async {
 // TODO: in android, does it need any permission?
 Future<bool> clearImageCacheDir(String type) async {
   try {
-    var dir = Directory(join(appDirectory, type));
+    var dir = Directory(join(appStorageDirectory, type));
     if (dir.existsSync()) await dir.delete(recursive: true);
     return true;
   } catch (e) {

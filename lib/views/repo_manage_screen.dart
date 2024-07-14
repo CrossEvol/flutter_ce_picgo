@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
+import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_ce_picgo/widgets/image_manage_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RepoManageScreen extends StatefulWidget {
   final String storageType;
@@ -42,10 +45,22 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('RepoManage'),
+        title: const Text('Images'),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16.0),
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+              onPressed: () async {
+                await openDocument('$appStorageDirectory/${widget.storageType}');
+              },
+              icon: Icon(
+                Icons.file_open,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
             child: selectedCount == 0
                 ? FilledButton.tonal(
                     onPressed: null,
@@ -145,6 +160,22 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
       return Colors.blue;
     }
     return Colors.red;
+  }
+
+  Future<void> openDocument(String filePath) async {
+    final url = 'file:///$filePath';
+    try {
+      await launchUrl(Uri.parse(url));
+    } catch (e) {
+      logger.w(e);
+      fToast.showErrorToast(text: 'Open File Failed.');
+    }
+    // if (await canLaunchUrl(Uri.parse(url))) {
+    //   await launchUrl(Uri.parse(url));
+    // } else {
+    //   // Handle the case where no app can open the file
+    //   fToast.showErrorToast(text: 'No Permission');
+    // }
   }
 
   @override

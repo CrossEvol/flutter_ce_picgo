@@ -50,7 +50,7 @@ class ImageManageItem extends StatelessWidget {
 
   Future<FileImage> setupFileImage() async {
     var exists = await dbProvider.existsDownloadedImage((name, remoteUrl));
-    var localUrl = join(appDirectory, ImageStorageType.github.name, name);
+    var localUrl = join(appStorageDirectory, ImageStorageType.github.name, name);
     if (exists) {
       var file = File(localUrl);
       if (file.existsSync()) {
