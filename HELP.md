@@ -81,3 +81,11 @@ find the detailed response error message:
 }
 ```
 analyze the repo, find out that the images can be upload repeatedly.
+
+# download image failed
+```shell
+======== Exception caught by image resource service ================================================
+The following StateError was thrown resolving an image codec:
+Bad state: File: 'C:\Users\mizuk\Documents\github\1720846279855633-dignissim.jpg' is empty and cannot be loaded as an image.
+```
+if the image size is too large, can not download it ??
