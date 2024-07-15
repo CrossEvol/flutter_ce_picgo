@@ -54,6 +54,11 @@
         </intent>
         <!-- Place inside the <queries> element. -->
         <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <!-- If you don't know the MIME type in advance, set "mimeType" to "*/*". -->
+            <data android:mimeType="text/plain" />
+        </intent>
+        <intent>
             <action android:name="android.media.browse.MediaBrowserService" />
         </intent>
         <!-- If your application checks for inAppBrowserView launch mode support -->

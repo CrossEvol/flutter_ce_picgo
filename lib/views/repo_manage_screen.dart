@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
@@ -51,7 +54,8 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
               onPressed: () async {
-                await openDocument('$appStorageDirectory/${widget.storageType}');
+                await openDocument(
+                    '$appStorageDirectory/${widget.storageType}');
               },
               icon: Icon(
                 Icons.file_open,
@@ -164,18 +168,17 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
 
   Future<void> openDocument(String filePath) async {
     final url = 'file:///$filePath';
-    try {
-      await launchUrl(Uri.parse(url));
-    } catch (e) {
-      logger.w(e);
-      fToast.showErrorToast(text: 'Open File Failed.');
+    if (Platform.isWindows) {
+      try {
+        await launchUrl(Uri.parse(url));
+      } catch (e) {
+        logger.w(e);
+        fToast.showErrorToast(text: 'Open File Failed.');
+      }
+    } else if (Platform.isAndroid) {
+      Clipboard.setData(ClipboardData(text: url));
+      fToast.showSuccessToast(text: 'Copy the Path!$url');
     }
-    // if (await canLaunchUrl(Uri.parse(url))) {
-    //   await launchUrl(Uri.parse(url));
-    // } else {
-    //   // Handle the case where no app can open the file
-    //   fToast.showErrorToast(text: 'No Permission');
-    // }
   }
 
   @override
