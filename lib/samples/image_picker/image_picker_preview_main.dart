@@ -15,7 +15,7 @@ void main() {
 }
 
 class _MyApp extends StatefulWidget {
-  const _MyApp({super.key});
+  const _MyApp();
 
   @override
   State<_MyApp> createState() => _MyAppState();
@@ -170,7 +170,7 @@ class _MyAppState extends State<_MyApp> {
 }
 
 class _UploadView extends StatefulWidget {
-  const _UploadView({super.key});
+  const _UploadView();
 
   @override
   State<_UploadView> createState() => _UploadViewState();

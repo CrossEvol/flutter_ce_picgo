@@ -142,11 +142,11 @@ class _ImageStorageSettingScreenState extends State<ImageStorageSettingScreen>
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text('警告'),
-                content: Text('无法正常访问，因为没有权限'),
+                title: const Text('警告'),
+                content: const Text('无法正常访问，因为没有权限'),
                 actions: <Widget>[
                   TextButton(
-                    child: Text('去设置'),
+                    child: const Text('去设置'),
                     onPressed: () {
                       openAppSettings();
                     },

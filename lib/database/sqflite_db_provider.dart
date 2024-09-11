@@ -31,9 +31,6 @@ class SqfliteDbProvider implements DbInterface {
 
   /// 获取数据库中所有的表
   Future<List<String>> getTables() async {
-    if (db == null) {
-      return Future.value([]);
-    }
     List<Map<String, dynamic>> tables = await db
         .rawQuery('SELECT name FROM sqlite_master WHERE type = "table"');
     List<String> targetList = [];
@@ -113,7 +110,7 @@ class SqfliteDbProvider implements DbInterface {
     }
     if (isExists) {
       await db.execute(
-          'ALTER TABLE $PB_SETTING_TABLE RENAME TO ${PB_SETTING_TABLE + "_backup"}');
+          'ALTER TABLE $PB_SETTING_TABLE RENAME TO ${"${PB_SETTING_TABLE}_backup"}');
     }
     // 创建pb_setting表
     await db.execute('''
@@ -139,10 +136,10 @@ class SqfliteDbProvider implements DbInterface {
     if (isExists) {
       await db.execute('''
           UPDATE $PB_SETTING_TABLE SET config = 
-          (SELECT config FROM ${PB_SETTING_TABLE + "_backup"} WHERE ${PB_SETTING_TABLE + "_backup"}.type = $PB_SETTING_TABLE.type)
+          (SELECT config FROM ${"${PB_SETTING_TABLE}_backup"} WHERE ${"${PB_SETTING_TABLE}_backup"}.type = $PB_SETTING_TABLE.type)
           ''');
       // drop backup
-      await db.execute('DROP TABLE IF EXISTS ${PB_SETTING_TABLE + "_backup"}');
+      await db.execute('DROP TABLE IF EXISTS ${"${PB_SETTING_TABLE}_backup"}');
     }
   }
 

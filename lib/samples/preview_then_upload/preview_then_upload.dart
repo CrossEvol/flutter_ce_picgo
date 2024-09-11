@@ -62,7 +62,7 @@ void main() async {
 }
 
 class _MyApp extends StatefulWidget {
-  const _MyApp({super.key});
+  const _MyApp();
 
   @override
   State<_MyApp> createState() => _MyAppState();
@@ -280,7 +280,7 @@ class _UploadViewState extends State<_UploadView> {
 class _StatefulUploadItem extends StatefulWidget {
   final UploadedImage uploadedImage;
 
-  const _StatefulUploadItem({super.key, required this.uploadedImage});
+  const _StatefulUploadItem({required this.uploadedImage});
 
   @override
   State<_StatefulUploadItem> createState() => _StatefulUploadItemState();
@@ -388,7 +388,7 @@ class _StatelessUploadItem extends StatelessWidget {
   final UploadState uploadState;
   final String path;
 
-  _StatelessUploadItem({super.key, required UploadedImage uploadedImage})
+  _StatelessUploadItem({required UploadedImage uploadedImage})
       : name = uploadedImage.name,
         uploadState = uploadedImage.state,
         path = !kIsWeb ? uploadedImage.filepath : uploadedImage.url;

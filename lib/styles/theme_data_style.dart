@@ -6,7 +6,7 @@ class ThemeDataStyle {
     useMaterial3: true,
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(
-      background: Colors.white,
+      surface: Colors.white,
       primary: Colors.lightBlueAccent.shade200,
       secondary: Colors.indigoAccent.shade200,
       error: Colors.redAccent.shade200
@@ -17,7 +17,7 @@ class ThemeDataStyle {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: ColorScheme.dark(
-      background: Colors.grey.shade800,
+      surface: Colors.grey.shade800,
       primary: Colors.deepPurple.shade600,
       secondary: Colors.deepPurple.shade800,
       error: Colors.red.shade900

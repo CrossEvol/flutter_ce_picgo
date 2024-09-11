@@ -40,7 +40,7 @@ class _UrlLaunchPageState extends State<UrlLaunchPage> {
                 },
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Colors.purpleAccent)),
+                        WidgetStateProperty.all(Colors.purpleAccent)),
                 child: const Text('Open In Windows')),
             const SizedBox(
               height: 10,
@@ -51,7 +51,7 @@ class _UrlLaunchPageState extends State<UrlLaunchPage> {
                 },
                 style: ButtonStyle(
                     backgroundColor:
-                        MaterialStateProperty.all(Colors.greenAccent)),
+                        WidgetStateProperty.all(Colors.greenAccent)),
                 child: const Text('Open In Android')),
           ],
         )));

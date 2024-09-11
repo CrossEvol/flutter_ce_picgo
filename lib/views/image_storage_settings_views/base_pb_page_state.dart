@@ -55,8 +55,8 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
                     child: ElevatedButton(
                       style: ButtonStyle(
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          backgroundColor: MaterialStateProperty.all(
+                              WidgetStateProperty.all(Colors.white),
+                          backgroundColor: WidgetStateProperty.all(
                               Theme.of(context).colorScheme.primary)),
                       child: const Text('保存'),
                       onPressed: () {
@@ -71,8 +71,8 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
                     child: ElevatedButton(
                       style: ButtonStyle(
                           foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          backgroundColor: MaterialStateProperty.all(
+                              WidgetStateProperty.all(Colors.white),
+                          backgroundColor: WidgetStateProperty.all(
                               Theme.of(context).colorScheme.secondary)),
                       child: const Text('设为默认图床'),
                       onPressed: () {
@@ -100,7 +100,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
 
   /// 生成配置输入框
   Widget _generateConfigRow() {
-    if (configs == null || configs.isEmpty) {
+    if (configs.isEmpty) {
       return const Column(
         children: <Widget>[
           SizedBox(height: 20),
@@ -154,12 +154,10 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
 
   // 子类主动调用
   setConfigs(List<Config> configs) {
-    if (configs != null) {
-      setState(() {
-        this.configs = configs;
-      });
+    setState(() {
+      this.configs = configs;
+    });
     }
-  }
 
   /// 当前图床类型
   String get pbType;
@@ -171,7 +169,7 @@ abstract class BasePBSettingPageState<T extends StatefulWidget>
   onLoadConfig(String config);
 
   /// 表单验证
-  bool get validate => _formKey?.currentState?.validate() ?? true;
+  bool get validate => _formKey.currentState?.validate() ?? true;
 
   /// 子类可重写更改文本
   String get tip => '请先保存配置后再进行管理';

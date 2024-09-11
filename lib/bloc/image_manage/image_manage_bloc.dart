@@ -115,7 +115,6 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
         });
         emit(state.copyWith(images: []));
       }
-      ;
     });
 
     on<ImageManageEvent>((event, emit) {

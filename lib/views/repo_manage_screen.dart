@@ -70,7 +70,7 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                     onPressed: null,
                     style: ButtonStyle(
                       minimumSize:
-                          MaterialStateProperty.all(const Size(100.0, 40.0)),
+                          WidgetStateProperty.all(const Size(100.0, 40.0)),
                     ),
                     child: const Text('确认'),
                   )
@@ -86,10 +86,10 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                       // fToast.showErrorToast(text: 'UnImplemented');
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith(
+                      backgroundColor: WidgetStateProperty.resolveWith(
                           (states) => Theme.of(context).colorScheme.error),
                       minimumSize:
-                          MaterialStateProperty.all(const Size(120.0, 40.0)),
+                          WidgetStateProperty.all(const Size(120.0, 40.0)),
                     ),
                     child: Text(
                       '确认($selectedCount/$totalCount)',
@@ -154,11 +154,11 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
     );
   }
 
-  Color getColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
+  Color getColor(Set<WidgetState> states) {
+    const Set<WidgetState> interactiveStates = <WidgetState>{
+      WidgetState.pressed,
       // MaterialState.hovered,
-      MaterialState.focused,
+      WidgetState.focused,
     };
     if (states.any(interactiveStates.contains)) {
       return Colors.blue;

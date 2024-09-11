@@ -33,7 +33,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   dynamic _pickImageError;
 
   void _setImageFileListFromFile(XFile? value) {
-    _mediaFileList = value == null ? null : [...?_mediaFileList, value!];
+    _mediaFileList = value == null ? null : [...?_mediaFileList, value];
   }
 
   _AlbumScreenState();
