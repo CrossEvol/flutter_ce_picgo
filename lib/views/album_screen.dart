@@ -211,22 +211,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
           itemBuilder: (BuildContext context, int index) {
             final String? mime = lookupMimeType(_mediaFileList![index].path);
 
-            // Why network for web?
-            // See https://pub.dev/packages/image_picker_for_web#limitations-on-the-web-platform
             return Semantics(
               label: 'image_picker_example_picked_image',
               child: kIsWeb
                   ? Image.network(_mediaFileList![index].path)
                   : (mime == null || mime.startsWith('image/')
-                      ? Image.file(
-                          File(_mediaFileList![index].path),
-                          errorBuilder: (BuildContext context, Object error,
-                              StackTrace? stackTrace) {
-                            return const Center(
-                                child:
-                                    Text('This image type is not supported'));
-                          },
-                        )
+                      ? ImagePreviewWidget(file: _mediaFileList![index])
                       : _buildInlineVideoPlayer(index)),
             );
           },
@@ -304,5 +294,101 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   Widget _previewVideo() {
     throw UnimplementedError('Preview Video has not been implemented.');
+  }
+}
+
+class ImagePreviewWidget extends StatefulWidget {
+  final XFile file;
+
+  const ImagePreviewWidget({Key? key, required this.file}) : super(key: key);
+
+  @override
+  State<ImagePreviewWidget> createState() => ImagePreviewWidgetState();
+}
+
+class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
+  bool _isEditing = false;
+  TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.file.name;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
+      child: Column(
+        children: [
+          GestureDetector(
+            onDoubleTap: () {
+              setState(() {
+                _isEditing = true;
+              });
+            },
+            child: _isEditing
+                ? Focus(
+                    onFocusChange: (hasFocus) {
+                      if (!hasFocus) {
+                        setState(() {
+                          _isEditing = false;
+                        });
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _controller,
+                            maxLines: null,
+                            onSubmitted: (value) {
+                              setState(() {
+                                _isEditing = false;
+                              });
+                            },
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.generating_tokens,
+                            color: Colors.lightBlue,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _controller.text = '${faker.lorem.word()}.jpg';
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade400,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      _controller.text,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+          ),
+          Image.file(
+            File(widget.file.path),
+            errorBuilder:
+                (BuildContext context, Object error, StackTrace? stackTrace) {
+              return const Center(
+                  child: Text('This image type is not supported'));
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
