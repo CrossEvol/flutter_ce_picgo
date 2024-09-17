@@ -96,8 +96,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                   filepath: e.path,
                                   storageType: ImageStorageType.github.name,
                                   url: '',
-                                  name:
-                                      '${DateTime.now().microsecondsSinceEpoch}-${faker.lorem.word()}.jpg',
+                                  name: e.name,
                                   state: UploadState.uploading,
                                   createTime: DateTime.now(),
                                   uploadTime: DateTime.now()))
@@ -105,11 +104,19 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     }
                   }
 
-                  fToast.showSuccessToast(
-                      text: 'Waiting...',
-                      duration: _mediaFileList != null
-                          ? _mediaFileList!.length ~/ 2
-                          : 2);
+                  // Use Builder to get the correct context
+                  Builder(
+                    builder: (BuildContext context) {
+                      fToast.showSuccessToast(
+                        text: 'Waiting...',
+                        duration: _mediaFileList != null
+                            ? _mediaFileList!.length ~/ 2
+                            : 2,
+                      );
+                      return Container(); // Return an empty container
+                    },
+                  );
+
                   Future.delayed(
                       Duration(
                           seconds: _mediaFileList != null
@@ -118,8 +125,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     setState(() {
                       _mediaFileList = null;
                     });
-                    context.go('/upload');
                   });
+                  context.go('/upload');
                 },
                 heroTag: 'upload',
                 tooltip: 'Upload Image to cloud',
@@ -308,7 +315,7 @@ class ImagePreviewWidget extends StatefulWidget {
 
 class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
   bool _isEditing = false;
-  TextEditingController _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {

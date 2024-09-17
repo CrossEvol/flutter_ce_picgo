@@ -47,14 +47,14 @@ class GithubRepoService
 
     // Set request body
     Map<String, dynamic> requestBody = {
-      'message': rename,
+      'message': xFile.name ?? rename,
       'content': base64Encode(fileData),
     };
 
     // Perform PUT request
     try {
       Response response = await dio.put(
-        'https://api.github.com/repos/${githubConfig.repo}/contents/$rename',
+        'https://api.github.com/repos/${githubConfig.repo}/contents/${xFile.name ?? rename}',
         data: requestBody,
         options: Options(contentType: Headers.jsonContentType),
       );
