@@ -15,7 +15,7 @@ GithubContent _$GithubContentFromJson(Map<String, dynamic> json) =>
       url: json['url'] as String,
       htmlUrl: json['html_url'] as String,
       gitUrl: json['git_url'] as String,
-      downloadUrl: json['download_url'] as String,
+      downloadUrl: json['download_url'] as String?,
       type: $enumDecode(_$FileContentTypeEnumMap, json['type']),
       links: (json['_links'] as Map<String, dynamic>).map(
         (k, e) =>

@@ -10,6 +10,7 @@ import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/utils/dio_util.dart';
 import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
+import 'package:flutter_ce_picgo/utils/upload_util.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../models/enums/uploaded_state.dart';
@@ -54,20 +55,20 @@ class GithubRepoService
     // Perform PUT request
     try {
       Response response = await dio.put(
-        'https://api.github.com/repos/${githubConfig.repo}/contents/${xFile.name ?? rename}',
+        'https://api.github.com/repos/${githubConfig.repo}/contents/${formattedNow()}/${xFile.name ?? rename}',
         data: requestBody,
         options: Options(contentType: Headers.jsonContentType),
       );
       var jsonData = response.data;
       var githubContent = GithubContent.fromJson(jsonData['content']);
       return (
-        githubContent.downloadUrl,
+        githubContent.downloadUrl ?? '',
         UploadState.completed,
         githubContent.sha
       );
     } catch (e) {
       switch (e.runtimeType) {
-        case DioException:
+        case DioException _:
           {
             if (((e as DioException).response?.data
                     as Map<String, dynamic>)['status'] ==
@@ -97,7 +98,7 @@ class GithubRepoService
 
   @override
   Future<List<GetImagesResult>> getImages(GithubConfig config) async {
-    return await GithubApi.getImages(config);
+    return await GithubApi.getImages(config: config);
   }
 
   @override

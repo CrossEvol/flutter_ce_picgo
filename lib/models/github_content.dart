@@ -16,7 +16,7 @@ class GithubContent implements IContent {
   String url;
   String htmlUrl;
   String gitUrl;
-  String downloadUrl;
+  String? downloadUrl;
   FileContentType type;
 
   @JsonKey(name: '_links')

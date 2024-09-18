@@ -32,7 +32,7 @@ class $PbSettingsTTable extends PbSettingsT
   late final GeneratedColumn<String> path = GeneratedColumn<String>(
       'path', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 20),
+          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 100),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));
@@ -41,7 +41,7 @@ class $PbSettingsTTable extends PbSettingsT
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 50),
+          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 255),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));
@@ -49,8 +49,8 @@ class $PbSettingsTTable extends PbSettingsT
   @override
   late final GeneratedColumn<String> config = GeneratedColumn<String>(
       'config', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 255),
+      additionalChecks: GeneratedColumn.checkTextLength(
+          minTextLength: 0, maxTextLength: 10000),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));
@@ -347,8 +347,8 @@ class $UploadedImagesTTable extends UploadedImagesT
   @override
   late final GeneratedColumn<String> filepath = GeneratedColumn<String>(
       'filepath', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 255),
+      additionalChecks: GeneratedColumn.checkTextLength(
+          minTextLength: 0, maxTextLength: 1000),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));
@@ -358,7 +358,7 @@ class $UploadedImagesTTable extends UploadedImagesT
   late final GeneratedColumn<String> storageType = GeneratedColumn<String>(
       'storage_type', aliasedName, false,
       additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 20),
+          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 50),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));
@@ -366,8 +366,8 @@ class $UploadedImagesTTable extends UploadedImagesT
   @override
   late final GeneratedColumn<String> url = GeneratedColumn<String>(
       'url', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 255),
+      additionalChecks: GeneratedColumn.checkTextLength(
+          minTextLength: 0, maxTextLength: 1000),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));
@@ -385,8 +385,8 @@ class $UploadedImagesTTable extends UploadedImagesT
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 255),
+      additionalChecks: GeneratedColumn.checkTextLength(
+          minTextLength: 0, maxTextLength: 1000),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));
@@ -797,8 +797,8 @@ class $DownloadedImagesTTable extends DownloadedImagesT
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 255),
+      additionalChecks: GeneratedColumn.checkTextLength(
+          minTextLength: 0, maxTextLength: 1000),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));
@@ -807,8 +807,8 @@ class $DownloadedImagesTTable extends DownloadedImagesT
   @override
   late final GeneratedColumn<String> localUrl = GeneratedColumn<String>(
       'local_url', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 255),
+      additionalChecks: GeneratedColumn.checkTextLength(
+          minTextLength: 0, maxTextLength: 1000),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));
@@ -817,8 +817,8 @@ class $DownloadedImagesTTable extends DownloadedImagesT
   @override
   late final GeneratedColumn<String> remoteUrl = GeneratedColumn<String>(
       'remote_url', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 0, maxTextLength: 255),
+      additionalChecks: GeneratedColumn.checkTextLength(
+          minTextLength: 0, maxTextLength: 1000),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(""));

@@ -10,6 +10,22 @@ import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_ce_picgo/widgets/image_manage_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+class ImageItemVO {
+  int id;
+  String name;
+  String remoteUrl;
+  bool selected;
+  String parentPath;
+
+  ImageItemVO({
+    required this.id,
+    required this.name,
+    required this.remoteUrl,
+    required this.selected,
+    required this.parentPath,
+  });
+}
+
 class RepoManageScreen extends StatefulWidget {
   final String storageType;
 
@@ -20,20 +36,6 @@ class RepoManageScreen extends StatefulWidget {
 
   @override
   State<RepoManageScreen> createState() => _RepoManageScreenState();
-}
-
-class ImageItemVO {
-  int id;
-  String name;
-  String remoteUrl;
-  bool selected;
-
-  ImageItemVO({
-    required this.id,
-    required this.name,
-    required this.remoteUrl,
-    required this.selected,
-  });
 }
 
 class _RepoManageScreenState extends State<RepoManageScreen> {

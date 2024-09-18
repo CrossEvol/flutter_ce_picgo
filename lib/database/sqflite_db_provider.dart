@@ -8,8 +8,6 @@ import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/image_storage_setting.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
-import 'package:flutter_ce_picgo/utils/env_util.dart';
-import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -54,18 +52,18 @@ class DriftDbProvider extends _$DriftDbProvider implements DbInterface {
 
   Future<void> _initPb() async {
     await into(pbSettingsT).insert(PbSettingsTCompanion.insert(
-      type: Value('github'),
-      path: Value('/settings/pb/github'),
-      name: Value('Github图床'),
-      config: Value(''),
-      visible: Value(1),
+      type: const Value('github'),
+      path: const Value('/settings/pb/github'),
+      name: const Value('Github图床'),
+      config: const Value(''),
+      visible: const Value(1),
     ));
     await into(pbSettingsT).insert(PbSettingsTCompanion.insert(
-      type: Value('gitee'),
-      path: Value('/settings/pb/gitee'),
-      name: Value('Gitee图床'),
-      config: Value(''),
-      visible: Value(1),
+      type: const Value('gitee'),
+      path: const Value('/settings/pb/gitee'),
+      name: const Value('Gitee图床'),
+      config: const Value(''),
+      visible: const Value(1),
     ));
   }
 

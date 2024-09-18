@@ -307,7 +307,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
 class ImagePreviewWidget extends StatefulWidget {
   final XFile file;
 
-  const ImagePreviewWidget({Key? key, required this.file}) : super(key: key);
+  const ImagePreviewWidget({super.key, required this.file});
 
   @override
   State<ImagePreviewWidget> createState() => ImagePreviewWidgetState();

@@ -8,4 +8,5 @@ enum FileContentType {
 
   /// 文件夹
   dir,
+
 }

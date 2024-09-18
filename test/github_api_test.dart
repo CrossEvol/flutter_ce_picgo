@@ -150,12 +150,13 @@ void main() async {
   });
 
   test('GetImages test', () async {
-    var list = await GithubApi.getImages(GithubConfig(
-        branch: '',
-        customUrl: '',
-        path: '',
-        repo: githubRepo,
-        token: githubToken));
+    var list = await GithubApi.getImages(
+        config: GithubConfig(
+            branch: '',
+            customUrl: '',
+            path: '',
+            repo: githubRepo,
+            token: githubToken));
     for (var element in list) {
       logger.i('name = ${element.name}\n sha = ${element.sha}');
     }
@@ -171,6 +172,7 @@ void main() async {
             path: '',
             repo: githubRepo,
             token: githubToken),
-        dest: filename, src: '');
+        dest: filename,
+        src: '');
   });
 }

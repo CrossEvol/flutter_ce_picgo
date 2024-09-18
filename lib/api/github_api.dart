@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/file.dart';
@@ -18,14 +19,16 @@ import '../utils/logger_util.dart';
 // );
 
 class GithubApi {
-  static Future<List<GetImagesResult>> getImages(
-      GithubConfig githubConfig) async {
+  static Future<List<GetImagesResult>> getImages({
+    String parentPath = '',
+    required GithubConfig config,
+  }) async {
     Dio dio = Dio();
 
     // Set headers
     dio.setTimeout();
     dio.options.headers['Accept'] = 'application/vnd.github+json';
-    dio.options.headers['Authorization'] = 'Bearer ${githubConfig.token}';
+    dio.options.headers['Authorization'] = 'Bearer ${config.token}';
     dio.options.headers['X-GitHub-Api-Version'] = '2022-11-28';
     dio.options.headers['Content-Type'] = 'application/json';
     if (env.logEnabled) {
@@ -36,28 +39,33 @@ class GithubApi {
     }
 
     var response = await dio.get<List<dynamic>>(
-        'https://api.github.com/repos/${githubConfig.repo}/contents');
+        'https://api.github.com/repos/${config.repo}/contents/$parentPath');
     if (response.statusCode != 200) {
       throw DioException(requestOptions: RequestOptions());
     }
-    return response.data!
+
+    var dirs = response.data!
         .map((e) => e as Map<String, dynamic>)
-        .map((e) => GithubContent.fromJson(e))
-        .where((element) => element.type == FileContentType.file)
-        .map((e) => GetImagesResult(
-                name: e.name,
-                remoteUrl: e.url,
-                downloadUrl: e.downloadUrl,
-                sha: e.sha)
-            // (
-            //           e.name,
-            //           // 'https://api.github.com/repos/${githubConfig.repo}/contents/${e.name}
-            //           e.url,
-            //           e.downloadUrl,
-            //           e.sha
-            //         )
-            )
+        .where((m) => m['type'] == FileContentType.dir.name)
         .toList();
+
+    List<GetImagesResult> images = response.data!
+        .map((e) => e as Map<String, dynamic>)
+        .where((m) => m['type'] == FileContentType.file.name)
+        .map((e) => GithubContent.fromJson(e))
+        .map((e) => GetImagesResult(
+            name: e.name,
+            remoteUrl: e.url,
+            downloadUrl: e.downloadUrl ?? '',
+            sha: e.sha,
+            parentPath: parentPath.isEmpty ? 'root' : parentPath))
+        .toList();
+
+    for (var dir in dirs) {
+      images.addAll(await getImages(config: config, parentPath: dir['path']));
+    }
+
+    return images;
   }
 
   static Future<GithubContent> downloadImage(

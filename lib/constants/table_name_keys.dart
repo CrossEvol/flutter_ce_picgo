@@ -1,4 +1,5 @@
 /// table name keys
+library;
 
 const String PB_SETTING_TABLE = 'pb_setting';
 const String PB_SETTING_BOX = 'pb_setting_box';
