@@ -37,6 +37,7 @@ extension IsarDownloadedImageExt on IsarDownloadedImage {
         remoteUrl: remoteUrl,
         name: name,
         sha: sha,
+        parentPath: '',
         createdAt: createdAt);
   }
 }

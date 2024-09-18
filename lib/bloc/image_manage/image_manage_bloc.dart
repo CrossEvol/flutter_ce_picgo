@@ -16,13 +16,15 @@ import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import '../../common/interfaces/interface.dart';
 
 part 'image_manage_event.dart';
+
 part 'image_manage_state.dart';
 
 Future<IConfig> _getConfig(String storageType) async {
   var configJson =
       await dbProvider.getImageStorageSettingConfig(type: storageType);
-  var storageTypeEnum = EnumToString.fromString(ImageStorageType.values, storageType);
-  switch(storageTypeEnum){
+  var storageTypeEnum =
+      EnumToString.fromString(ImageStorageType.values, storageType);
+  switch (storageTypeEnum) {
     case ImageStorageType.github:
       return GithubConfig.fromJson(jsonDecode(configJson));
     case ImageStorageType.gitee:
@@ -49,6 +51,7 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
               remoteUrl: e.remoteUrl,
               name: e.name,
               sha: e.sha,
+              parentPath: e.parentPath,
               createdAt: DateTime.now()))
           .toList();
       emit(state.copyWith(images: images));

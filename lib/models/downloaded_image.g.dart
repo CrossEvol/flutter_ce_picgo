@@ -14,6 +14,7 @@ DownloadedImage _$DownloadedImageFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       sha: json['sha'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
+      parentPath: json['parent_path'] as String,
     );
 
 Map<String, dynamic> _$DownloadedImageToJson(DownloadedImage instance) =>
@@ -23,5 +24,6 @@ Map<String, dynamic> _$DownloadedImageToJson(DownloadedImage instance) =>
       'remote_url': instance.remoteUrl,
       'name': instance.name,
       'sha': instance.sha,
+      'parent_path': instance.parentPath,
       'created_at': instance.createdAt.toIso8601String(),
     };

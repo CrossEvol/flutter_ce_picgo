@@ -1,4 +1,3 @@
-
 export 'dart:ui' show Color;
 
 import 'package:drift/drift.dart';
@@ -55,4 +54,7 @@ class DownloadedImagesT extends Table {
   TextColumn get sha => text().withLength(min: 0).withDefault(const Constant(""))();
 
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  // 新增的 parentPath 列
+  TextColumn get parentPath => text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
 }

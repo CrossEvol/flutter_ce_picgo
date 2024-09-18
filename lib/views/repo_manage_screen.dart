@@ -10,6 +10,13 @@ import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:flutter_ce_picgo/widgets/image_manage_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+class ImageItemGroup {
+  String parentPath;
+  List<ImageItemVO> items;
+
+  ImageItemGroup(this.parentPath, this.items);
+}
+
 class ImageItemVO {
   int id;
   String name;
@@ -39,12 +46,34 @@ class RepoManageScreen extends StatefulWidget {
 }
 
 class _RepoManageScreenState extends State<RepoManageScreen> {
+  List<ImageItemGroup> groupedImages = [];
+
   int get selectedCount =>
       widget.images.where((element) => element.selected).toList().length;
 
   int get totalCount => widget.images.length;
 
   _RepoManageScreenState();
+
+  @override
+  void initState() {
+    super.initState();
+    fToast.init(context);
+    groupImagesByParentPath();
+  }
+
+  void groupImagesByParentPath() {
+    final Map<String, List<ImageItemVO>> groupedMap = {};
+    for (var image in widget.images) {
+      if (!groupedMap.containsKey(image.parentPath)) {
+        groupedMap[image.parentPath] = [];
+      }
+      groupedMap[image.parentPath]!.add(image);
+    }
+    groupedImages = groupedMap.entries
+        .map((entry) => ImageItemGroup(entry.key, entry.value))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,55 +130,79 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
           ),
         ],
       ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, // Adjust column count as desired
-        ),
-        itemCount: totalCount,
-        itemBuilder: (context, index) {
-          var image = widget.images[index];
-          return Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Stack(
-              children: [
-                ImageManageItem(
-                  name: image.name,
-                  remoteUrl: image.remoteUrl,
+      body: ListView.builder(
+        itemCount: groupedImages.length,
+        itemBuilder: (context, groupIndex) {
+          var group = groupedImages[groupIndex];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  group.parentPath,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueGrey,
+                      ),
                 ),
-                image.selected
-                    ? GestureDetector(
-                        onDoubleTap: () {
-                          setState(() {
-                            image.selected = false;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.grey.withOpacity(
-                              0.5), // Adjust opacity for desired mask intensity
+              ),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // Adjust column count as desired
+                ),
+                itemCount: group.items.length,
+                itemBuilder: (context, index) {
+                  var image = group.items[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Stack(
+                      children: [
+                        ImageManageItem(
+                          name: image.name,
+                          remoteUrl: image.remoteUrl,
+                          parentPath: image.parentPath,
                         ),
-                      )
-                    : Container(),
-                Positioned(
-                  top: 2.0, // Adjust position
-                  right: 2.0, // Adjust position
-                  child: Checkbox(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                        image.selected
+                            ? GestureDetector(
+                                onDoubleTap: () {
+                                  setState(() {
+                                    image.selected = false;
+                                  });
+                                },
+                                child: Container(
+                                  color: Colors.grey.withOpacity(
+                                      0.5), // Adjust opacity for desired mask intensity
+                                ),
+                              )
+                            : Container(),
+                        Positioned(
+                          top: 2.0, // Adjust position
+                          right: 2.0, // Adjust position
+                          child: Checkbox(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            side: const BorderSide(color: Colors.white, width: 2.0),
+                            checkColor: Colors.white,
+                            activeColor: Theme.of(context).colorScheme.error,
+                            // fillColor: MaterialStateProperty.resolveWith(getColor),
+                            value: image.selected,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                image.selected = value!;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                    side: const BorderSide(color: Colors.white, width: 2.0),
-                    checkColor: Colors.white,
-                    activeColor: Theme.of(context).colorScheme.error,
-                    // fillColor: MaterialStateProperty.resolveWith(getColor),
-                    value: image.selected,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        image.selected = value!;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
+                  );
+                },
+              ),
+            ],
           );
         },
       ),
@@ -181,12 +234,6 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
       Clipboard.setData(ClipboardData(text: url));
       fToast.showSuccessToast(text: 'Copy the Path!$url');
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fToast.init(context);
   }
 
   @override

@@ -22,7 +22,7 @@ class DriftDbProvider extends _$DriftDbProvider implements DbInterface {
   DriftDbProvider() : super(_openConnection());
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10; // 更新 schema 版本
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
@@ -82,7 +82,10 @@ class DriftDbProvider extends _$DriftDbProvider implements DbInterface {
           await init(isCreate: true);
         },
         onUpgrade: (Migrator m, int from, int to) async {
-          if (from == 1) {}
+          if (from < 10) {
+            // 添加新的 parentPath 列
+            await m.addColumn(downloadedImagesT, downloadedImagesT.parentPath);
+          }
         },
       );
 
@@ -180,6 +183,7 @@ class DriftDbProvider extends _$DriftDbProvider implements DbInterface {
       remoteUrl: Value(downloadedImage.remoteUrl),
       sha: Value(downloadedImage.sha),
       createdAt: Value(downloadedImage.createdAt),
+      parentPath: Value(downloadedImage.parentPath),
     ));
     return true;
   }

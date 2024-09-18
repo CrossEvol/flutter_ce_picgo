@@ -19,9 +19,13 @@ import 'package:path/path.dart';
 class ImageManageItem extends StatelessWidget {
   final String name;
   final String remoteUrl;
+  final String parentPath;
 
   const ImageManageItem(
-      {super.key, required this.name, required this.remoteUrl});
+      {super.key,
+      required this.name,
+      required this.remoteUrl,
+      required this.parentPath});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +54,8 @@ class ImageManageItem extends StatelessWidget {
 
   Future<FileImage> setupFileImage() async {
     var exists = await dbProvider.existsDownloadedImage((name, remoteUrl));
-    var localUrl = join(appStorageDirectory, ImageStorageType.github.name, name);
+    var localUrl =
+        join(appStorageDirectory, ImageStorageType.github.name, name);
     if (exists) {
       var file = File(localUrl);
       if (file.existsSync()) {
@@ -74,13 +79,13 @@ class ImageManageItem extends StatelessWidget {
         dest: dest);
     Future.delayed(Duration.zero, () async {
       await dbProvider.saveDownloadedImage(DownloadedImage(
-        id: 0,
-        localUrl: dest,
-        remoteUrl: githubContent.url,
-        name: githubContent.name,
-        sha: githubContent.sha,
-        createdAt: DateTime.now(),
-      ));
+          id: 0,
+          localUrl: dest,
+          remoteUrl: githubContent.url,
+          name: githubContent.name,
+          sha: githubContent.sha,
+          createdAt: DateTime.now(),
+          parentPath: parentPath));
     });
     return FileImage(File(dest));
   }

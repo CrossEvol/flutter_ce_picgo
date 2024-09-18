@@ -97,7 +97,7 @@ final GoRouter router = GoRouter(
                           name: e.name,
                           remoteUrl: e.remoteUrl,
                           selected: false,
-                          parentPath: ''))
+                          parentPath: e.parentPath))
                       .toList(),
                 );
               },

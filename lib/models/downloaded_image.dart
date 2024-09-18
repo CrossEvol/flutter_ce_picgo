@@ -4,12 +4,13 @@ import 'package:json_annotation/json_annotation.dart';
 part 'downloaded_image.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class DownloadedImage implements IDownload{
+class DownloadedImage implements IDownload {
   final int id;
   final String localUrl;
   final String remoteUrl;
   final String name; // this is the unique identifier
   final String sha;
+  final String parentPath;
 
   final DateTime createdAt;
 
@@ -25,5 +26,6 @@ class DownloadedImage implements IDownload{
     required this.name,
     required this.sha,
     required this.createdAt,
+    required this.parentPath,
   });
 }
