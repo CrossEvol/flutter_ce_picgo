@@ -63,10 +63,10 @@ class ImageManageItem extends StatelessWidget {
       } else {
         // remote the outdated mismatched data
         await dbProvider.removeDownloadedImage((name, '', remoteUrl));
-        return await createLocalImageCache(name, localUrl);
+        return await createLocalImageCache(remoteUrl, localUrl);
       }
     } else {
-      return await createLocalImageCache(name, localUrl);
+      return await createLocalImageCache(remoteUrl, localUrl);
     }
   }
 

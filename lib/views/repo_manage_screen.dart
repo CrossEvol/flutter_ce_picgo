@@ -95,9 +95,11 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: RemoveAction(),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: RemoveAction(
+              storageType: widget.storageType,
+            ),
           ),
         ],
       ),
@@ -172,7 +174,9 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
 }
 
 class RemoveAction extends StatefulWidget {
-  const RemoveAction({super.key});
+  final String storageType;
+
+  const RemoveAction({super.key, required this.storageType});
 
   @override
   State<RemoveAction> createState() => _RemoveActionState();
@@ -197,13 +201,11 @@ class _RemoveActionState extends State<RemoveAction> {
             )
           : FilledButton(
               onPressed: () {
-                // context.read<ImageManageBloc>().add(ImageManageEventDelete(
-                //     storageType: widget.storageType,
-                //     ids: widget.images
-                //         .where((element) => element.selected)
-                //         .map((e) => e.id)
-                //         .toList()));
-                // fToast.showErrorToast(text: 'UnImplemented');
+                var ids = context.read<SelectedImagesBloc>().state.selectedIDs;
+                context.read<ImageManageBloc>().add(ImageManageEventDelete(
+                      storageType: widget.storageType,
+                      ids: ids,
+                    ));
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.resolveWith(

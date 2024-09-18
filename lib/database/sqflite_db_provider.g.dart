@@ -821,6 +821,7 @@ class $DownloadedImagesTTable extends DownloadedImagesT
           minTextLength: 0, maxTextLength: 1000),
       type: DriftSqlType.string,
       requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
       defaultValue: const Constant(""));
   static const VerificationMeta _shaMeta = const VerificationMeta('sha');
   @override

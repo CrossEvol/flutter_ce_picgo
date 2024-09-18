@@ -198,6 +198,7 @@ class DriftDbProvider extends _$DriftDbProvider implements DbInterface {
   Future<DownloadedImage> getDownloadedImage(
       GetDownloadedImageVo getDownloadedImageVo) async {
     final (name, _, remoteUrl) = getDownloadedImageVo;
+    /* Todo: There has some race conditions to save the url twice which make the error */
     final image = await (select(downloadedImagesT)
           ..where(
               (tbl) => tbl.name.equals(name) & tbl.remoteUrl.equals(remoteUrl)))

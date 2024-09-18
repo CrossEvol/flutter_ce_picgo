@@ -7,9 +7,11 @@ import 'package:flutter_ce_picgo/constants/table_name_keys.dart';
 class PbSettingsT extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  TextColumn get type => text().withLength(min: 0, max: 20).withDefault(const Constant(""))();
+  TextColumn get type =>
+      text().withLength(min: 0, max: 20).withDefault(const Constant(""))();
 
-  TextColumn get path => text().withLength(min: 0, max: 100).withDefault(const Constant(""))();
+  TextColumn get path =>
+      text().withLength(min: 0, max: 100).withDefault(const Constant(""))();
 
   TextColumn get name =>
       text().withLength(min: 0, max: 255).withDefault(const Constant(""))();
@@ -24,17 +26,23 @@ class PbSettingsT extends Table {
 class UploadedImagesT extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  TextColumn get filepath => text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
+  TextColumn get filepath =>
+      text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
 
-  TextColumn get storageType => text().withLength(min: 0, max: 50).withDefault(const Constant(""))();
+  TextColumn get storageType =>
+      text().withLength(min: 0, max: 50).withDefault(const Constant(""))();
 
-  TextColumn get url => text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
+  TextColumn get url =>
+      text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
 
-  TextColumn get sha => text().withLength(min: 0).withDefault(const Constant(""))();
+  TextColumn get sha =>
+      text().withLength(min: 0).withDefault(const Constant(""))();
 
-  TextColumn get name => text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
+  TextColumn get name =>
+      text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
 
-  TextColumn get state => text().withLength(min: 0, max: 255).withDefault(const Constant(""))();
+  TextColumn get state =>
+      text().withLength(min: 0, max: 255).withDefault(const Constant(""))();
 
   DateTimeColumn get createTime => dateTime().withDefault(currentDateAndTime)();
 
@@ -45,16 +53,23 @@ class UploadedImagesT extends Table {
 class DownloadedImagesT extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  TextColumn get name => text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
+  TextColumn get name =>
+      text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
 
-  TextColumn get localUrl => text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
+  TextColumn get localUrl =>
+      text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
 
-  TextColumn get remoteUrl => text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
+  TextColumn get remoteUrl => text()
+      .unique()
+      .withLength(min: 0, max: 1000)
+      .withDefault(const Constant(""))();
 
-  TextColumn get sha => text().withLength(min: 0).withDefault(const Constant(""))();
+  TextColumn get sha =>
+      text().withLength(min: 0).withDefault(const Constant(""))();
 
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
   // 新增的 parentPath 列
-  TextColumn get parentPath => text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
+  TextColumn get parentPath =>
+      text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
 }

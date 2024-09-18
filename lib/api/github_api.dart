@@ -84,7 +84,7 @@ class GithubApi {
         requestBody: false, responseBody: true, logPrint: (o) => logger.w(o)));
 
     var response = await dio
-        .get('https://api.github.com/repos/${githubConfig.repo}/contents/$src');
+        .get(src);
     if (response.statusCode != 200) {
       throw DioException(
           requestOptions: RequestOptions(
