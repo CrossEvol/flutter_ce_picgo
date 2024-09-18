@@ -202,7 +202,18 @@ class DriftDbProvider extends _$DriftDbProvider implements DbInterface {
           ..where(
               (tbl) => tbl.name.equals(name) & tbl.remoteUrl.equals(remoteUrl)))
         .getSingle();
-    return DownloadedImage.fromJson(image.toJson());
+
+    // can not use DownloadedImage.fromJson(image.toJson()),
+    // type int not a subType of String,
+    // but I do not know where is the problem
+    return DownloadedImage(
+        id: image.id,
+        localUrl: image.localUrl,
+        remoteUrl: image.remoteUrl,
+        name: image.name,
+        sha: image.sha,
+        createdAt: image.createdAt,
+        parentPath: image.parentPath);
   }
 
   @override

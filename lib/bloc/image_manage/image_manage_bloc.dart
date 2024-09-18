@@ -61,10 +61,19 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
       var removeList = state.images
           .where((element) => event.ids.contains(element.id))
           .toList();
+
+      var removedIds = await Future.wait(removeList
+          .map((element) async => (await dbProvider.getDownloadedImage(
+                  (element.name, element.localUrl, element.remoteUrl)))
+              .id)
+          .toList());
+      emit(state.copyWith(
+          images: state.images
+              .where((element) => !removedIds.contains(element.id))
+              .toList()));
+
       // remove in remote → db → fs
       var config = await _getConfig(event.storageType);
-      var removedIds =
-          <int>[]; // not care whether the data in db and fs has been removed success
       for (var element in removeList) {
         var downloadedImage = await dbProvider.getDownloadedImage(
             (element.name, element.localUrl, element.remoteUrl));
@@ -77,13 +86,14 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
               'Failed to remove image [${element.name}](${element.remoteUrl}) in repo.');
           return;
         }
-        removedIds.add(element.id);
+        // removedIds.add(downloadedImage.id);
         var isDeletedInDB = await dbProvider.removeDownloadedImage(
             (element.name, element.localUrl, element.remoteUrl));
         if (!isDeletedInDB) {
           logger.e('Failed to remove image record in Database.');
           return;
         }
+
         Future.delayed(Duration.zero, () async {
           try {
             var file = File(downloadedImage.localUrl);
@@ -96,10 +106,6 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
           }
         });
       }
-      emit(state.copyWith(
-          images: state.images
-              .where((element) => !removedIds.contains(element.id))
-              .toList()));
     });
 
     on<ImageManageEventReset>((event, emit) async {

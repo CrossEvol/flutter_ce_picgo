@@ -48,10 +48,18 @@ class RepoManageScreen extends StatefulWidget {
 class _RepoManageScreenState extends State<RepoManageScreen> {
   List<ImageItemGroup> groupedImages = [];
 
-  int get selectedCount =>
-      widget.images.where((element) => element.selected).toList().length;
+  List<ImageItemVO> get imageItems => groupedImages.fold<List<ImageItemVO>>(
+      [], (previousValue, element) => [...previousValue, ...element.items]);
 
-  int get totalCount => widget.images.length;
+  int get selectedCount =>
+      imageItems.where((element) => element.selected).length;
+
+  // int get selectedCount =>
+  //     widget.images.where((element) => element.selected).toList().length;
+
+  int get totalCount => imageItems.length;
+
+  // int get totalCount => widget.images.length;
 
   _RepoManageScreenState();
 
@@ -185,7 +193,8 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
-                            side: const BorderSide(color: Colors.white, width: 2.0),
+                            side: const BorderSide(
+                                color: Colors.white, width: 2.0),
                             checkColor: Colors.white,
                             activeColor: Theme.of(context).colorScheme.error,
                             // fillColor: MaterialStateProperty.resolveWith(getColor),

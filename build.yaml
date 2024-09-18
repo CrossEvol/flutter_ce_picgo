@@ -21,3 +21,8 @@ targets:
           generic_argument_factories: false
           ignore_unannotated: false
           include_if_null: true
+      drift_dev:
+        options:
+          use_column_name_as_json_key_when_defined_in_moor_file: true
+          use_sql_column_name_as_json_key: true
+          store_date_time_values_as_text: true

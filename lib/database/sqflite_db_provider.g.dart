@@ -569,13 +569,13 @@ class uploaded_image extends DataClass implements Insertable<uploaded_image> {
     return uploaded_image(
       id: serializer.fromJson<int>(json['id']),
       filepath: serializer.fromJson<String>(json['filepath']),
-      storageType: serializer.fromJson<String>(json['storageType']),
+      storageType: serializer.fromJson<String>(json['storage_type']),
       url: serializer.fromJson<String>(json['url']),
       sha: serializer.fromJson<String>(json['sha']),
       name: serializer.fromJson<String>(json['name']),
       state: serializer.fromJson<String>(json['state']),
-      createTime: serializer.fromJson<DateTime>(json['createTime']),
-      uploadTime: serializer.fromJson<DateTime>(json['uploadTime']),
+      createTime: serializer.fromJson<DateTime>(json['create_time']),
+      uploadTime: serializer.fromJson<DateTime>(json['upload_time']),
     );
   }
   @override
@@ -584,13 +584,13 @@ class uploaded_image extends DataClass implements Insertable<uploaded_image> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'filepath': serializer.toJson<String>(filepath),
-      'storageType': serializer.toJson<String>(storageType),
+      'storage_type': serializer.toJson<String>(storageType),
       'url': serializer.toJson<String>(url),
       'sha': serializer.toJson<String>(sha),
       'name': serializer.toJson<String>(name),
       'state': serializer.toJson<String>(state),
-      'createTime': serializer.toJson<DateTime>(createTime),
-      'uploadTime': serializer.toJson<DateTime>(uploadTime),
+      'create_time': serializer.toJson<DateTime>(createTime),
+      'upload_time': serializer.toJson<DateTime>(uploadTime),
     };
   }
 
@@ -972,11 +972,11 @@ class downloaded_image extends DataClass
     return downloaded_image(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      localUrl: serializer.fromJson<String>(json['localUrl']),
-      remoteUrl: serializer.fromJson<String>(json['remoteUrl']),
+      localUrl: serializer.fromJson<String>(json['local_url']),
+      remoteUrl: serializer.fromJson<String>(json['remote_url']),
       sha: serializer.fromJson<String>(json['sha']),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
-      parentPath: serializer.fromJson<String>(json['parentPath']),
+      createdAt: serializer.fromJson<DateTime>(json['created_at']),
+      parentPath: serializer.fromJson<String>(json['parent_path']),
     );
   }
   @override
@@ -985,11 +985,11 @@ class downloaded_image extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
-      'localUrl': serializer.toJson<String>(localUrl),
-      'remoteUrl': serializer.toJson<String>(remoteUrl),
+      'local_url': serializer.toJson<String>(localUrl),
+      'remote_url': serializer.toJson<String>(remoteUrl),
       'sha': serializer.toJson<String>(sha),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
-      'parentPath': serializer.toJson<String>(parentPath),
+      'created_at': serializer.toJson<DateTime>(createdAt),
+      'parent_path': serializer.toJson<String>(parentPath),
     };
   }
 
@@ -1161,6 +1161,9 @@ abstract class _$DriftDbProvider extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
       [pbSettingsT, uploadedImagesT, downloadedImagesT];
+  @override
+  DriftDatabaseOptions get options =>
+      const DriftDatabaseOptions(storeDateTimeAsText: true);
 }
 
 typedef $$PbSettingsTTableInsertCompanionBuilder = PbSettingsTCompanion
