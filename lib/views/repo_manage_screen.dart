@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/selected_images/selected_images_bloc.dart';
+import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
@@ -37,41 +38,41 @@ class ImageItemVO {
 class RepoManageScreen extends StatefulWidget {
   final String storageType;
 
-  final List<ImageItemVO> images;
-
-  const RepoManageScreen(
-      {super.key, required this.images, required this.storageType});
+  const RepoManageScreen({super.key, required this.storageType});
 
   @override
   State<RepoManageScreen> createState() => _RepoManageScreenState();
 }
 
 class _RepoManageScreenState extends State<RepoManageScreen> {
-  List<ImageItemGroup> groupedImages = [];
-
-  int get selectedCount =>
-      widget.images.where((element) => element.selected).toList().length;
-
-  int get totalCount => widget.images.length;
-
   _RepoManageScreenState();
 
   @override
   void initState() {
     super.initState();
     fToast.init(context);
-    groupImagesByParentPath();
+    context
+        .read<ImageManageBloc>()
+        .add(ImageManageEventLoad(storageType: widget.storageType));
+    context.read<SelectedImagesBloc>().add(const SelectedImagesResetEvent());
   }
 
-  void groupImagesByParentPath() {
+  List<ImageItemGroup> groupImagesByParentPath(List<DownloadedImage> images) {
     final Map<String, List<ImageItemVO>> groupedMap = {};
-    for (var image in widget.images) {
+    for (var image in images
+        .map((e) => ImageItemVO(
+            id: e.id,
+            name: e.name,
+            remoteUrl: e.remoteUrl,
+            selected: false,
+            parentPath: e.parentPath))
+        .toList()) {
       if (!groupedMap.containsKey(image.parentPath)) {
         groupedMap[image.parentPath] = [];
       }
       groupedMap[image.parentPath]!.add(image);
     }
-    groupedImages = groupedMap.entries
+    return groupedMap.entries
         .map((entry) => ImageItemGroup(entry.key, entry.value))
         .toList();
   }
@@ -103,36 +104,43 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: groupedImages.length,
-        itemBuilder: (context, groupIndex) {
-          var group = groupedImages[groupIndex];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  group.parentPath,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-              ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // Adjust column count as desired
-                ),
-                itemCount: group.items.length,
-                itemBuilder: (context, index) {
-                  var image = group.items[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: ImageItemStack(image: image),
-                  );
-                },
-              ),
-            ],
+      body: BlocBuilder<ImageManageBloc, ImageManageState>(
+        builder: (context, state) {
+          var groupedImages = groupImagesByParentPath(
+              context.read<ImageManageBloc>().state.images);
+          return ListView.builder(
+            itemCount: groupedImages.length,
+            itemBuilder: (context, groupIndex) {
+              var group = groupedImages[groupIndex];
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      group.parentPath,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // Adjust column count as desired
+                    ),
+                    itemCount: group.items.length,
+                    itemBuilder: (context, index) {
+                      var image = group.items[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: ImageItemStack(image: image),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

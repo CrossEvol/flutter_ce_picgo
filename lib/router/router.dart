@@ -85,27 +85,7 @@ final GoRouter router = GoRouter(
           path: 'repo/:type',
           builder: (BuildContext context, GoRouterState state) {
             var storageType = state.pathParameters['type']!;
-            context
-                .read<ImageManageBloc>()
-                .add(ImageManageEventLoad(storageType: storageType));
-            context
-                .read<SelectedImagesBloc>()
-                .add(const SelectedImagesResetEvent());
-            return BlocBuilder<ImageManageBloc, ImageManageState>(
-              builder: (context, state) {
-                return RepoManageScreen(
-                  storageType: storageType,
-                  images: state.images
-                      .map((e) => ImageItemVO(
-                          id: e.id,
-                          name: e.name,
-                          remoteUrl: e.remoteUrl,
-                          selected: false,
-                          parentPath: e.parentPath))
-                      .toList(),
-                );
-              },
-            );
+            return RepoManageScreen(storageType: storageType);
           },
         ),
         GoRoute(
