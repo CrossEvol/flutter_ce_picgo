@@ -68,7 +68,7 @@ class ImageStorageSettingPagePresenter {
       Map<String, dynamic> map = {};
       map.putIfAbsent('github', () => jsonDecode(githubConfigJson));
       map.putIfAbsent('gitee', () => jsonDecode(giteeConfigJson));
-      _view.exportConfigSuccess(json2yaml(map));
+      _view.exportConfigSuccess(jsonEncode(map));
     } catch (e) {
       logger.e(e);
       _view.exportConfigError('$e');

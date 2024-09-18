@@ -79,6 +79,6 @@ class _BarCodeViewState extends State<BarCodeView> {
     if (kDebugMode) {
       logger.i(map);
     }
-    return json2yaml(map);
+    return jsonEncode(map);
   }
 }
