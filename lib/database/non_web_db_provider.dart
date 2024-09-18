@@ -6,7 +6,7 @@ import 'db_interface.dart';
 
 DbInterface getInstance() {
   return switch (defaultTargetPlatform) {
-    TargetPlatform.windows => SqfliteDbProvider(),
+    TargetPlatform.windows => DriftDbProvider(),
     TargetPlatform.android => IsarDbProvider(),
     _ => throw UnimplementedError('Unsupported Platform')
   };
