@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/selected_images/selected_images_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/theme_state/theme_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => ImageCacheBloc()),
         BlocProvider(create: (_) => ThemeBloc()),
         BlocProvider(create: (_) => ImageManageBloc()),
+        BlocProvider(create: (_) => SelectedImagesBloc()),
       ],
       child: BlocConsumer<ThemeBloc, ThemeState>(
         listener: (context, state) {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/selected_images/selected_images_bloc.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
@@ -48,18 +49,10 @@ class RepoManageScreen extends StatefulWidget {
 class _RepoManageScreenState extends State<RepoManageScreen> {
   List<ImageItemGroup> groupedImages = [];
 
-  List<ImageItemVO> get imageItems => groupedImages.fold<List<ImageItemVO>>(
-      [], (previousValue, element) => [...previousValue, ...element.items]);
-
   int get selectedCount =>
-      imageItems.where((element) => element.selected).length;
+      widget.images.where((element) => element.selected).toList().length;
 
-  // int get selectedCount =>
-  //     widget.images.where((element) => element.selected).toList().length;
-
-  int get totalCount => imageItems.length;
-
-  // int get totalCount => widget.images.length;
+  int get totalCount => widget.images.length;
 
   _RepoManageScreenState();
 
@@ -102,39 +95,9 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: selectedCount == 0
-                ? FilledButton.tonal(
-                    onPressed: null,
-                    style: ButtonStyle(
-                      minimumSize:
-                          WidgetStateProperty.all(const Size(100.0, 40.0)),
-                    ),
-                    child: const Text('确认'),
-                  )
-                : FilledButton(
-                    onPressed: () {
-                      context.read<ImageManageBloc>().add(
-                          ImageManageEventDelete(
-                              storageType: widget.storageType,
-                              ids: widget.images
-                                  .where((element) => element.selected)
-                                  .map((e) => e.id)
-                                  .toList()));
-                      // fToast.showErrorToast(text: 'UnImplemented');
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.resolveWith(
-                          (states) => Theme.of(context).colorScheme.error),
-                      minimumSize:
-                          WidgetStateProperty.all(const Size(120.0, 40.0)),
-                    ),
-                    child: Text(
-                      '确认($selectedCount/$totalCount)',
-                      style: const TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                  ),
+          const Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: RemoveAction(),
           ),
         ],
       ),
@@ -149,10 +112,7 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   group.parentPath,
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey,
-                      ),
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
               GridView.builder(
@@ -166,48 +126,7 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
                   var image = group.items[index];
                   return Padding(
                     padding: const EdgeInsets.all(2.0),
-                    child: Stack(
-                      children: [
-                        ImageManageItem(
-                          name: image.name,
-                          remoteUrl: image.remoteUrl,
-                          parentPath: image.parentPath,
-                        ),
-                        image.selected
-                            ? GestureDetector(
-                                onDoubleTap: () {
-                                  setState(() {
-                                    image.selected = false;
-                                  });
-                                },
-                                child: Container(
-                                  color: Colors.grey.withOpacity(
-                                      0.5), // Adjust opacity for desired mask intensity
-                                ),
-                              )
-                            : Container(),
-                        Positioned(
-                          top: 2.0, // Adjust position
-                          right: 2.0, // Adjust position
-                          child: Checkbox(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            side: const BorderSide(
-                                color: Colors.white, width: 2.0),
-                            checkColor: Colors.white,
-                            activeColor: Theme.of(context).colorScheme.error,
-                            // fillColor: MaterialStateProperty.resolveWith(getColor),
-                            value: image.selected,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                image.selected = value!;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: ImageItemStack(image: image),
                   );
                 },
               ),
@@ -248,6 +167,144 @@ class _RepoManageScreenState extends State<RepoManageScreen> {
   @override
   void dispose() {
     fToast.removeQueuedCustomToasts();
+    super.dispose();
+  }
+}
+
+class RemoveAction extends StatefulWidget {
+  const RemoveAction({super.key});
+
+  @override
+  State<RemoveAction> createState() => _RemoveActionState();
+}
+
+class _RemoveActionState extends State<RemoveAction> {
+  _RemoveActionState();
+
+  @override
+  Widget build(BuildContext context) {
+    int totalCount = 40;
+    return BlocBuilder<SelectedImagesBloc, SelectedImagesState>(
+        builder: (context, state) {
+      var selectedCount = state.selectedIDs.length;
+      return selectedCount == 0
+          ? FilledButton.tonal(
+              onPressed: null,
+              style: ButtonStyle(
+                minimumSize: WidgetStateProperty.all(const Size(100.0, 40.0)),
+              ),
+              child: const Text('确认'),
+            )
+          : FilledButton(
+              onPressed: () {
+                // context.read<ImageManageBloc>().add(ImageManageEventDelete(
+                //     storageType: widget.storageType,
+                //     ids: widget.images
+                //         .where((element) => element.selected)
+                //         .map((e) => e.id)
+                //         .toList()));
+                // fToast.showErrorToast(text: 'UnImplemented');
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.resolveWith(
+                    (states) => Theme.of(context).colorScheme.error),
+                minimumSize: WidgetStateProperty.all(const Size(120.0, 40.0)),
+              ),
+              child: Text(
+                '确认($selectedCount/$totalCount)',
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+            );
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+}
+
+class ImageItemStack extends StatefulWidget {
+  final ImageItemVO image;
+
+  const ImageItemStack({super.key, required this.image});
+
+  @override
+  State<ImageItemStack> createState() => _ImageItemStackState();
+}
+
+class _ImageItemStackState extends State<ImageItemStack> {
+  _ImageItemStackState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Stack(
+        children: [
+          ImageManageItem(
+            name: widget.image.name,
+            remoteUrl: widget.image.remoteUrl,
+            parentPath: widget.image.parentPath,
+          ),
+          widget.image.selected
+              ? GestureDetector(
+                  onDoubleTap: () {
+                    setState(() {
+                      widget.image.selected = false;
+                    });
+                  },
+                  child: Container(
+                    color: Colors.grey.withOpacity(
+                        0.5), // Adjust opacity for desired mask intensity
+                  ),
+                )
+              : Container(),
+          Positioned(
+            top: 2.0, // Adjust position
+            right: 2.0, // Adjust position
+            child: Checkbox(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              side: const BorderSide(color: Colors.white, width: 2.0),
+              checkColor: Colors.white,
+              activeColor: Theme.of(context).colorScheme.error,
+              // fillColor: MaterialStateProperty.resolveWith(getColor),
+              value: widget.image.selected,
+              onChanged: (bool? value) {
+                setState(() {
+                  widget.image.selected = value!;
+                  if (widget.image.selected) {
+                    context
+                        .read<SelectedImagesBloc>()
+                        .add(SelectedImagesAddEvent(id: widget.image.id));
+                  } else {
+                    context
+                        .read<SelectedImagesBloc>()
+                        .add(SelectedImagesRemoveEvent(id: widget.image.id));
+                  }
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
     super.dispose();
   }
 }

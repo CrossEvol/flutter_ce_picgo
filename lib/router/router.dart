@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/selected_images/selected_images_bloc.dart';
 import 'package:flutter_ce_picgo/router/router_extra.dart';
 import 'package:flutter_ce_picgo/views/album_screen.dart';
 import 'package:flutter_ce_picgo/views/barcode_view.dart';
@@ -87,6 +88,9 @@ final GoRouter router = GoRouter(
             context
                 .read<ImageManageBloc>()
                 .add(ImageManageEventLoad(storageType: storageType));
+            context
+                .read<SelectedImagesBloc>()
+                .add(const SelectedImagesResetEvent());
             return BlocBuilder<ImageManageBloc, ImageManageState>(
               builder: (context, state) {
                 return RepoManageScreen(
