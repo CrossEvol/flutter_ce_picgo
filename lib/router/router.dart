@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
-import 'package:flutter_ce_picgo/bloc/selected_images/selected_images_bloc.dart';
 import 'package:flutter_ce_picgo/router/router_extra.dart';
 import 'package:flutter_ce_picgo/views/album_screen.dart';
 import 'package:flutter_ce_picgo/views/barcode_view.dart';
@@ -9,6 +6,7 @@ import 'package:flutter_ce_picgo/views/image_storage_settings_views/gitee_page/g
 import 'package:flutter_ce_picgo/views/image_storage_settings_views/github/github_page.dart';
 import 'package:flutter_ce_picgo/views/picgo_setting_views/picgo_setting_view.dart';
 import 'package:flutter_ce_picgo/views/picgo_setting_views/theme_setting_view.dart';
+import 'package:flutter_ce_picgo/views/repo_manage_view/repo_manage_view.dart';
 import 'package:flutter_ce_picgo/views/settings_screen.dart';
 import 'package:flutter_ce_picgo/views/single_image_view.dart';
 import 'package:flutter_ce_picgo/views/upload_screen.dart';
@@ -16,7 +14,6 @@ import 'package:go_router/go_router.dart';
 
 import '../views/home_screen.dart';
 import '../views/image_storage_settings_views/image_storage_setting_screen.dart';
-import '../views/repo_manage_screen.dart';
 
 /// The route configuration.
 final GoRouter router = GoRouter(
@@ -85,7 +82,7 @@ final GoRouter router = GoRouter(
           path: 'repo/:type',
           builder: (BuildContext context, GoRouterState state) {
             var storageType = state.pathParameters['type']!;
-            return RepoManageScreen(storageType: storageType);
+            return RepoManageView(storageType: storageType);
           },
         ),
         GoRoute(
