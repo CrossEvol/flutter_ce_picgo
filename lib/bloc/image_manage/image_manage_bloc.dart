@@ -12,6 +12,7 @@ import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/service/repo/storage_service_factory.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
+import 'package:flutter_ce_picgo/views/repo_manage_view/models.dart';
 
 import '../../common/interfaces/interface.dart';
 
@@ -35,8 +36,13 @@ Future<IConfig> _getConfig(String storageType) async {
 }
 
 class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
-  ImageManageBloc() : super(const ImageManageState(images: [])) {
+  ImageManageBloc()
+      : super(const ImageManageState(
+            images: [], status: ImageManageStatus.initial)) {
     on<ImageManageEventLoad>((event, emit) async {
+      emit(state.copyWith(
+          images: state.images, status: ImageManageStatus.loading));
+
       var config = await _getConfig(event.storageType);
       var storageService =
           StorageServiceFactory.instance.getUploadStrategy(event.storageType);
@@ -54,7 +60,7 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
               parentPath: e.parentPath,
               createdAt: DateTime.now()))
           .toList();
-      emit(state.copyWith(images: images));
+      emit(state.copyWith(images: images, status: ImageManageStatus.done));
     });
 
     on<ImageManageEventDelete>((event, emit) async {

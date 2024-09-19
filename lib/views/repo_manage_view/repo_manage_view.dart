@@ -86,8 +86,10 @@ class _RepoManageViewState extends State<RepoManageView> {
       ),
       body: BlocBuilder<ImageManageBloc, ImageManageState>(
         builder: (context, state) {
-          var groupedImages = groupImagesByParentPath(
-              context.read<ImageManageBloc>().state.images);
+          if (state.status == ImageManageStatus.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          var groupedImages = state.imageItemGroups;
           return ListView.builder(
             itemCount: groupedImages.length,
             itemBuilder: (context, groupIndex) {
