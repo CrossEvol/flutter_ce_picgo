@@ -29,6 +29,7 @@ class GithubRepoService
     var configJson = await dbProvider.getImageStorageSettingConfig(
         type: ImageStorageType.github.name);
     var githubConfig = GithubConfig.fromJson(jsonDecode(configJson));
+    var finalName = rename.isNotEmpty ? rename : xFile.name;
 
     Dio dio = Dio();
     // Set headers
@@ -48,14 +49,14 @@ class GithubRepoService
 
     // Set request body
     Map<String, dynamic> requestBody = {
-      'message': xFile.name ?? rename,
+      'message': finalName,
       'content': base64Encode(fileData),
     };
 
     // Perform PUT request
     try {
       Response response = await dio.put(
-        'https://api.github.com/repos/${githubConfig.repo}/contents/${formattedNow()}/${xFile.name ?? rename}',
+        'https://api.github.com/repos/${githubConfig.repo}/contents/${formattedNow()}/$finalName',
         data: requestBody,
         options: Options(contentType: Headers.jsonContentType),
       );

@@ -17,6 +17,15 @@ import '../models/enums/uploaded_state.dart';
 import '../models/uploaded_image.dart';
 import '../utils/faker_util.dart';
 
+class DecoratedXFile {
+  final XFile file;
+  String name;
+
+  String get path => file.path;
+
+  DecoratedXFile({required this.file, required this.name});
+}
+
 class AlbumScreen extends StatefulWidget {
   const AlbumScreen({super.key});
 
@@ -26,14 +35,39 @@ class AlbumScreen extends StatefulWidget {
 
 class _AlbumScreenState extends State<AlbumScreen> {
   final ImagePicker _picker = ImagePicker();
-  List<XFile>? _mediaFileList;
-  bool isVideo = false; // unnecessary field
+  List<DecoratedXFile>? _mediaFileList;
+  bool isVideo = false;
+  final _validImageExtensions = [
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.bmp',
+    '.webp'
+  ];
 
   String? _retrieveDataError;
   dynamic _pickImageError;
 
   void _setImageFileListFromFile(XFile? value) {
-    _mediaFileList = value == null ? null : [...?_mediaFileList, value];
+    if (value != null) {
+      _mediaFileList = _mediaFileList ?? [];
+      _mediaFileList!.add(DecoratedXFile(file: value, name: value.name));
+    }
+  }
+
+  void _updateFileName(int index, String newName) {
+    setState(() {
+      newName = newName.trim();
+      bool hasValidExtension =
+          _validImageExtensions.any((ext) => newName.endsWith(ext));
+
+      if (!hasValidExtension) {
+        newName += '.jpg';
+      }
+
+      _mediaFileList![index].name = newName;
+    });
   }
 
   _AlbumScreenState();
@@ -87,7 +121,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     if (_mediaFileList!.isNotEmpty) {
                       _mediaFileList?.forEach((element) {
                         context.read<ImageCacheBloc>().add(ImageCacheEventPut(
-                            key: element.path, xFile: element));
+                            key: element.file.path, xFile: element.file));
                       });
                       context.read<UploadImageBloc>().add(UploadImageEventAdd(
                           uploadedImages: _mediaFileList!
@@ -223,7 +257,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
               child: kIsWeb
                   ? Image.network(_mediaFileList![index].path)
                   : (mime == null || mime.startsWith('image/')
-                      ? ImagePreviewWidget(file: _mediaFileList![index])
+                      ? ImagePreviewWidget(
+                          file: _mediaFileList![index],
+                          onNameChanged: (newName) =>
+                              _updateFileName(index, newName),
+                        )
                       : _buildInlineVideoPlayer(index)),
             );
           },
@@ -270,7 +308,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
           if (response.files == null) {
             _setImageFileListFromFile(response.file);
           } else {
-            _mediaFileList = response.files;
+            _mediaFileList = response.files
+                ?.map((file) => DecoratedXFile(file: file, name: file.name))
+                .toList();
           }
         });
       }
@@ -305,9 +345,11 @@ class _AlbumScreenState extends State<AlbumScreen> {
 }
 
 class ImagePreviewWidget extends StatefulWidget {
-  final XFile file;
+  final DecoratedXFile file;
+  final ValueChanged<String> onNameChanged;
 
-  const ImagePreviewWidget({super.key, required this.file});
+  const ImagePreviewWidget(
+      {super.key, required this.file, required this.onNameChanged});
 
   @override
   State<ImagePreviewWidget> createState() => ImagePreviewWidgetState();
@@ -340,6 +382,7 @@ class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
                     onFocusChange: (hasFocus) {
                       if (!hasFocus) {
                         setState(() {
+                          widget.onNameChanged(_controller.text);
                           _isEditing = false;
                         });
                       }
@@ -354,6 +397,7 @@ class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
                               setState(() {
                                 _isEditing = false;
                               });
+                              widget.onNameChanged(value);
                             },
                           ),
                         ),
@@ -364,8 +408,11 @@ class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _controller.text = '${faker.lorem.word()}.jpg';
+                              var randomName = '${faker.lorem.word()}.jpg';
+                              _controller.text = randomName;
+                              _isEditing = false;
                             });
+                            widget.onNameChanged(_controller.text);
                           },
                         ),
                       ],
