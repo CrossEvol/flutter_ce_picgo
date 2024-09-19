@@ -23,23 +23,28 @@ const IsarDownloadedImageSchema = CollectionSchema(
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
-    r'localUrl': PropertySchema(
+    r'downloadUrl': PropertySchema(
       id: 1,
+      name: r'downloadUrl',
+      type: IsarType.string,
+    ),
+    r'localUrl': PropertySchema(
+      id: 2,
       name: r'localUrl',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
     r'remoteUrl': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'remoteUrl',
       type: IsarType.string,
     ),
     r'sha': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'sha',
       type: IsarType.string,
     )
@@ -88,6 +93,19 @@ const IsarDownloadedImageSchema = CollectionSchema(
           caseSensitive: true,
         )
       ],
+    ),
+    r'downloadUrl': IndexSchema(
+      id: 97970090451215649,
+      name: r'downloadUrl',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'downloadUrl',
+          type: IndexType.value,
+          caseSensitive: true,
+        )
+      ],
     )
   },
   links: {},
@@ -104,6 +122,12 @@ int _isarDownloadedImageEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.downloadUrl;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.localUrl.length * 3;
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.remoteUrl.length * 3;
@@ -118,10 +142,11 @@ void _isarDownloadedImageSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.createdAt);
-  writer.writeString(offsets[1], object.localUrl);
-  writer.writeString(offsets[2], object.name);
-  writer.writeString(offsets[3], object.remoteUrl);
-  writer.writeString(offsets[4], object.sha);
+  writer.writeString(offsets[1], object.downloadUrl);
+  writer.writeString(offsets[2], object.localUrl);
+  writer.writeString(offsets[3], object.name);
+  writer.writeString(offsets[4], object.remoteUrl);
+  writer.writeString(offsets[5], object.sha);
 }
 
 IsarDownloadedImage _isarDownloadedImageDeserialize(
@@ -132,10 +157,11 @@ IsarDownloadedImage _isarDownloadedImageDeserialize(
 ) {
   final object = IsarDownloadedImage(
     createdAt: reader.readDateTime(offsets[0]),
-    localUrl: reader.readString(offsets[1]),
-    name: reader.readString(offsets[2]),
-    remoteUrl: reader.readString(offsets[3]),
-    sha: reader.readString(offsets[4]),
+    downloadUrl: reader.readStringOrNull(offsets[1]),
+    localUrl: reader.readString(offsets[2]),
+    name: reader.readString(offsets[3]),
+    remoteUrl: reader.readString(offsets[4]),
+    sha: reader.readString(offsets[5]),
   );
   object.id = id;
   return object;
@@ -151,12 +177,14 @@ P _isarDownloadedImageDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -208,6 +236,15 @@ extension IsarDownloadedImageQueryWhereSort
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'remoteUrl'),
+      );
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhere>
+      anyDownloadUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'downloadUrl'),
       );
     });
   }
@@ -705,6 +742,169 @@ extension IsarDownloadedImageQueryWhere
       }
     });
   }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'downloadUrl',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'downloadUrl',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlEqualTo(String? downloadUrl) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'downloadUrl',
+        value: [downloadUrl],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlNotEqualTo(String? downloadUrl) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'downloadUrl',
+              lower: [],
+              upper: [downloadUrl],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'downloadUrl',
+              lower: [downloadUrl],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'downloadUrl',
+              lower: [downloadUrl],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'downloadUrl',
+              lower: [],
+              upper: [downloadUrl],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlGreaterThan(
+    String? downloadUrl, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'downloadUrl',
+        lower: [downloadUrl],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlLessThan(
+    String? downloadUrl, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'downloadUrl',
+        lower: [],
+        upper: [downloadUrl],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlBetween(
+    String? lowerDownloadUrl,
+    String? upperDownloadUrl, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'downloadUrl',
+        lower: [lowerDownloadUrl],
+        includeLower: includeLower,
+        upper: [upperDownloadUrl],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlStartsWith(String DownloadUrlPrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'downloadUrl',
+        lower: [DownloadUrlPrefix],
+        upper: ['$DownloadUrlPrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'downloadUrl',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterWhereClause>
+      downloadUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'downloadUrl',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'downloadUrl',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'downloadUrl',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'downloadUrl',
+              upper: [''],
+            ));
+      }
+    });
+  }
 }
 
 extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
@@ -761,6 +961,160 @@ extension IsarDownloadedImageQueryFilter on QueryBuilder<IsarDownloadedImage,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'downloadUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'downloadUrl',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'downloadUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'downloadUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'downloadUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'downloadUrl',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'downloadUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'downloadUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'downloadUrl',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'downloadUrl',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'downloadUrl',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterFilterCondition>
+      downloadUrlIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'downloadUrl',
+        value: '',
       ));
     });
   }
@@ -1389,6 +1743,20 @@ extension IsarDownloadedImageQuerySortBy
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
+      sortByDownloadUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'downloadUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
+      sortByDownloadUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'downloadUrl', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
       sortByLocalUrl() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'localUrl', Sort.asc);
@@ -1458,6 +1826,20 @@ extension IsarDownloadedImageQuerySortThenBy
       thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'createdAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
+      thenByDownloadUrl() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'downloadUrl', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QAfterSortBy>
+      thenByDownloadUrlDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'downloadUrl', Sort.desc);
     });
   }
 
@@ -1542,6 +1924,13 @@ extension IsarDownloadedImageQueryWhereDistinct
   }
 
   QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QDistinct>
+      distinctByDownloadUrl({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'downloadUrl', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, IsarDownloadedImage, QDistinct>
       distinctByLocalUrl({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'localUrl', caseSensitive: caseSensitive);
@@ -1582,6 +1971,13 @@ extension IsarDownloadedImageQueryProperty
       createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'createdAt');
+    });
+  }
+
+  QueryBuilder<IsarDownloadedImage, String?, QQueryOperations>
+      downloadUrlProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'downloadUrl');
     });
   }
 

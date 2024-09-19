@@ -823,6 +823,16 @@ class $DownloadedImagesTTable extends DownloadedImagesT
       requiredDuringInsert: false,
       defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
       defaultValue: const Constant(""));
+  static const VerificationMeta _downloadUrlMeta =
+      const VerificationMeta('downloadUrl');
+  @override
+  late final GeneratedColumn<String> downloadUrl = GeneratedColumn<String>(
+      'download_url', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(
+          minTextLength: 0, maxTextLength: 1000),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(""));
   static const VerificationMeta _shaMeta = const VerificationMeta('sha');
   @override
   late final GeneratedColumn<String> sha =
@@ -853,7 +863,7 @@ class $DownloadedImagesTTable extends DownloadedImagesT
       defaultValue: const Constant(""));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, name, localUrl, remoteUrl, sha, createdAt, parentPath];
+      [id, name, localUrl, remoteUrl, downloadUrl, sha, createdAt, parentPath];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -878,6 +888,12 @@ class $DownloadedImagesTTable extends DownloadedImagesT
     if (data.containsKey('remote_url')) {
       context.handle(_remoteUrlMeta,
           remoteUrl.isAcceptableOrUnknown(data['remote_url']!, _remoteUrlMeta));
+    }
+    if (data.containsKey('download_url')) {
+      context.handle(
+          _downloadUrlMeta,
+          downloadUrl.isAcceptableOrUnknown(
+              data['download_url']!, _downloadUrlMeta));
     }
     if (data.containsKey('sha')) {
       context.handle(
@@ -910,6 +926,8 @@ class $DownloadedImagesTTable extends DownloadedImagesT
           .read(DriftSqlType.string, data['${effectivePrefix}local_url'])!,
       remoteUrl: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}remote_url'])!,
+      downloadUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}download_url'])!,
       sha: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}sha'])!,
       createdAt: attachedDatabase.typeMapping
@@ -931,6 +949,7 @@ class downloaded_image extends DataClass
   final String name;
   final String localUrl;
   final String remoteUrl;
+  final String downloadUrl;
   final String sha;
   final DateTime createdAt;
   final String parentPath;
@@ -939,6 +958,7 @@ class downloaded_image extends DataClass
       required this.name,
       required this.localUrl,
       required this.remoteUrl,
+      required this.downloadUrl,
       required this.sha,
       required this.createdAt,
       required this.parentPath});
@@ -949,6 +969,7 @@ class downloaded_image extends DataClass
     map['name'] = Variable<String>(name);
     map['local_url'] = Variable<String>(localUrl);
     map['remote_url'] = Variable<String>(remoteUrl);
+    map['download_url'] = Variable<String>(downloadUrl);
     map['sha'] = Variable<String>(sha);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['parent_path'] = Variable<String>(parentPath);
@@ -961,6 +982,7 @@ class downloaded_image extends DataClass
       name: Value(name),
       localUrl: Value(localUrl),
       remoteUrl: Value(remoteUrl),
+      downloadUrl: Value(downloadUrl),
       sha: Value(sha),
       createdAt: Value(createdAt),
       parentPath: Value(parentPath),
@@ -975,6 +997,7 @@ class downloaded_image extends DataClass
       name: serializer.fromJson<String>(json['name']),
       localUrl: serializer.fromJson<String>(json['local_url']),
       remoteUrl: serializer.fromJson<String>(json['remote_url']),
+      downloadUrl: serializer.fromJson<String>(json['download_url']),
       sha: serializer.fromJson<String>(json['sha']),
       createdAt: serializer.fromJson<DateTime>(json['created_at']),
       parentPath: serializer.fromJson<String>(json['parent_path']),
@@ -988,6 +1011,7 @@ class downloaded_image extends DataClass
       'name': serializer.toJson<String>(name),
       'local_url': serializer.toJson<String>(localUrl),
       'remote_url': serializer.toJson<String>(remoteUrl),
+      'download_url': serializer.toJson<String>(downloadUrl),
       'sha': serializer.toJson<String>(sha),
       'created_at': serializer.toJson<DateTime>(createdAt),
       'parent_path': serializer.toJson<String>(parentPath),
@@ -999,6 +1023,7 @@ class downloaded_image extends DataClass
           String? name,
           String? localUrl,
           String? remoteUrl,
+          String? downloadUrl,
           String? sha,
           DateTime? createdAt,
           String? parentPath}) =>
@@ -1007,6 +1032,7 @@ class downloaded_image extends DataClass
         name: name ?? this.name,
         localUrl: localUrl ?? this.localUrl,
         remoteUrl: remoteUrl ?? this.remoteUrl,
+        downloadUrl: downloadUrl ?? this.downloadUrl,
         sha: sha ?? this.sha,
         createdAt: createdAt ?? this.createdAt,
         parentPath: parentPath ?? this.parentPath,
@@ -1018,6 +1044,7 @@ class downloaded_image extends DataClass
           ..write('name: $name, ')
           ..write('localUrl: $localUrl, ')
           ..write('remoteUrl: $remoteUrl, ')
+          ..write('downloadUrl: $downloadUrl, ')
           ..write('sha: $sha, ')
           ..write('createdAt: $createdAt, ')
           ..write('parentPath: $parentPath')
@@ -1026,8 +1053,8 @@ class downloaded_image extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, name, localUrl, remoteUrl, sha, createdAt, parentPath);
+  int get hashCode => Object.hash(
+      id, name, localUrl, remoteUrl, downloadUrl, sha, createdAt, parentPath);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1036,6 +1063,7 @@ class downloaded_image extends DataClass
           other.name == this.name &&
           other.localUrl == this.localUrl &&
           other.remoteUrl == this.remoteUrl &&
+          other.downloadUrl == this.downloadUrl &&
           other.sha == this.sha &&
           other.createdAt == this.createdAt &&
           other.parentPath == this.parentPath);
@@ -1046,6 +1074,7 @@ class DownloadedImagesTCompanion extends UpdateCompanion<downloaded_image> {
   final Value<String> name;
   final Value<String> localUrl;
   final Value<String> remoteUrl;
+  final Value<String> downloadUrl;
   final Value<String> sha;
   final Value<DateTime> createdAt;
   final Value<String> parentPath;
@@ -1054,6 +1083,7 @@ class DownloadedImagesTCompanion extends UpdateCompanion<downloaded_image> {
     this.name = const Value.absent(),
     this.localUrl = const Value.absent(),
     this.remoteUrl = const Value.absent(),
+    this.downloadUrl = const Value.absent(),
     this.sha = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.parentPath = const Value.absent(),
@@ -1063,6 +1093,7 @@ class DownloadedImagesTCompanion extends UpdateCompanion<downloaded_image> {
     this.name = const Value.absent(),
     this.localUrl = const Value.absent(),
     this.remoteUrl = const Value.absent(),
+    this.downloadUrl = const Value.absent(),
     this.sha = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.parentPath = const Value.absent(),
@@ -1072,6 +1103,7 @@ class DownloadedImagesTCompanion extends UpdateCompanion<downloaded_image> {
     Expression<String>? name,
     Expression<String>? localUrl,
     Expression<String>? remoteUrl,
+    Expression<String>? downloadUrl,
     Expression<String>? sha,
     Expression<DateTime>? createdAt,
     Expression<String>? parentPath,
@@ -1081,6 +1113,7 @@ class DownloadedImagesTCompanion extends UpdateCompanion<downloaded_image> {
       if (name != null) 'name': name,
       if (localUrl != null) 'local_url': localUrl,
       if (remoteUrl != null) 'remote_url': remoteUrl,
+      if (downloadUrl != null) 'download_url': downloadUrl,
       if (sha != null) 'sha': sha,
       if (createdAt != null) 'created_at': createdAt,
       if (parentPath != null) 'parent_path': parentPath,
@@ -1092,6 +1125,7 @@ class DownloadedImagesTCompanion extends UpdateCompanion<downloaded_image> {
       Value<String>? name,
       Value<String>? localUrl,
       Value<String>? remoteUrl,
+      Value<String>? downloadUrl,
       Value<String>? sha,
       Value<DateTime>? createdAt,
       Value<String>? parentPath}) {
@@ -1100,6 +1134,7 @@ class DownloadedImagesTCompanion extends UpdateCompanion<downloaded_image> {
       name: name ?? this.name,
       localUrl: localUrl ?? this.localUrl,
       remoteUrl: remoteUrl ?? this.remoteUrl,
+      downloadUrl: downloadUrl ?? this.downloadUrl,
       sha: sha ?? this.sha,
       createdAt: createdAt ?? this.createdAt,
       parentPath: parentPath ?? this.parentPath,
@@ -1121,6 +1156,9 @@ class DownloadedImagesTCompanion extends UpdateCompanion<downloaded_image> {
     if (remoteUrl.present) {
       map['remote_url'] = Variable<String>(remoteUrl.value);
     }
+    if (downloadUrl.present) {
+      map['download_url'] = Variable<String>(downloadUrl.value);
+    }
     if (sha.present) {
       map['sha'] = Variable<String>(sha.value);
     }
@@ -1140,6 +1178,7 @@ class DownloadedImagesTCompanion extends UpdateCompanion<downloaded_image> {
           ..write('name: $name, ')
           ..write('localUrl: $localUrl, ')
           ..write('remoteUrl: $remoteUrl, ')
+          ..write('downloadUrl: $downloadUrl, ')
           ..write('sha: $sha, ')
           ..write('createdAt: $createdAt, ')
           ..write('parentPath: $parentPath')
@@ -1528,6 +1567,7 @@ typedef $$DownloadedImagesTTableInsertCompanionBuilder
   Value<String> name,
   Value<String> localUrl,
   Value<String> remoteUrl,
+  Value<String> downloadUrl,
   Value<String> sha,
   Value<DateTime> createdAt,
   Value<String> parentPath,
@@ -1538,6 +1578,7 @@ typedef $$DownloadedImagesTTableUpdateCompanionBuilder
   Value<String> name,
   Value<String> localUrl,
   Value<String> remoteUrl,
+  Value<String> downloadUrl,
   Value<String> sha,
   Value<DateTime> createdAt,
   Value<String> parentPath,
@@ -1568,6 +1609,7 @@ class $$DownloadedImagesTTableTableManager extends RootTableManager<
             Value<String> name = const Value.absent(),
             Value<String> localUrl = const Value.absent(),
             Value<String> remoteUrl = const Value.absent(),
+            Value<String> downloadUrl = const Value.absent(),
             Value<String> sha = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<String> parentPath = const Value.absent(),
@@ -1577,6 +1619,7 @@ class $$DownloadedImagesTTableTableManager extends RootTableManager<
             name: name,
             localUrl: localUrl,
             remoteUrl: remoteUrl,
+            downloadUrl: downloadUrl,
             sha: sha,
             createdAt: createdAt,
             parentPath: parentPath,
@@ -1586,6 +1629,7 @@ class $$DownloadedImagesTTableTableManager extends RootTableManager<
             Value<String> name = const Value.absent(),
             Value<String> localUrl = const Value.absent(),
             Value<String> remoteUrl = const Value.absent(),
+            Value<String> downloadUrl = const Value.absent(),
             Value<String> sha = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<String> parentPath = const Value.absent(),
@@ -1595,6 +1639,7 @@ class $$DownloadedImagesTTableTableManager extends RootTableManager<
             name: name,
             localUrl: localUrl,
             remoteUrl: remoteUrl,
+            downloadUrl: downloadUrl,
             sha: sha,
             createdAt: createdAt,
             parentPath: parentPath,
@@ -1638,6 +1683,11 @@ class $$DownloadedImagesTTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get downloadUrl => $state.composableBuilder(
+      column: $state.table.downloadUrl,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<String> get sha => $state.composableBuilder(
       column: $state.table.sha,
       builder: (column, joinBuilders) =>
@@ -1674,6 +1724,11 @@ class $$DownloadedImagesTTableOrderingComposer
 
   ColumnOrderings<String> get remoteUrl => $state.composableBuilder(
       column: $state.table.remoteUrl,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get downloadUrl => $state.composableBuilder(
+      column: $state.table.downloadUrl,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

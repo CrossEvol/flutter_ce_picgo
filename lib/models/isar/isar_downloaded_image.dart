@@ -16,6 +16,9 @@ class IsarDownloadedImage {
   @Index(type: IndexType.value)
   final String remoteUrl;
 
+  @Index(type: IndexType.value)
+  final String? downloadUrl;
+
   final String sha;
 
   final DateTime createdAt;
@@ -24,6 +27,7 @@ class IsarDownloadedImage {
     required this.localUrl,
     required this.name,
     required this.remoteUrl,
+    required this.downloadUrl,
     required this.sha,
     required this.createdAt,
   });
@@ -35,6 +39,7 @@ extension IsarDownloadedImageExt on IsarDownloadedImage {
         id: id,
         localUrl: localUrl,
         remoteUrl: remoteUrl,
+        downloadUrl: downloadUrl,
         name: name,
         sha: sha,
         parentPath: '',
@@ -48,6 +53,7 @@ extension DownloadedImageExt on DownloadedImage {
         localUrl: localUrl,
         name: name,
         remoteUrl: remoteUrl,
+        downloadUrl: downloadUrl,
         sha: sha,
         createdAt: createdAt);
   }

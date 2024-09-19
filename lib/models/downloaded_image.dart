@@ -8,6 +8,7 @@ class DownloadedImage implements IDownload {
   final int id;
   final String localUrl;
   final String remoteUrl;
+  final String? downloadUrl;
   final String name; // this is the unique identifier
   final String sha;
   final String parentPath;
@@ -23,6 +24,7 @@ class DownloadedImage implements IDownload {
     required this.id,
     required this.localUrl,
     required this.remoteUrl,
+    required this.downloadUrl,
     required this.name,
     required this.sha,
     required this.createdAt,

@@ -44,6 +44,7 @@ class _RepoManageViewState extends State<RepoManageView> {
             id: e.id,
             name: e.name,
             remoteUrl: e.remoteUrl,
+            downloadUrl: e.downloadUrl ?? '',
             selected: false,
             parentPath: e.parentPath))
         .toList()) {

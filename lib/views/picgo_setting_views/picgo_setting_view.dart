@@ -24,6 +24,7 @@ class PicGoSettingView extends StatefulWidget {
 }
 
 class _PicGoSettingViewState extends State<PicGoSettingView> {
+  bool preferLoadNetworkImages = false;
   bool isUploadedRename = false;
   bool isTimestampRename = false;
   bool isUploadedTip = false;
@@ -33,6 +34,9 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
   @override
   void initState() {
     super.initState();
+    preferLoadNetworkImages =
+        prefs.getBool(SharedPreferencesKeys.preferLoadNetworkImages.name) ??
+            false;
     isUploadedRename =
         prefs.getBool(SharedPreferencesKeys.settingIsUploadedRename.name) ??
             false;
@@ -40,11 +44,9 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
         prefs.getBool(SharedPreferencesKeys.settingIsTimestampRename.name) ??
             false;
     isUploadedTip =
-        prefs.getBool(SharedPreferencesKeys.settingIsUploadedTip.name) ??
-            false;
+        prefs.getBool(SharedPreferencesKeys.settingIsUploadedTip.name) ?? false;
     isForceDelete =
-        prefs.getBool(SharedPreferencesKeys.settingIsForceDelete.name) ??
-            false;
+        prefs.getBool(SharedPreferencesKeys.settingIsForceDelete.name) ?? false;
     fToast.init(context);
     _getLatestVersion();
   }
@@ -60,6 +62,20 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
         builder: (BuildContext context) {
           return ListView(
             children: <Widget>[
+              ListTile(
+                title: const Text('优先加载网络图片'),
+                trailing: CupertinoSwitch(
+                  activeColor: Theme.of(context).colorScheme.primary,
+                  value: preferLoadNetworkImages,
+                  onChanged: (value) {
+                    save(SharedPreferencesKeys.preferLoadNetworkImages.name,
+                        value);
+                    setState(() {
+                      preferLoadNetworkImages = value;
+                    });
+                  },
+                ),
+              ),
               ListTile(
                 title: const Text('上传前重命名'),
                 trailing: CupertinoSwitch(

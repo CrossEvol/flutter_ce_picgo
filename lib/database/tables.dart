@@ -64,6 +64,9 @@ class DownloadedImagesT extends Table {
       .withLength(min: 0, max: 1000)
       .withDefault(const Constant(""))();
 
+  TextColumn get downloadUrl =>
+      text().withLength(min: 0, max: 1000).withDefault(const Constant(""))();
+
   TextColumn get sha =>
       text().withLength(min: 0).withDefault(const Constant(""))();
 

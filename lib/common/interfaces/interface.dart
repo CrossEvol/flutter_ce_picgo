@@ -5,3 +5,5 @@ interface class IConfig {}
 interface class IContent {}
 
 interface class IDownload {}
+
+interface class ImageItemWidget {}

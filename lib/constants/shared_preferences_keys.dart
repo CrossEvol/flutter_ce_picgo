@@ -1,4 +1,5 @@
 enum SharedPreferencesKeys {
+  preferLoadNetworkImages,
   settingIsUploadedRename,
   settingIsTimestampRename,
   settingIsUploadedTip,

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_ce_picgo/api/github_api.dart';
+import 'package:flutter_ce_picgo/common/interfaces/interface.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
@@ -16,12 +17,12 @@ import 'package:path/path.dart';
 * TODO : has some performance problem, reload too many , does it download the file repeatedly?
 * */
 
-class ImageManageItem extends StatelessWidget {
+class ImageItemLocal extends StatelessWidget implements ImageItemWidget {
   final String name;
   final String remoteUrl;
   final String parentPath;
 
-  const ImageManageItem(
+  const ImageItemLocal(
       {super.key,
       required this.name,
       required this.remoteUrl,
@@ -30,6 +31,7 @@ class ImageManageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<FileImage>(
+      future: setupFileImage(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -48,7 +50,6 @@ class ImageManageItem extends StatelessWidget {
             },
             child: Image(image: snapshot.data!, fit: BoxFit.cover));
       },
-      future: setupFileImage(),
     );
   }
 
@@ -82,6 +83,7 @@ class ImageManageItem extends StatelessWidget {
           id: 0,
           localUrl: dest,
           remoteUrl: githubContent.url,
+          downloadUrl: githubContent.downloadUrl,
           name: githubContent.name,
           sha: githubContent.sha,
           createdAt: DateTime.now(),

@@ -93,6 +93,8 @@ class GithubApi {
     }
     var githubContent =
         GithubContent.fromJson(response.data! as Map<String, dynamic>);
+
+    // here save the content to the localUrl, so the remoteUrl not need to reference to the image render
     var flag = await saveBase64ToFile(githubContent.content!, dest);
     if (flag) {
       return githubContent;

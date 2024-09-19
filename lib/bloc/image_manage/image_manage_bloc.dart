@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
+import 'package:flutter_ce_picgo/constants/shared_preferences_keys.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
 import 'package:flutter_ce_picgo/models/downloaded_image.dart';
 import 'package:flutter_ce_picgo/models/gitee_config.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_ce_picgo/models/github_config.dart';
 import 'package:flutter_ce_picgo/service/repo/storage_service_factory.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
+import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 import 'package:flutter_ce_picgo/views/repo_manage_view/models.dart';
 
 import '../../common/interfaces/interface.dart';
@@ -55,6 +57,7 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
               localUrl: '',
               // it will be check in the child widget
               remoteUrl: e.remoteUrl,
+              downloadUrl: e.downloadUrl,
               name: e.name,
               sha: e.sha,
               parentPath: e.parentPath,
@@ -64,50 +67,57 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
     });
 
     on<ImageManageEventDelete>((event, emit) async {
-      var removeList = state.images
-          .where((element) => event.ids.contains(element.id))
-          .toList();
-
       emit(state.copyWith(
           images: state.images
               .where((element) => !event.ids.contains(element.id))
               .toList()));
 
-      // remove in remote → db → fs
-      var config = await _getConfig(event.storageType);
-      for (var element in removeList) {
-        var downloadedImage = await dbProvider.getDownloadedImage(
-            (element.name, element.localUrl, element.remoteUrl));
-        var storageService =
-            StorageServiceFactory.instance.getUploadStrategy(event.storageType);
-        var isDeletedInRemote = await storageService.removeImage(
-            config: config, download: downloadedImage);
-        if (!isDeletedInRemote) {
-          logger.e(
-              'Failed to remove image [${element.name}](${element.remoteUrl}) in repo.');
-          return;
-        }
-        // removedIds.add(downloadedImage.id);
-        var isDeletedInDB = await dbProvider.removeDownloadedImage(
-            (element.name, element.localUrl, element.remoteUrl));
-        if (!isDeletedInDB) {
-          logger.e('Failed to remove image record in Database.');
-          return;
-        }
+      var preferLoadNetworkImages =
+          prefs.getBool(SharedPreferencesKeys.preferLoadNetworkImages.name) ??
+              false;
 
-        Future.delayed(Duration.zero, () async {
-          try {
-            var file = File(downloadedImage.localUrl);
-            if (await file.exists()) {
-              await file.delete();
-            }
-          } catch (e) {
+      if (preferLoadNetworkImages) {
+        print('');
+      } else {
+        var removeList = state.images
+            .where((element) => event.ids.contains(element.id))
+            .toList();
+
+        // remove in remote → db → fs
+        var config = await _getConfig(event.storageType);
+        for (var element in removeList) {
+          var downloadedImage = await dbProvider.getDownloadedImage(
+              (element.name, element.localUrl, element.remoteUrl));
+          var storageService = StorageServiceFactory.instance
+              .getUploadStrategy(event.storageType);
+          var isDeletedInRemote = await storageService.removeImage(
+              config: config, download: downloadedImage);
+          if (!isDeletedInRemote) {
             logger.e(
-                'Failed to remove image [${element.name}](${element.localUrl}) in FileSystem.');
+                'Failed to remove image [${element.name}](${element.remoteUrl}) in repo.');
+            return;
           }
-        });
-      }
+          // removedIds.add(downloadedImage.id);
+          var isDeletedInDB = await dbProvider.removeDownloadedImage(
+              (element.name, element.localUrl, element.remoteUrl));
+          if (!isDeletedInDB) {
+            logger.e('Failed to remove image record in Database.');
+            return;
+          }
 
+          Future.delayed(Duration.zero, () async {
+            try {
+              var file = File(downloadedImage.localUrl);
+              if (await file.exists()) {
+                await file.delete();
+              }
+            } catch (e) {
+              logger.e(
+                  'Failed to remove image [${element.name}](${element.localUrl}) in FileSystem.');
+            }
+          });
+        }
+      }
     });
 
     on<ImageManageEventReset>((event, emit) async {
