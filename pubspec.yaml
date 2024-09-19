@@ -91,6 +91,9 @@ dev_dependencies:
   isar_generator: ^3.1.0+1
   drift_dev: ^2.18.0
 
+# Notes here
+# https://github.com/isar-community/isar?tab=readme-ov-file maybe should use this instead of isar
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

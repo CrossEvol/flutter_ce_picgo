@@ -25,7 +25,6 @@ if (flutterVersionName == null) {
 android {
     namespace "com.crossevol.flutter_ce_picgo"
     compileSdkVersion 34
-//    compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
