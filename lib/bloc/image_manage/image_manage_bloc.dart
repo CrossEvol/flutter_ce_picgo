@@ -68,14 +68,9 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
           .where((element) => event.ids.contains(element.id))
           .toList();
 
-      var removedIds = await Future.wait(removeList
-          .map((element) async => (await dbProvider.getDownloadedImage(
-                  (element.name, element.localUrl, element.remoteUrl)))
-              .id)
-          .toList());
       emit(state.copyWith(
           images: state.images
-              .where((element) => !removedIds.contains(element.id))
+              .where((element) => !event.ids.contains(element.id))
               .toList()));
 
       // remove in remote → db → fs
@@ -112,6 +107,7 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
           }
         });
       }
+
     });
 
     on<ImageManageEventReset>((event, emit) async {

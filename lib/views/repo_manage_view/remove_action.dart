@@ -31,7 +31,10 @@ class _RemoveActionState extends State<RemoveAction> {
             )
           : FilledButton(
               onPressed: () {
-                var ids = context.read<SelectedImagesBloc>().state.selectedIDs;
+                var ids = state.selectedIDs;
+                context
+                    .read<SelectedImagesBloc>()
+                    .add(const SelectedImagesResetEvent());
                 context.read<ImageManageBloc>().add(ImageManageEventDelete(
                       storageType: widget.storageType,
                       ids: ids,
