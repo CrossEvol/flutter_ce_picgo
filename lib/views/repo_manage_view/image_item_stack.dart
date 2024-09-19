@@ -31,7 +31,10 @@ class _ImageItemStackState extends State<ImageItemStack> {
       child: Stack(
         children: [
           preferLoadNetworkImages
-              ? ImageItemNetwork(imageUrl: widget.image.downloadUrl)
+              ? ImageItemNetwork(
+                  name: widget.image.name,
+                  remoteUrl: widget.image.remoteUrl,
+                  downloadUrl: widget.image.downloadUrl)
               : ImageItemLocal(
                   name: widget.image.name,
                   remoteUrl: widget.image.remoteUrl,

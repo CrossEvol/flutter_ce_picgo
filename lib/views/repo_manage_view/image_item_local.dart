@@ -43,7 +43,8 @@ class ImageItemLocal extends StatelessWidget implements ImageItemWidget {
             onTap: () {
               context.go(
                 '/image',
-                extra: ImageExtra(
+                extra: ImageExtra.local(
+                    name: name,
                     localUrl: snapshot.data!.file.absolute.path,
                     type: ImageStorageType.github.name),
               );
