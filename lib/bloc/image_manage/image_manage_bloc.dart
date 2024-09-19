@@ -67,29 +67,34 @@ class ImageManageBloc extends Bloc<ImageManageEvent, ImageManageState> {
     });
 
     on<ImageManageEventDelete>((event, emit) async {
-      emit(state.copyWith(
-          images: state.images
-              .where((element) => !event.ids.contains(element.id))
-              .toList()));
+      var images = state.images.map((e) => e).toList();
 
+      // emit at the first time for re-render
+      {
+        emit(state.copyWith(
+            images: state.images
+                .where((element) => !event.ids.contains(element.id))
+                .toList()));
+      }
+
+      var removeList =
+          images.where((element) => event.ids.contains(element.id)).toList();
       var preferLoadNetworkImages =
           prefs.getBool(SharedPreferencesKeys.preferLoadNetworkImages.name) ??
               false;
+      var config = await _getConfig(event.storageType);
+      var storageService =
+          StorageServiceFactory.instance.getUploadStrategy(event.storageType);
 
       if (preferLoadNetworkImages) {
-        print('');
+        for (var download in removeList) {
+          await storageService.removeImage(config: config, download: download);
+        }
       } else {
-        var removeList = state.images
-            .where((element) => event.ids.contains(element.id))
-            .toList();
-
         // remove in remote → db → fs
-        var config = await _getConfig(event.storageType);
         for (var element in removeList) {
           var downloadedImage = await dbProvider.getDownloadedImage(
               (element.name, element.localUrl, element.remoteUrl));
-          var storageService = StorageServiceFactory.instance
-              .getUploadStrategy(event.storageType);
           var isDeletedInRemote = await storageService.removeImage(
               config: config, download: downloadedImage);
           if (!isDeletedInRemote) {
