@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ce_picgo/samples/bloc_todo/todo_bloc.dart';
-import 'package:flutter_ce_picgo/samples/bloc_todo/todo_page.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 
 import 'simple_bloc_observer.dart';
+import 'todo_bloc.dart';
+import 'todo_page.dart';
 
 void main() async{
   await initLogger();

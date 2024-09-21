@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ce_picgo/samples/tab_bloc_demo/notification_bloc.dart';
+
+import 'notification_bloc.dart';
 
 /// Flutter code sample for [NavigationBar].
 

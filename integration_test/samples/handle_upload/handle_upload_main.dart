@@ -4,12 +4,12 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ce_picgo/database/db_interface.dart';
+import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
+import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 
-import '../../database/db_interface.dart';
-import '../../models/enums/uploaded_state.dart';
-import '../../utils/logger_util.dart';
-import '../../utils/shared_preferences_ext.dart';
 
 late List<UploadedImage> uploadedImages;
 

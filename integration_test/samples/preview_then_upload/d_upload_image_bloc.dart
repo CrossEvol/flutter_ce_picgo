@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_ce_picgo/database/db_interface.dart';
+import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 
-import '../../models/enums/uploaded_state.dart';
 
 part 'd_upload_image_event.dart';
 part 'd_upload_image_state.dart';
