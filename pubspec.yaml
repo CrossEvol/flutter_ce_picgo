@@ -75,6 +75,7 @@ dependencies:
   cached_network_image: ^3.4.0
   http: ^1.2.2
   window_manager: ^0.4.2
+  desktop_drop: ^0.4.4
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,8 +53,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   void _setImageFileListFromFile(XFile? value) {
     if (value != null) {
-      _mediaFileList = _mediaFileList ?? [];
-      _mediaFileList!.add(DecoratedXFile(file: value, name: value.name));
+      addMediaFile([value]);
     }
   }
 
@@ -178,21 +178,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
               child: FloatingActionButton(
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 onPressed: () async {
-                  try {
-                    final XFile? pickedFile = await _picker.pickImage(
-                      source: ImageSource.gallery,
-                      // maxWidth: maxWidth,
-                      // maxHeight: maxHeight,
-                      // imageQuality: quality,
-                    );
-                    setState(() {
-                      _setImageFileListFromFile(pickedFile);
-                    });
-                  } catch (e) {
-                    setState(() {
-                      _pickImageError = e;
-                    });
-                  }
+                  await _pickImage();
                 },
                 heroTag: 'preview',
                 tooltip: 'Pick Image from gallery',
@@ -247,34 +233,69 @@ class _AlbumScreenState extends State<AlbumScreen> {
         ));
   }
 
+  Future<void> _pickImage() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        // maxWidth: maxWidth,
+        // maxHeight: maxHeight,
+        // imageQuality: quality,
+      );
+      setState(() {
+        _setImageFileListFromFile(pickedFile);
+      });
+    } catch (e) {
+      setState(() {
+        _pickImageError = e;
+      });
+    }
+  }
+
   Widget _previewImages() {
     final Text? retrieveError = _getRetrieveErrorWidget();
     if (retrieveError != null) {
       return retrieveError;
     }
     if (_mediaFileList != null) {
-      return Semantics(
-        label: 'image_picker_example_picked_images',
-        child: ListView.builder(
-          key: UniqueKey(),
-          itemBuilder: (BuildContext context, int index) {
-            final String? mime = lookupMimeType(_mediaFileList![index].path);
+      return Column(
+        children: [
+          Expanded(
+            child: Semantics(
+              label: 'image_picker_example_picked_images',
+              child: ListView.builder(
+                key: UniqueKey(),
+                itemBuilder: (BuildContext context, int index) {
+                  final String? mime =
+                      lookupMimeType(_mediaFileList![index].path);
 
-            return Semantics(
-              label: 'image_picker_example_picked_image',
-              child: kIsWeb
-                  ? Image.network(_mediaFileList![index].path)
-                  : (mime == null || mime.startsWith('image/')
-                      ? ImagePreviewWidget(
-                          file: _mediaFileList![index],
-                          onNameChanged: (newName) =>
-                              _updateFileName(index, newName),
-                        )
-                      : _buildInlineVideoPlayer(index)),
-            );
-          },
-          itemCount: _mediaFileList!.length,
-        ),
+                  return Semantics(
+                    label: 'image_picker_example_picked_image',
+                    child: kIsWeb
+                        ? Image.network(_mediaFileList![index].path)
+                        : (mime == null || mime.startsWith('image/')
+                            ? ImagePreviewWidget(
+                                file: _mediaFileList![index],
+                                onNameChanged: (newName) =>
+                                    _updateFileName(index, newName),
+                              )
+                            : _buildInlineVideoPlayer(index)),
+                  );
+                },
+                itemCount: _mediaFileList!.length,
+              ),
+            ),
+          ),
+          isDesktop()
+              ? DropTargetWidget(
+                  onTap: _pickImage,
+                  onFilesDropped: (files) {
+                    setState(() {
+                      addMediaFile(files);
+                    });
+                  },
+                )
+              : Container(),
+        ],
       );
     } else if (_pickImageError != null) {
       return Text(
@@ -287,11 +308,13 @@ class _AlbumScreenState extends State<AlbumScreen> {
               padding: const EdgeInsets.all(32.0),
               child: Column(
                 children: [
-                  Image.asset(
-                    'assets/images/empty_upload_files.png',
-                    fit: BoxFit.cover,
-                    width: 220,
-                    height: 220,
+                  DropTargetWidget(
+                    onTap: _pickImage,
+                    onFilesDropped: (files) {
+                      setState(() {
+                        addMediaFile(files);
+                      });
+                    },
                   ),
                   const Text(
                     'You have not yet picked an image.',
@@ -305,6 +328,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
               textAlign: TextAlign.center,
             );
     }
+  }
+
+  void addMediaFile(List<XFile> files) {
+    _mediaFileList = _mediaFileList ?? [];
+    _mediaFileList!.addAll(
+        files.map((file) => DecoratedXFile(file: file, name: file.name)));
   }
 
   Text? _getRetrieveErrorWidget() {
@@ -468,6 +497,51 @@ class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DropTargetWidget extends StatelessWidget {
+  final Function(List<XFile>) onFilesDropped;
+  final Function() onTap;
+
+  const DropTargetWidget(
+      {super.key, required this.onFilesDropped, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: DropTarget(
+        onDragDone: (detail) async {
+          if (detail.files.isNotEmpty) {
+            onFilesDropped(detail.files);
+          }
+        },
+        onDragUpdated: (details) {},
+        onDragEntered: (detail) {},
+        onDragExited: (detail) {},
+        child: Container(
+          width: 220,
+          height: 80,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey,
+              style: BorderStyle.solid,
+            ),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: const Center(
+            child: Icon(
+              Icons.add,
+              size: 40,
+              color: Colors.grey,
+            ),
+          ),
+        ),
       ),
     );
   }
