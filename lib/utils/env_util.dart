@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 late Env env;
@@ -21,3 +23,7 @@ class EnvUtil {
         dbLogEnabled: bool.parse(dotenv.get('DB_LOG_ENABLED')));
   }
 }
+
+bool isDesktop() => Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+
+bool isMobile() => Platform.isAndroid || Platform.isIOS;

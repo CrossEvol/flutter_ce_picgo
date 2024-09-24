@@ -114,6 +114,7 @@ flutter:
     - assets/images/3.0x/logo.png
     - assets/images/4.0x/logo.png
     - assets/images/icon_empty_album.png
+    - assets/images/empty_upload_files.png
     - assets/logo/logo1.webp
     - assets/logo/logo2.webp
     - assets/logo/logo3.webp

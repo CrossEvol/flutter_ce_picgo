@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
 import 'package:go_router/go_router.dart';
@@ -227,9 +228,16 @@ class _AlbumScreenState extends State<AlbumScreen> {
                             textAlign: TextAlign.center,
                           );
                         } else {
-                          return const Text(
-                            'You have not yet picked an image.',
-                            textAlign: TextAlign.center,
+                          return Column(
+                            children: [
+                              Image.asset(
+                                  'assets/images/empty_upload_files.png',
+                                  fit: BoxFit.cover),
+                              const Text(
+                                'You have not yet picked an image.',
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           );
                         }
                     }
@@ -274,10 +282,28 @@ class _AlbumScreenState extends State<AlbumScreen> {
         textAlign: TextAlign.center,
       );
     } else {
-      return const Text(
-        'You have not yet picked an image.',
-        textAlign: TextAlign.center,
-      );
+      return isDesktop()
+          ? Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/empty_upload_files.png',
+                    fit: BoxFit.cover,
+                    width: 220,
+                    height: 220,
+                  ),
+                  const Text(
+                    'You have not yet picked an image.',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            )
+          : const Text(
+              'You have not yet picked an image.',
+              textAlign: TextAlign.center,
+            );
     }
   }
 
