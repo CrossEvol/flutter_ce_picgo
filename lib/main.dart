@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
 import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'database/db_interface.dart';
 import 'styles/theme_data_style.dart';
@@ -36,6 +38,7 @@ void main() async {
   }
 
   if (!kIsWeb && Platform.isWindows) {
+    await windowManager.ensureInitialized(); // Initialize windows_manager
     appWindow.size = const Size(375, 667);
     logger.i('Platform is windows, configure the appWindow successfully...');
   } else {
@@ -57,7 +60,33 @@ void main() async {
       win.title = "Flutter PicGo";
       win.show();
     });
+
+    // Add keyboard listener for 'Alt + t'
+    HardwareKeyboard.instance.addHandler((KeyEvent event) {
+      if (HardwareKeyboard.instance.isAltPressed &&
+          HardwareKeyboard.instance
+              .isLogicalKeyPressed(LogicalKeyboardKey.keyT)) {
+        toggleOnTop();
+        return false;
+      }
+      return false;
+    });
   }
+}
+
+bool isOnTop = false;
+
+void toggleOnTop() {
+  if (isOnTop) {
+    windowManager.setAlwaysOnTop(false);
+    windowManager.setTitleBarStyle(TitleBarStyle.normal,
+        windowButtonVisibility: true);
+  } else {
+    windowManager.setAlwaysOnTop(true);
+    windowManager.setTitleBarStyle(TitleBarStyle.hidden,
+        windowButtonVisibility: true);
+  }
+  isOnTop = !isOnTop;
 }
 
 class MyApp extends StatelessWidget {
