@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ce_picgo/views/album_screen.dart';
 import 'package:flutter_ce_picgo/views/settings_screen.dart';
+
+import 'album_view/album_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

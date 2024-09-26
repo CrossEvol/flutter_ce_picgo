@@ -6,21 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
 import 'package:flutter_ce_picgo/constants/shared_preferences_keys.dart';
+import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
+import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:flutter_ce_picgo/utils/env_util.dart';
+import 'package:flutter_ce_picgo/utils/faker_util.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
-import 'package:flutter_ce_picgo/views/album_dropdown_acton.dart';
+import 'package:flutter_ce_picgo/views/album_view/album_dropdown_acton.dart';
 import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:provider/provider.dart';
-
-import '../constants/image_storage_type.dart';
-import '../models/enums/uploaded_state.dart';
-import '../models/uploaded_image.dart';
-import '../utils/faker_util.dart';
 
 class DecoratedXFile {
   final XFile file;
