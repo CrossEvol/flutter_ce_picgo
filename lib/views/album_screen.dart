@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
+import 'package:flutter_ce_picgo/constants/shared_preferences_keys.dart';
 import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
+import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -422,6 +424,41 @@ class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var canRename =
+        prefs.getBool(SharedPreferencesKeys.settingIsUploadedRename.name) ??
+            false;
+    if (!canRename) {
+      return Container(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade400,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Text(
+                _controller.text,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Image.file(
+              File(widget.file.path),
+              errorBuilder:
+                  (BuildContext context, Object error, StackTrace? stackTrace) {
+                return const Center(
+                    child: Text('This image type is not supported'));
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
       child: Column(
