@@ -5,6 +5,8 @@ enum SharedPreferencesKeys {
   settingIsUploadedTip,
   settingIsForceDelete,
   settingDefaultStorage,
+  multiUpload,
+  dragAndDrop,
   localThemeState,
   latestVersion,
   latestVersionExpiry,

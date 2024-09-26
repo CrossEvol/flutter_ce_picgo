@@ -10,6 +10,7 @@ import 'package:flutter_ce_picgo/constants/shared_preferences_keys.dart';
 import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
+import 'package:flutter_ce_picgo/views/album_dropdown_acton.dart';
 import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -81,6 +82,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
         appBar: HomePageAppBar(
           title: '相册',
           backgroundColor: Theme.of(context).colorScheme.secondary,
+          actions: const [
+            Padding(
+              padding: EdgeInsets.only(right: 8.0),
+              child: AlbumDropdownActon(),
+            )
+          ],
         ),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,

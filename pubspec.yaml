@@ -76,6 +76,7 @@ dependencies:
   http: ^1.2.2
   window_manager: ^0.4.2
   desktop_drop: ^0.4.4
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
