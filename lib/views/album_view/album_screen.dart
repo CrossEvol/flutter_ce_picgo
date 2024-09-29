@@ -20,6 +20,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_ce_picgo/bloc/settings/settings_bloc.dart';
 
 class DecoratedXFile {
   final XFile file;
@@ -49,6 +50,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
     '.bmp',
     '.webp'
   ];
+
 
   String? _retrieveDataError;
   dynamic _pickImageError;
@@ -261,81 +263,86 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   Widget _previewImages() {
     final Text? retrieveError = _getRetrieveErrorWidget();
-    if (retrieveError != null) {
-      return retrieveError;
-    }
-    if (_mediaFileList != null) {
-      return Column(
-        children: [
-          Expanded(
-            child: Semantics(
-              label: 'image_picker_example_picked_images',
-              child: ListView.builder(
-                key: UniqueKey(),
-                itemBuilder: (BuildContext context, int index) {
-                  final String? mime =
-                      lookupMimeType(_mediaFileList![index].path);
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, state) {
+        var canDragAndDrop = state.canDragAndDrop;
+        if (retrieveError != null) {
+          return retrieveError;
+        }
+        if (_mediaFileList != null) {
+          return Column(
+            children: [
+              Expanded(
+                child: Semantics(
+                  label: 'image_picker_example_picked_images',
+                  child: ListView.builder(
+                    key: UniqueKey(),
+                    itemBuilder: (BuildContext context, int index) {
+                      final String? mime =
+                          lookupMimeType(_mediaFileList![index].path);
 
-                  return Semantics(
-                    label: 'image_picker_example_picked_image',
-                    child: kIsWeb
-                        ? Image.network(_mediaFileList![index].path)
-                        : (mime == null || mime.startsWith('image/')
-                            ? ImagePreviewWidget(
-                                file: _mediaFileList![index],
-                                onNameChanged: (newName) =>
-                                    _updateFileName(index, newName),
-                              )
-                            : _buildInlineVideoPlayer(index)),
-                  );
-                },
-                itemCount: _mediaFileList!.length,
-              ),
-            ),
-          ),
-          isDesktop()
-              ? DropTargetWidget(
-                  onTap: _pickImage,
-                  onFilesDropped: (files) {
-                    setState(() {
-                      addMediaFile(files);
-                    });
-                  },
-                )
-              : Container(),
-        ],
-      );
-    } else if (_pickImageError != null) {
-      return Text(
-        'Pick image error: $_pickImageError',
-        textAlign: TextAlign.center,
-      );
-    } else {
-      return isDesktop()
-          ? Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Column(
-                children: [
-                  DropTargetWidget(
-                    onTap: _pickImage,
-                    onFilesDropped: (files) {
-                      setState(() {
-                        addMediaFile(files);
-                      });
+                      return Semantics(
+                        label: 'image_picker_example_picked_image',
+                        child: kIsWeb
+                            ? Image.network(_mediaFileList![index].path)
+                            : (mime == null || mime.startsWith('image/')
+                                ? ImagePreviewWidget(
+                                    file: _mediaFileList![index],
+                                    onNameChanged: (newName) =>
+                                        _updateFileName(index, newName),
+                                  )
+                                : _buildInlineVideoPlayer(index)),
+                      );
                     },
+                    itemCount: _mediaFileList!.length,
                   ),
-                  const Text(
-                    'You have not yet picked an image.',
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                ),
               ),
-            )
-          : const Text(
-              'You have not yet picked an image.',
-              textAlign: TextAlign.center,
-            );
-    }
+              isDesktop() && canDragAndDrop
+                  ? DropTargetWidget(
+                      onTap: _pickImage,
+                      onFilesDropped: (files) {
+                        setState(() {
+                          addMediaFile(files);
+                        });
+                      },
+                    )
+                  : Container(),
+            ],
+          );
+        } else if (_pickImageError != null) {
+          return Text(
+            'Pick image error: $_pickImageError',
+            textAlign: TextAlign.center,
+          );
+        } else {
+          return isDesktop() && canDragAndDrop
+              ? Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    children: [
+                      DropTargetWidget(
+                        onTap: _pickImage,
+                        onFilesDropped: (files) {
+                          setState(() {
+                            addMediaFile(files);
+                          });
+                        },
+                      ),
+                      const Text(
+                        'You have not yet picked an image.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                )
+              : const Text(
+                  'You have not yet picked an image.',
+                  textAlign: TextAlign.center,
+                );
+        }
+      },
+    );
   }
 
   void addMediaFile(List<XFile> files) {
@@ -343,6 +350,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
     _mediaFileList!.addAll(
         files.map((file) => DecoratedXFile(file: file, name: file.name)));
   }
+
 
   Text? _getRetrieveErrorWidget() {
     if (_retrieveDataError != null) {
@@ -418,6 +426,7 @@ class ImagePreviewWidget extends StatefulWidget {
   State<ImagePreviewWidget> createState() => ImagePreviewWidgetState();
 }
 
+
 class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
   bool _isEditing = false;
   final TextEditingController _controller = TextEditingController();
@@ -430,117 +439,119 @@ class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var canRename =
-        prefs.getBool(SharedPreferencesKeys.canRenameUploaded.name) ??
-            false;
-    if (!canRename) {
-      return Container(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Text(
-                _controller.text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Image.file(
-              File(widget.file.path),
-              errorBuilder:
-                  (BuildContext context, Object error, StackTrace? stackTrace) {
-                return const Center(
-                    child: Text('This image type is not supported'));
-              },
-            ),
-          ],
-        ),
-      );
-    }
-
-    return Container(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
-      child: Column(
-        children: [
-          GestureDetector(
-            onDoubleTap: () {
-              setState(() {
-                _isEditing = true;
-              });
-            },
-            child: _isEditing
-                ? Focus(
-                    onFocusChange: (hasFocus) {
-                      if (!hasFocus) {
-                        setState(() {
-                          widget.onNameChanged(_controller.text);
-                          _isEditing = false;
-                        });
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _controller,
-                            maxLines: null,
-                            onSubmitted: (value) {
-                              setState(() {
-                                _isEditing = false;
-                              });
-                              widget.onNameChanged(value);
-                            },
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.generating_tokens,
-                            color: Colors.lightBlue,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              var randomName = '${faker.lorem.word()}.jpg';
-                              _controller.text = randomName;
-                              _isEditing = false;
-                            });
-                            widget.onNameChanged(_controller.text);
-                          },
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade400,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      _controller.text,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, state) {
+        var canRename = state.canRenameUploaded;
+        if (!canRename) {
+          return Container(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text(
+                    _controller.text,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                ),
+                Image.file(
+                  File(widget.file.path),
+                  errorBuilder: (BuildContext context, Object error,
+                      StackTrace? stackTrace) {
+                    return const Center(
+                        child: Text('This image type is not supported'));
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+
+        return Container(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
+          child: Column(
+            children: [
+              GestureDetector(
+                onDoubleTap: () {
+                  setState(() {
+                    _isEditing = true;
+                  });
+                },
+                child: _isEditing
+                    ? Focus(
+                        onFocusChange: (hasFocus) {
+                          if (!hasFocus) {
+                            setState(() {
+                              widget.onNameChanged(_controller.text);
+                              _isEditing = false;
+                            });
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _controller,
+                                maxLines: null,
+                                onSubmitted: (value) {
+                                  setState(() {
+                                    _isEditing = false;
+                                  });
+                                  widget.onNameChanged(value);
+                                },
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.generating_tokens,
+                                color: Colors.lightBlue,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  var randomName = '${faker.lorem.word()}.jpg';
+                                  _controller.text = randomName;
+                                  _isEditing = false;
+                                });
+                                widget.onNameChanged(_controller.text);
+                              },
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade400,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Text(
+                          _controller.text,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+              ),
+              Image.file(
+                File(widget.file.path),
+                errorBuilder:
+                    (BuildContext context, Object error, StackTrace? stackTrace) {
+                  return const Center(
+                      child: Text('This image type is not supported'));
+                },
+              ),
+            ],
           ),
-          Image.file(
-            File(widget.file.path),
-            errorBuilder:
-                (BuildContext context, Object error, StackTrace? stackTrace) {
-              return const Center(
-                  child: Text('This image type is not supported'));
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
