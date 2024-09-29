@@ -7,19 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/constants/image_storage_type.dart';
-import 'package:flutter_ce_picgo/constants/shared_preferences_keys.dart';
 import 'package:flutter_ce_picgo/models/enums/uploaded_state.dart';
 import 'package:flutter_ce_picgo/models/uploaded_image.dart';
 import 'package:flutter_ce_picgo/utils/env_util.dart';
 import 'package:flutter_ce_picgo/utils/faker_util.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
-import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
 import 'package:flutter_ce_picgo/views/album_view/album_dropdown_acton.dart';
 import 'package:flutter_ce_picgo/widgets/home_page_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_ce_picgo/bloc/settings/settings_bloc.dart';
 
 class DecoratedXFile {
@@ -51,13 +48,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
     '.webp'
   ];
 
-
   String? _retrieveDataError;
   dynamic _pickImageError;
 
-  void _setImageFileListFromFile(XFile? value) {
-    if (value != null) {
-      addMediaFile([value]);
+  void _setImageFileListFromFile(List<XFile>? files) {
+    if (files != null && files.isNotEmpty) {
+      addMediaFile(files);
     }
   }
 
@@ -244,16 +240,27 @@ class _AlbumScreenState extends State<AlbumScreen> {
   }
 
   Future<void> _pickImage() async {
+    var supportMultiUpload =
+        context.read<SettingsBloc>().state.supportMultiUpload;
     try {
-      final XFile? pickedFile = await _picker.pickImage(
-        source: ImageSource.gallery,
-        // maxWidth: maxWidth,
-        // maxHeight: maxHeight,
-        // imageQuality: quality,
-      );
-      setState(() {
-        _setImageFileListFromFile(pickedFile);
-      });
+      if (supportMultiUpload) {
+        var pickedFiles =
+            await _picker.pickMultiImage(imageQuality: 100, limit: 100);
+        setState(() {
+          if (pickedFiles.isNotEmpty) {
+            _setImageFileListFromFile(pickedFiles);
+          }
+        });
+      } else {
+        final XFile? pickedFile = await _picker.pickImage(
+          source: ImageSource.gallery,
+        );
+        setState(() {
+          if (pickedFile != null) {
+            _setImageFileListFromFile([pickedFile]);
+          }
+        });
+      }
     } catch (e) {
       setState(() {
         _pickImageError = e;
@@ -351,7 +358,6 @@ class _AlbumScreenState extends State<AlbumScreen> {
         files.map((file) => DecoratedXFile(file: file, name: file.name)));
   }
 
-
   Text? _getRetrieveErrorWidget() {
     if (_retrieveDataError != null) {
       final Text result = Text(_retrieveDataError!);
@@ -377,11 +383,14 @@ class _AlbumScreenState extends State<AlbumScreen> {
         isVideo = false;
         setState(() {
           if (response.files == null) {
-            _setImageFileListFromFile(response.file);
+            if (response.file != null) {
+              _setImageFileListFromFile([response.file!]);
+            }
           } else {
             _mediaFileList = response.files
                 ?.map((file) => DecoratedXFile(file: file, name: file.name))
                 .toList();
+
           }
         });
       }
@@ -425,7 +434,6 @@ class ImagePreviewWidget extends StatefulWidget {
   @override
   State<ImagePreviewWidget> createState() => ImagePreviewWidgetState();
 }
-
 
 class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
   bool _isEditing = false;
@@ -542,8 +550,8 @@ class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
               ),
               Image.file(
                 File(widget.file.path),
-                errorBuilder:
-                    (BuildContext context, Object error, StackTrace? stackTrace) {
+                errorBuilder: (BuildContext context, Object error,
+                    StackTrace? stackTrace) {
                   return const Center(
                       child: Text('This image type is not supported'));
                 },
