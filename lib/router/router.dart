@@ -8,7 +8,7 @@ import 'package:flutter_ce_picgo/views/picgo_setting_views/picgo_setting_view.da
 import 'package:flutter_ce_picgo/views/picgo_setting_views/theme_setting_view.dart';
 import 'package:flutter_ce_picgo/views/repo_manage_view/repo_manage_view.dart';
 import 'package:flutter_ce_picgo/views/settings_screen.dart';
-import 'package:flutter_ce_picgo/views/single_image_view.dart';
+import 'package:flutter_ce_picgo/views/single_image_view/single_image_view.dart';
 import 'package:flutter_ce_picgo/views/upload_screen.dart';
 import 'package:go_router/go_router.dart';
 
