@@ -8,6 +8,7 @@ enum SharedPreferencesKeys {
   supportMultiUpload,
   canDragAndDrop,
   localThemeState,
+  showFabInSingleView,
   latestVersion,
   latestVersionExpiry,
 }

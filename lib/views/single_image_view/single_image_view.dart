@@ -1,7 +1,12 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ce_picgo/constants/shared_preferences_keys.dart';
 import 'package:flutter_ce_picgo/router/router_extra.dart';
+import 'package:flutter_ce_picgo/utils/logger_util.dart';
+import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
+import 'package:flutter_ce_picgo/views/single_image_view/single_image_dropdown_action.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart'; // 新增导入
 import 'package:http/http.dart' as http; // 新增导入
@@ -16,7 +21,10 @@ class SingleImageView extends StatefulWidget {
 }
 
 class _SingleImageViewState extends State<SingleImageView> {
-  bool _showFab = true; // 新增变量
+  // TODO: it can not read value from from persistent storage
+  bool _showFab =
+      prefs.getBool(SharedPreferencesKeys.showFabInSingleView.name) ??
+          false; // 新增变量
 
   _SingleImageViewState();
 
@@ -27,22 +35,26 @@ class _SingleImageViewState extends State<SingleImageView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('SingleImageView'),
+        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 24.0),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             context.go('/repo/${widget.imageExtra.type}');
           },
         ),
         actions: [
-          Switch(
-            // 新增开关
-            value: _showFab,
-            onChanged: (value) {
-              setState(() {
-                _showFab = value;
-              });
-            },
-            activeColor: theme.colorScheme.primary, // 使用主题颜色
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: SingleImageDropdownAction(
+              downloadImage: _downloadImage,
+              copyLink: _copyLink,
+              toggleShow: _toggleShow,
+            ),
           ),
         ],
       ),
@@ -71,13 +83,41 @@ class _SingleImageViewState extends State<SingleImageView> {
               ),
       ),
       floatingActionButton: _showFab // 根据开关状态显示或隐藏浮动按钮
-          ? FloatingActionButton(
-              onPressed: _downloadImage,
-              backgroundColor: theme.colorScheme.primary,
-              child: const Icon(Icons.download), // 使用主题颜色
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FloatingActionButton(
+                    onPressed: _downloadImage,
+                    backgroundColor: theme.colorScheme.primary,
+                    child: const Icon(Icons.download), // 使用主题颜色
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FloatingActionButton(
+                    onPressed: _copyLink,
+                    backgroundColor: theme.colorScheme.primary,
+                    child: const Icon(Icons.copy), // 使用主题颜色
+                  ),
+                ),
+              ],
             )
           : null,
     );
+  }
+
+  Future<void> _toggleShow() async {
+    setState(() {
+      _showFab = !_showFab;
+      prefs.setBool(SharedPreferencesKeys.showFabInSingleView.name, !_showFab);
+    });
+  }
+
+  Future<void> _copyLink() async {
+    FlutterClipboard.copy(widget.imageExtra.downloadUrl)
+        .then((value) => logger.d('copied'));
   }
 
   Future<void> _downloadImage() async {
