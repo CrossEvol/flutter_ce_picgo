@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/settings/settings_bloc.dart';
 import 'package:flutter_ce_picgo/models/enums/theme_mode.dart';
 
-import '../../bloc/theme_state/theme_bloc.dart';
 
 class ThemeSettingView extends StatefulWidget {
   const ThemeSettingView({super.key});
@@ -19,7 +19,7 @@ class _ThemeSettingViewState extends State<ThemeSettingView> {
         centerTitle: true,
         title: const Text('主题设置'),
       ),
-      body: BlocBuilder<ThemeBloc, ThemeState>(
+      body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           return ListView(
             children: <Widget>[
@@ -58,6 +58,6 @@ class _ThemeSettingViewState extends State<ThemeSettingView> {
   }
 
   changeThemeMode(LocalThemeMode themeMode) {
-    context.read<ThemeBloc>().add(ThemeEventChange(themeMode: themeMode));
+    context.read<SettingsBloc>().add(ToggleThemeEvent(themeMode: themeMode));
   }
 }

@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/selected_images/selected_images_bloc.dart';
-import 'package:flutter_ce_picgo/bloc/theme_state/theme_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/settings/settings_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/upload_image/upload_image_bloc.dart';
 import 'package:flutter_ce_picgo/router/router.dart';
 import 'package:flutter_ce_picgo/utils/dir_util.dart';
@@ -100,11 +100,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
             create: (_) => UploadImageBloc()..add(UploadImageEventLoad())),
         BlocProvider(create: (_) => ImageCacheBloc()),
-        BlocProvider(create: (_) => ThemeBloc()),
+        BlocProvider(create: (_) => SettingsBloc()),
         BlocProvider(create: (_) => ImageManageBloc()),
         BlocProvider(create: (_) => SelectedImagesBloc()),
       ],
-      child: BlocConsumer<ThemeBloc, ThemeState>(
+      child: BlocConsumer<SettingsBloc, SettingsState>(
         listener: (context, state) {
           // TODO: implement listener
         },
@@ -113,7 +113,7 @@ class MyApp extends StatelessWidget {
             title: 'Flutter CE PicGo',
             theme: ThemeDataStyle.light,
             darkTheme: ThemeDataStyle.dark,
-            themeMode: BlocProvider.of<ThemeBloc>(context).state.themeMode,
+            themeMode: BlocProvider.of<SettingsBloc>(context).state.themeMode,
             debugShowCheckedModeBanner: false,
             routerConfig: router,
           );
