@@ -1,7 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ce_picgo/constants/shared_preferences_keys.dart';
-import 'package:flutter_ce_picgo/utils/shared_preferences_ext.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/settings/settings_bloc.dart';
 
 typedef VoidCallback = void Function();
 
@@ -15,46 +15,50 @@ class AlbumDropdownActon extends StatefulWidget {
 class _AlbumDropdownActonState extends State<AlbumDropdownActon> {
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton2(
-        customButton: const Icon(
-          Icons.settings,
-          size: 32,
-          color: Colors.white,
-        ),
-        items: [
-          ...MenuItems.firstItems.map(
-            (item) => DropdownMenuItem<MenuItem>(
-              value: item,
-              child: MenuItems.buildItem(item, () {
-                setState(() {
-                  MenuItems.onChanged(context, item);
-                });
-              }),
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, state) {
+        return DropdownButtonHideUnderline(
+          child: DropdownButton2(
+            customButton: const Icon(
+              Icons.settings,
+              size: 32,
+              color: Colors.white,
+            ),
+            items: [
+              ...MenuItems.firstItems.map(
+                (item) => DropdownMenuItem<MenuItem>(
+                  value: item,
+                  child: MenuItems.buildItem(item, () {
+                    setState(() {
+                      MenuItems.onChanged(context, item, state);
+                    });
+                  }, state),
+                ),
+              ),
+            ],
+            onChanged: (value) {
+              setState(() {
+                MenuItems.onChanged(context, value!, state);
+              });
+            },
+            dropdownStyleData: DropdownStyleData(
+              width: 160,
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Colors.white,
+              ),
+              offset: const Offset(0, 8),
+            ),
+            menuItemStyleData: MenuItemStyleData(
+              customHeights: [
+                ...List<double>.filled(MenuItems.firstItems.length, 48),
+              ],
+              padding: const EdgeInsets.only(left: 16, right: 16),
             ),
           ),
-        ],
-        onChanged: (value) {
-          setState(() {
-            MenuItems.onChanged(context, value!);
-          });
-        },
-        dropdownStyleData: DropdownStyleData(
-          width: 160,
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            color: Colors.white,
-          ),
-          offset: const Offset(0, 8),
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          customHeights: [
-            ...List<double>.filled(MenuItems.firstItems.length, 48),
-          ],
-          padding: const EdgeInsets.only(left: 16, right: 16),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -75,24 +79,30 @@ enum AlbumSettings { canDrag, supportMultiUpload, canRename }
 
 abstract class MenuItems {
   static List<MenuItem> firstItems = [drag, multi, rename];
-  static bool canDrag =
-      prefs.getBool(SharedPreferencesKeys.dragAndDrop.name) ?? false;
-  static bool multiUpload =
-      prefs.getBool(SharedPreferencesKeys.multiUpload.name) ?? false;
-  static bool canRename =
-      prefs.getBool(SharedPreferencesKeys.settingIsUploadedRename.name) ??
-          false;
 
-  static var drag = MenuItem(
-      text: 'Drag', isChecked: canDrag, setting: AlbumSettings.canDrag);
+  static var drag =
+      MenuItem(text: 'Drag', isChecked: false, setting: AlbumSettings.canDrag);
   static var multi = MenuItem(
       text: 'Multi',
-      isChecked: multiUpload,
+      isChecked: false,
       setting: AlbumSettings.supportMultiUpload);
   static var rename = MenuItem(
-      text: 'Rename', isChecked: canRename, setting: AlbumSettings.canRename);
+      text: 'Rename', isChecked: false, setting: AlbumSettings.canRename);
 
-  static Widget buildItem(MenuItem item, VoidCallback callback) {
+  static Widget buildItem(
+      MenuItem item, VoidCallback callback, SettingsState state) {
+    switch (item.setting) {
+      case AlbumSettings.canDrag:
+        item.isChecked = state.canDragAndDrop;
+        break;
+      case AlbumSettings.supportMultiUpload:
+        item.isChecked = state.supportMultiUpload;
+        break;
+      case AlbumSettings.canRename:
+        item.isChecked = state.canRenameUploaded;
+        break;
+    }
+
     return Row(
       children: [
         Checkbox(
@@ -102,7 +112,6 @@ abstract class MenuItems {
           },
           value: item.isChecked,
         ),
-        // Icon(item.icon, color: Colors.grey[800], size: 22),
         const SizedBox(
           width: 10,
         ),
@@ -118,20 +127,20 @@ abstract class MenuItems {
     );
   }
 
-  static void onChanged(BuildContext context, MenuItem item) {
+  static void onChanged(
+      BuildContext context, MenuItem item, SettingsState state) {
+    final settingsBloc = context.read<SettingsBloc>();
     switch (item.setting) {
       case AlbumSettings.canDrag:
-        item.isChecked = !item.isChecked;
-        prefs.setBool(SharedPreferencesKeys.dragAndDrop.name, item.isChecked);
+        settingsBloc.add(ToggleCanDragAndDropEvent(canDragAndDrop: !state.canDragAndDrop));
         break;
       case AlbumSettings.supportMultiUpload:
-        item.isChecked = !item.isChecked;
-        prefs.setBool(SharedPreferencesKeys.multiUpload.name, item.isChecked);
+        settingsBloc.add(
+            ToggleSupportMultiUploadEvent(supportMultiUpload: !state.supportMultiUpload));
         break;
       case AlbumSettings.canRename:
-        item.isChecked = !item.isChecked;
-        prefs.setBool(
-            SharedPreferencesKeys.settingIsUploadedRename.name, item.isChecked);
+        settingsBloc.add(ToggleCanRenameUploadedEvent(
+            canRenameUploaded: !state.canRenameUploaded));
         break;
     }
   }

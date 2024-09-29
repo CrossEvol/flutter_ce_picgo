@@ -431,7 +431,7 @@ class ImagePreviewWidgetState extends State<ImagePreviewWidget> {
   @override
   Widget build(BuildContext context) {
     var canRename =
-        prefs.getBool(SharedPreferencesKeys.settingIsUploadedRename.name) ??
+        prefs.getBool(SharedPreferencesKeys.canRenameUploaded.name) ??
             false;
     if (!canRename) {
       return Container(

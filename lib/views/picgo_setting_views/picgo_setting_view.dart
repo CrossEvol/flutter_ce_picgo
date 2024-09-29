@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_cache/image_cache_bloc.dart';
 import 'package:flutter_ce_picgo/bloc/image_manage/image_manage_bloc.dart';
+import 'package:flutter_ce_picgo/bloc/settings/settings_bloc.dart';
 import 'package:flutter_ce_picgo/utils/flutter_toast_ext.dart';
 import 'package:flutter_ce_picgo/utils/logger_util.dart';
 import 'package:go_router/go_router.dart';
@@ -24,29 +25,10 @@ class PicGoSettingView extends StatefulWidget {
 }
 
 class _PicGoSettingViewState extends State<PicGoSettingView> {
-  bool preferLoadNetworkImages = false;
-  bool isUploadedRename = false;
-  bool isTimestampRename = false;
-  bool isUploadedTip = false;
-  bool isForceDelete = false;
-  bool isNeedUpdate = false;
 
   @override
   void initState() {
     super.initState();
-    preferLoadNetworkImages =
-        prefs.getBool(SharedPreferencesKeys.preferLoadNetworkImages.name) ??
-            false;
-    isUploadedRename =
-        prefs.getBool(SharedPreferencesKeys.settingIsUploadedRename.name) ??
-            false;
-    isTimestampRename =
-        prefs.getBool(SharedPreferencesKeys.settingIsTimestampRename.name) ??
-            false;
-    isUploadedTip =
-        prefs.getBool(SharedPreferencesKeys.settingIsUploadedTip.name) ?? false;
-    isForceDelete =
-        prefs.getBool(SharedPreferencesKeys.settingIsForceDelete.name) ?? false;
     fToast.init(context);
     _getLatestVersion();
   }
@@ -62,80 +44,80 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
         builder: (BuildContext context) {
           return ListView(
             children: <Widget>[
-              ListTile(
-                title: const Text('优先加载网络图片'),
-                trailing: CupertinoSwitch(
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  value: preferLoadNetworkImages,
-                  onChanged: (value) {
-                    save(SharedPreferencesKeys.preferLoadNetworkImages.name,
-                        value);
-                    setState(() {
-                      preferLoadNetworkImages = value;
-                    });
-                  },
-                ),
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (context, state) {
+                  return ListTile(
+                    title: const Text('优先加载网络图片'),
+                    trailing: CupertinoSwitch(
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      value: state.preferLoadNetworkImages,
+                      onChanged: (value) {
+                        context.read<SettingsBloc>().add(TogglePreferLoadNetworkImagesEvent(preferLoadNetworkImages: value));
+                      },
+                    ),
+                  );
+                },
               ),
-              ListTile(
-                title: const Text('上传前重命名'),
-                trailing: CupertinoSwitch(
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  value: isUploadedRename,
-                  onChanged: (value) {
-                    save(SharedPreferencesKeys.settingIsUploadedRename.name,
-                        value);
-                    setState(() {
-                      isUploadedRename = value;
-                    });
-                  },
-                ),
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (context, state) {
+                  return ListTile(
+                    title: const Text('上传前重命名'),
+                    trailing: CupertinoSwitch(
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      value: state.canRenameUploaded,
+                      onChanged: (value) {
+                        context.read<SettingsBloc>().add(ToggleCanRenameUploadedEvent(canRenameUploaded: value));
+                      },
+                    ),
+                  );
+                },
               ),
-              ListTile(
-                title: const Text('时间戳重命名'),
-                trailing: CupertinoSwitch(
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  value: isTimestampRename,
-                  onChanged: (value) {
-                    save(SharedPreferencesKeys.settingIsTimestampRename.name,
-                        value);
-                    setState(() {
-                      isTimestampRename = value;
-                    });
-                  },
-                ),
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (context, state) {
+                  return ListTile(
+                    title: const Text('时间戳重命名'),
+                    trailing: CupertinoSwitch(
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      value: state.useTimestampForRenaming,
+                      onChanged: (value) {
+                        context.read<SettingsBloc>().add(ToggleUseTimestampForRenamingEvent(useTimestampForRenaming: value));
+                      },
+                    ),
+                  );
+                },
               ),
-              ListTile(
-                title: const Text('开启上传提示'),
-                trailing: CupertinoSwitch(
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  value: isUploadedTip,
-                  onChanged: (value) async {
-                    if (value) {
-                      /// Local Notification 请求权限
-                      // await LocalNotificationUtil.getInstance()
-                      //     .requestPermissions();
-                    }
-                    save(
-                        SharedPreferencesKeys.settingIsUploadedTip.name, value);
-                    setState(() {
-                      isUploadedTip = value;
-                    });
-                  },
-                ),
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (context, state) {
+                  return ListTile(
+                    title: const Text('开启上传提示'),
+                    trailing: CupertinoSwitch(
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      value: state.useTipsForUploaded,
+                      onChanged: (value) async {
+                        if (value) {
+                          /// Local Notification 请求权限
+                          // await LocalNotificationUtil.getInstance()
+                          //     .requestPermissions();
+                        }
+                        context.read<SettingsBloc>().add(ToggleUseTipsForUploadedEvent(useTipsForUploaded: value));
+                      },
+                    ),
+                  );
+                },
               ),
-              ListTile(
-                title: const Text('仅删除本地图片'),
-                trailing: CupertinoSwitch(
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  value: isForceDelete,
-                  onChanged: (value) {
-                    save(
-                        SharedPreferencesKeys.settingIsForceDelete.name, value);
-                    setState(() {
-                      isForceDelete = value;
-                    });
-                  },
-                ),
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (context, state) {
+                  return ListTile(
+                    title: const Text('仅删除本地图片'),
+                    trailing: CupertinoSwitch(
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      value: state.shouldForceDelete,
+                      onChanged: (value) {
+                        context.read<SettingsBloc>().add(ToggleShouldForceDeleteEvent(shouldForceDelete: value));
+                      },
+                    ),
+                  );
+                },
               ),
               ListTile(
                 title: const Text('主题设置'),
@@ -148,16 +130,19 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
                 onTap: () {
                   handleUpdateTap();
                 },
-                trailing: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    // color: Colors.red,
-                    decoration: BoxDecoration(
-                        color: isNeedUpdate ? Colors.red : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4)),
-                  ),
+                trailing: BlocBuilder<SettingsBloc, SettingsState>(
+                  builder: (context, state) {
+                    return CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                            color: state.needUpdate ? Colors.red : Colors.transparent,
+                            borderRadius: BorderRadius.circular(4)),
+                      ),
+                    );
+                  },
                 ),
               ),
               BlocConsumer<ImageCacheBloc, ImageCacheState>(
@@ -180,14 +165,6 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
     );
   }
 
-  save(String key, bool value) async {
-    prefs
-        .setBool(key, value)
-        .then((value) => fToast.showSuccessToast(text: '保存成功', duration: 1))
-        .onError((error, stackTrace) =>
-            fToast.showErrorToast(text: '保存失败', duration: 1));
-  }
-
   _getLatestVersion() async {
     var latestVersionExpiry =
         prefs.getString(SharedPreferencesKeys.latestVersionExpiry.name) ??
@@ -206,9 +183,7 @@ class _PicGoSettingViewState extends State<PicGoSettingView> {
       PackageInfo info = await PackageInfo.fromPlatform();
       String version = info.buildNumber;
       if (version.compareTo(latestVersion) < 0) {
-        setState(() {
-          isNeedUpdate = true;
-        });
+        context.read<SettingsBloc>().add(const ToggleNeedUpdateEvent(needUpdate: true));
       }
     } catch (e) {
       logger.e(e);

@@ -7,18 +7,18 @@ late SharedPreferences prefs;
 
 extension SharedPreferencesExtension on SharedPreferences {
   Future<String> getDefaultStorage() async {
-    return getString(SharedPreferencesKeys.settingDefaultStorage.name) ??
+    return getString(SharedPreferencesKeys.defaultStorageSetting.name) ??
         ImageStorageType.github.name;
   }
 
   Future<void> setDefaultStorage(String type) async {
-    setString(SharedPreferencesKeys.settingDefaultStorage.name, type);
+    setString(SharedPreferencesKeys.defaultStorageSetting.name, type);
   }
 }
 
 Future<void> useSharedPreferences() async {
   prefs = await SharedPreferences.getInstance();
   if (kDebugMode) {
-    prefs.remove(SharedPreferencesKeys.settingDefaultStorage.name);
+    prefs.remove(SharedPreferencesKeys.defaultStorageSetting.name);
   }
 }
